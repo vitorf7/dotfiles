@@ -1,0 +1,148 @@
+# Nightfox Alacritty Colors
+# Style: nightfox
+# Upstream: https://github.com/edeneast/nightfox.nvim/raw/main/extra/nightfox/nightfox_alacritty.yml
+colors:
+  # Default colors
+  primary:
+    background: '0x192330'
+    foreground: '0xcdcecf'
+  # Normal colors
+  normal:
+    black:   '0x393b44'
+    red:     '0xc94f6d'
+    green:   '0x81b29a'
+    yellow:  '0xdbc074'
+    blue:    '0x719cd6'
+    magenta: '0x9d79d6'
+    cyan:    '0x63cdcf'
+    white:   '0xdfdfe0'
+  # Bright colors
+  bright:
+    black:   '0x575860'
+    red:     '0xd16983'
+    green:   '0x8ebaa4'
+    yellow:  '0xe0c989'
+    blue:    '0x86abdc'
+    magenta: '0xbaa1e2'
+    cyan:    '0x7ad4d6'
+    white:   '0xe4e4e5'
+  indexed_colors:
+    - { index: 16, color: '0xf4a261' }
+    - { index: 17, color: '0xd67ad2' }
+
+font:
+  normal:
+    family: "Hack Nerd Font"
+    style: Regular
+  bold:
+    family: "Hack Nerd Font"
+    style: Bold
+  italic:
+    family: "Hack Nerd Font"
+    style: Italic
+  bold_italic:
+    family: "Hack Nerd Font"
+    style: Bold Italic
+
+  # Point size
+  size: 18.0
+
+  offset:
+    x: 0
+    y: 0
+  glyph_offset:
+    x: 0
+    y: 0
+
+  # OS X only: use thin stroke font rendering. Thin strokes are suitable
+  # for retina displays, but for non-retina you probably want this set to
+  # false.
+  use_thin_strokes: false
+
+window:
+  # Window dimensions (changes require restart)
+  #
+  # Number of lines/columns (not pixels) in the terminal. The number of columns
+  # must be at least `2`, while using a value of `0` for columns and lines will
+  # fall back to the window manager's recommended size.
+  dimensions:
+   columns: 2
+   lines: 2
+
+  # Window position (changes require restart)
+  #
+  # Specified in number of pixels.
+  # If the position is not set, the window manager will handle the placement.
+  position:
+   x: 0
+   y: 0
+
+  opacity: 0.98
+  padding:
+    x: 3
+    y: 3
+  # Spread additional padding evenly around the terminal content.
+  dynamic_padding: false
+
+  # Window decorations
+  #
+  # Values for `decorations`:
+  #     - full: Borders and title bar
+  #     - none: Neither borders nor title bar
+  #
+  # Values for `decorations` (macOS only):
+  #     - transparent: Title bar, transparent background and title bar buttons
+  #     - buttonless: Title bar, transparent background and no title bar buttons
+  decorations: none
+
+  # Startup Mode (changes require restart)
+  #
+  # Values for `startup_mode`:
+  #   - Windowed
+  #   - Maximized
+  #   - Fullscreen
+  #
+  # Values for `startup_mode` (macOS only):
+  #   - SimpleFullscreen
+  startup_mode: Maximized
+
+scrolling:
+  # Maximum number of lines in the scrollback buffer.
+  # Specifying '0' will disable scrolling.
+  history: 10000
+
+  # Number of lines the viewport will move for every line scrolled when
+  # scrollback is enabled (history > 0).
+  multiplier: 10
+
+# If `true`, bold text is drawn using the bright color variants.
+draw_bold_text_with_bright_colors: true
+
+selection:
+  semantic_escape_chars: ',│`|:"'' ()[]{}<>'
+  save_to_clipboard: true
+
+live_config_reload: true
+
+env:
+  TERM: xterm-256color
+
+key_bindings:
+  - { key: Key0,   mods: Command, action: ResetFontSize    }
+  - { key: Equals, mods: Command, action: IncreaseFontSize }
+  - { key: Minus,  mods: Command, action: DecreaseFontSize }
+  - { key: Return, mods: Command|Shift, action: ToggleFullscreen }
+  - { key: Return, mods: Command, action: ToggleSimpleFullscreen }
+  - { key: D,      mods: Command,       chars: "\x00\x25" } 
+  - { key: D,      mods: Command|Shift, chars: "\x00\x22" }
+  - { key: W,      mods: Command,       chars: "\x00\x26" }
+  - { key: T,      mods: Command,       chars: "\x00\x63" }
+  - { key: Key1,   mods: Command,       chars: "\x00\x31" }
+  - { key: Key2,   mods: Command,       chars: "\x00\x32" }
+  - { key: Key3,   mods: Command,       chars: "\x00\x33" }
+  - { key: Key4,   mods: Command,       chars: "\x00\x34" }
+  - { key: Key5,   mods: Command,       chars: "\x00\x35" }
+  - { key: Key6,   mods: Command,       chars: "\x00\x36" }
+  - { key: Key7,   mods: Command,       chars: "\x00\x37" }
+  - { key: Key8,   mods: Command,       chars: "\x00\x38" }
+  - { key: Key9,   mods: Command,       chars: "\x00\x39" }

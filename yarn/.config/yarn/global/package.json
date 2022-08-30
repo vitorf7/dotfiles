@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "neovim": "^4.10.1",
+    "quicktype": "^15.0.260",
+    "tree-sitter-cli": "^0.20.6"
+  }
+}
