@@ -1,0 +1,60 @@
+
+# Git Methods
+function gitCommitWithMessageAndPush() {
+    git commit -m "$1"
+    git push
+}
+# Git
+alias ga="git add"
+alias gaa="git add ."
+alias gc="git commit"
+alias gcm="git commit -m"
+alias gcmps="gitCommitWithMessageAndPush"
+alias gpl="git pull"
+alias gps="git push"
+alias gst="git status"
+alias gs="git switch"
+alias gl="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+alias gdf="git diff"
+alias gch="git checkout"
+
+#PhpSpec
+alias specr="phpspec run"
+alias specrcat="phpspec run --format nyan.cat"
+alias specrdino="phpspec run --format nyan.dino"
+alias specrcrab="phpspec run --format nyan.crab"
+alias specd="phpspec describe "
+
+# Docker helpers
+alias docker-stop-everything='docker stop $(docker ps -a -q)'
+alias docker-killall='docker-stop-everything && docker rm $(docker ps -a -q)'
+alias docker-prune='docker system prune -a --volumes -f'
+alias docker-fresh='docker-stop-everything && docker-prune'
+
+function docker-fatality() {
+    echo '============      FINISH IT   ============'
+    docker stop $(docker ps -a -q)
+    docker rm $(docker ps -a -q)
+    docker system prune -a --volumes -f
+    echo '============      FATALITY    ============'
+    echo '============ FLAWLESS VICTORY ============'
+}
+
+function tmux-named() {
+  session_name="$(basename "$PWD" | tr . -)"
+
+  session_exists=$(tmux has-session -t "=$session_name")
+
+  not_in_tmux=$([ -z "$TMUX" ])
+
+  if not_in_tmux; then
+    tmux new-session -As "$session_name"
+  else
+    if ! session_exists; then
+      (TMUX='' tmux new-session -Ad -s "$session_name")
+    fi
+    tmux switch-client -t "$session_name"
+  fi
+}
+
+alias brew-up-to-date="brew update && brew upgrade"
