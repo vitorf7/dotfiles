@@ -7,7 +7,7 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 # If you come from bash you might have to change your $PATH.
-export GOPATH=$HOME/Code/Go
+export GOPATH=$HOME/Code/go
 export GOROOT=/opt/homebrew/opt/go/libexec
 export HOMEBREW_PATH=/opt/homebrew
 export PATH="$HOME/bin:/usr/local/bin:$HOMEBREW_PATH/opt:/usr/local/sbin:$HOME/.composer/vendor/bin:./vendor/bin:$HOMEBREW_PATH/opt/node@8/bin:$PATH"
