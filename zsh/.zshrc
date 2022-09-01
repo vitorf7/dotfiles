@@ -8,7 +8,7 @@ fi
 
 # If you come from bash you might have to change your $PATH.
 export GOPATH=$HOME/Code/Go
-export GOROOT=/usr/local/opt/go/libexec
+export GOROOT=/opt/homebrew/opt/go/libexec
 export PATH="$HOME/bin:/usr/local/bin:/usr/local/opt:/usr/local/sbin:$HOME/.composer/vendor/bin:./vendor/bin:/usr/local/opt/node@8/bin:$PATH"
 export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 export PATH="$PATH:$GOPATH/bin"
@@ -21,7 +21,7 @@ export GO111MODULE=on
 export GOPRIVATE=github.com/PaddleHQ/*
 
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/vitor/.oh-my-zsh
+export ZSH=$HOME/.oh-my-zsh
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
@@ -116,6 +116,7 @@ source $ZSH/oh-my-zsh.sh
 source ~/.aliases
 
 . /usr/local/etc/profile.d/z.sh
+. /opt/homebrew/etc/profile.d/z.sh
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 export FZF_DEFAULT_OPTS="--cycle --multi --reverse --inline-info --preview 'file --mime-type {} | sift -q text/plain && cat {} || echo blob' --preview-window righ    t:60%:hidden --bind \?:toggle-preview --bind pgup:preview-page-up --bind pgdn:preview-page-down"
@@ -136,4 +137,4 @@ export EDITOR='nvim'
 # Run neofetch when the terminal starts
 neofetch
 
-alias luamake=/Users/vitor/Code/lua-language-server/3rd/luamake/luamake
+alias luamake=$HOME/Code/lua-language-server/3rd/luamake/luamake
