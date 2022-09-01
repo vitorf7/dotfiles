@@ -1,4 +1,9 @@
+# SSH
+
 ssh/.ssh/workgit.pub
 ssh/.ssh/personalgit.pub
 ssh/.ssh/known_hosts
 ssh/.ssh/known_hosts.old
+
+# Karabiner
+karabiner/.config/karabiner/automatic_backups/
