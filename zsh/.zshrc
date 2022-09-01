@@ -9,13 +9,14 @@ fi
 # If you come from bash you might have to change your $PATH.
 export GOPATH=$HOME/Code/Go
 export GOROOT=/opt/homebrew/opt/go/libexec
-export PATH="$HOME/bin:/usr/local/bin:/usr/local/opt:/usr/local/sbin:$HOME/.composer/vendor/bin:./vendor/bin:/usr/local/opt/node@8/bin:$PATH"
-export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+export HOMEBREW_PATH=/opt/homebrew
+export PATH="$HOME/bin:/usr/local/bin:$HOMEBREW_PATH/opt:/usr/local/sbin:$HOME/.composer/vendor/bin:./vendor/bin:$HOMEBREW_PATH/opt/node@8/bin:$PATH"
+export PATH="$HOMEBREW_PATH/opt/coreutils/libexec/gnubin:$PATH"
 export PATH="$PATH:$GOPATH/bin"
 export PATH="$PATH:$GOROOT/bin"
 export PATH="$PATH:$HOME/.local/bin"
-export PATH="/usr/local/opt/findutils/libexec/gnubin:$PATH"
-export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
+export PATH="$HOMEBREW_PATH/opt/findutils/libexec/gnubin:$PATH"
+export PATH="$HOMEBREW_PATH/opt/gnu-sed/libexec/gnubin:$PATH"
 export PATH="$HOME/tools/lua-language-server/bin/macOS:$PATH"
 export GO111MODULE=on
 export GOPRIVATE=github.com/PaddleHQ/*
@@ -115,8 +116,8 @@ source $ZSH/oh-my-zsh.sh
 
 source ~/.aliases
 
-. /usr/local/etc/profile.d/z.sh
-. /opt/homebrew/etc/profile.d/z.sh
+. $HOMEBREW_PATH/etc/profile.d/z.sh
+/opt/homebrew/Cellar/z/1.9/etc/profile.d/z.sh
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 export FZF_DEFAULT_OPTS="--cycle --multi --reverse --inline-info --preview 'file --mime-type {} | sift -q text/plain && cat {} || echo blob' --preview-window righ    t:60%:hidden --bind \?:toggle-preview --bind pgup:preview-page-up --bind pgdn:preview-page-down"
