@@ -122,12 +122,6 @@ source ~/.aliases
 
 export FZF_DEFAULT_OPTS="--cycle --multi --reverse --inline-info --preview 'file --mime-type {} | sift -q text/plain && cat {} || echo blob' --preview-window righ    t:60%:hidden --bind \?:toggle-preview --bind pgup:preview-page-up --bind pgdn:preview-page-down"
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
-
-# p10k Theme config
-source ~/.p10k_theme
-
 alias pip=pip3
 
 export GPG_TTY=$(tty)
@@ -139,3 +133,6 @@ export EDITOR='nvim'
 neofetch
 
 alias luamake=$HOME/Code/lua-language-server/3rd/luamake/luamake
+
+# To customize prompt, run `p10k configure` or edit ~/configfiles/zsh/.p10k.zsh.
+[[ ! -f ~/configfiles/zsh/.p10k.zsh ]] || source ~/configfiles/zsh/.p10k.zsh
