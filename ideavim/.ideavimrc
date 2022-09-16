@@ -1,0 +1,71 @@
+" space as leader
+nnoremap <SPACE> <Nop>
+let mapleader = " "
+
+" ============= GENERAL =============
+set selectmode=ideaselection  " use select mode only when IDE sets a selection
+set idearefactormode=keep
+set ideajoin                  " use the IDE's join/J behavior
+set clipboard=unnamed,ideaput " use system clipboard with idea's pasting logic
+set conceallevel=0            " so that `` is visible in markdown files
+set fileencoding="utf-8"      " the encoding written to a file
+set incsearch
+set gdefault
+set hlsearch                  " highlight all matches on previous search pattern
+set ignorecase                " ignore case in search patterns
+set smartcase                 " smart case
+set smartindent               " make indenting smarter again
+set splitbelow                " force all horizontal splits to go below current window
+set splitright                " force all vertical splits to go to the right of current window
+set termguicolors             " set term gui colors (most terminals support this)
+set updatetime=300            " faster completion (4000ms default)
+set cursorline                " highlight the current line
+set number                    " set numbered lines
+set scrolloff=8,              " is one of my fav
+set sidescrolloff=8,
+set colorcolumn="120,140"     " Line to help with coding best practices
+set timeoutlen=1000           " timeout for keymappings
+set showmode                  " show current mode in statusbar
+set showcmd                   " show partial command in statusbar
+set visualbell                " removes errorbells
+set history=5000
+
+
+" ============= PLUGINS =============
+set surround            " commands: ys, cs, ds, S
+set multiple-cursors    " commands <A-n>, <A-x>, <A-p>, g<A-n>
+set NERDTree
+set commentary
+set which-key
+
+
+" ============= MAPPINGS =============
+nnoremap \e :e ~/.ideavimrc<CR>
+nnoremap \r :action IdeaVim.ReloadVimRc.reload<CR>
+
+" Mapping for ESC
+imap jk <ESC>
+imap jj <ESC>
+
+" easy window navigation
+sethandlder <c-j> a:vim
+sethandlder <c-k> a:vim
+nnoremap <c-l> <c-w>l
+nnoremap <c-j> <c-w>j
+nnoremap <c-h> <c-w>h
+nnoremap <c-k> <c-w>k
+
+" Popup navigation
+inoremap <C-j> <Action>(PopupMenu-selectNext)
+inoremap <C-k> <Action>(PopupMenu-selectPrev)
+
+nnoremap <leader>e :NERDTree<CR>
+
+" navigation actions
+nmap <S-h> <action>(PreviousTab)
+nmap <S-l> <action>(NextTab)
+nmap gd <Action>(GotoDeclarationOnly)
+nmap gr <Action>(GotoDeclaration)
+nmap gl <Action>(QuickJavaDoc)
+nmap gi <Action>(GotoImplementation)
+
