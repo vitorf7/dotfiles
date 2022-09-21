@@ -1,21 +1,21 @@
-gpg --list-secret-keys --keyid-format=long
+// gpg --list-secret-keys --keyid-format=long
 
-read -p "Which signing key do you want to use: " signingKey
-
-read -p "Please enter a GitHub access token to be used: " ghToken
+read -p "Please enter the git name to be used: " gitName
 read -p "Please enter the git email to be used: " gitEmail
+read -p "Which signing key do you want to use: " signingKey
 read -p "Do you want to be able to download private modules (Y/N): " usePrivateModules
 if [[ $usePrivateModules == "Y" ]]; then
+  read -p "Please enter a GitHub access token to be used: " ghToken
   read -p "What is the github organisation root name: " ghOrg
 fi
 
 
 echo "The GitHub access token you enter was $ghToken"
 
-cat <<EOF > $HOME/.gitconfigtest
+cat <<EOF > $HOME/.gitconfig
 [user]
   email = $gitEmail
-  name = Vitor Faiante
+  name = $gitName
   signingKey = $signingKey
 [core]
   editor = nvim
@@ -24,6 +24,10 @@ cat <<EOF > $HOME/.gitconfigtest
   defaultBranch = master
 [status]
   short = true
+[gpg]
+  format = ssh
+[gpg "ssh"]
+  program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
 [commit]
   gpgsign = true
 EOF
