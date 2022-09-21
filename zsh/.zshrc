@@ -9,12 +9,16 @@ fi
 # If you come from bash you might have to change your $PATH.
 export HOMEBREW_PATH=/opt/homebrew
 if [[ $(uname -p) == 'i386' ]]; then
-  export HOMEBREW_PATH=/usr/local/Homebrew
+  export HOMEBREW_PATH=/usr/local
 fi
 
 export GOPATH=$HOME/Code/go
 export GOROOT=$HOMEBREW_PATH/opt/go/libexec
 export GOBIN=$HOME/Code/go/bin
+if [[ $(uname -p) == 'i386' ]]; then
+  export GOROOT=/usr/local/Cellar/go/1.19.1/libexec
+fi
+
 export PATH="$HOME/bin:/usr/local/bin:$HOMEBREW_PATH/opt:/usr/local/sbin:$HOME/.composer/vendor/bin:./vendor/bin:$HOMEBREW_PATH/opt/node@8/bin:$PATH"
 export PATH="$HOMEBREW_PATH/opt/coreutils/libexec/gnubin:$PATH"
 export PATH="$PATH:$GOPATH/bin"
@@ -121,8 +125,14 @@ source $ZSH/oh-my-zsh.sh
 
 source ~/.aliases
 
-. $HOMEBREW_PATH/etc/profile.d/z.sh
-$HOMEBREW_PATH/Cellar/z/1.9/etc/profile.d/z.sh
+if [[ $(uname -p) == 'i386' ]]; then
+  . $HOMEBREW_PREFIX/etc/profile.d/z.sh
+  $HOMEBREW_CELLAR/z/1.9/etc/profile.d/z.sh
+else
+  . $HOMEBREW_PATH/etc/profile.d/z.sh
+  $HOMEBREW_PATH/Cellar/z/1.9/etc/profile.d/z.sh
+fi
+
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 export FZF_DEFAULT_OPTS="--cycle --multi --reverse --inline-info --preview 'file --mime-type {} | sift -q text/plain && cat {} || echo blob' --preview-window righ    t:60%:hidden --bind \?:toggle-preview --bind pgup:preview-page-up --bind pgdn:preview-page-down"
