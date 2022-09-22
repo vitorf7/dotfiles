@@ -34,7 +34,7 @@ EOF
 
 
 if [[ $usePrivateModules == "Y" ]]; then
-cat <<EOF >> $HOME/.gitconfigtest
+cat <<EOF >> $HOME/.gitconfig
 [url "https://$ghToken:@github.com/$ghOrg"]
   insteadOf = https://github.com/$ghOrg
 EOF
