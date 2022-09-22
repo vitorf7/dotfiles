@@ -7,3 +7,10 @@ ssh/.ssh/known_hosts.old
 
 # Karabiner
 karabiner/.config/karabiner/automatic_backups/
+
+# Cargo
+cargo/.cargo/bin
+cargo/.cargo/registry
+cargo/.cargo/.crates.toml
+cargo/.cargo/.crates2.json
+cargo/.cargo/.package-cache
