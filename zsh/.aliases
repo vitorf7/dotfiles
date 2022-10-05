@@ -58,3 +58,4 @@ function tmux-named() {
 }
 
 alias brew-up-to-date="brew update && brew upgrade"
+alias brew-force-update-casks="brew update && brew upgrade --cask --greedy --force"
