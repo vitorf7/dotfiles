@@ -27,6 +27,7 @@ export PATH="$PATH:$HOME/.local/bin"
 export PATH="$HOMEBREW_PATH/opt/findutils/libexec/gnubin:$PATH"
 export PATH="$HOMEBREW_PATH/opt/gnu-sed/libexec/gnubin:$PATH"
 export PATH="$HOME/tools/lua-language-server/bin/macOS:$PATH"
+export PATH="$HOMEBREW_PATH/opt/openjdk@11/bin:$PATH"
 export GO111MODULE=on
 export GOPRIVATE=github.com/PaddleHQ/*
 
