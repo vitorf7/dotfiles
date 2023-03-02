@@ -29,7 +29,7 @@ export PATH="$HOMEBREW_PATH/opt/gnu-sed/libexec/gnubin:$PATH"
 export PATH="$HOME/tools/lua-language-server/bin/macOS:$PATH"
 export PATH="$HOMEBREW_PATH/opt/openjdk@11/bin:$PATH"
 export GO111MODULE=on
-export GOPRIVATE=github.com/PaddleHQ/*
+export GOPRIVATE=github.com/utilitywarehouse/*
 
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
@@ -128,10 +128,8 @@ source ~/.aliases
 
 if [[ $(uname -p) == 'i386' ]]; then
   . $HOMEBREW_PREFIX/etc/profile.d/z.sh
-  $HOMEBREW_CELLAR/z/1.9/etc/profile.d/z.sh
 else
   . $HOMEBREW_PATH/etc/profile.d/z.sh
-  $HOMEBREW_PATH/Cellar/z/1.9/etc/profile.d/z.sh
 fi
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
