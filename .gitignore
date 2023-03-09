@@ -14,3 +14,9 @@ cargo/.cargo/registry
 cargo/.cargo/.crates.toml
 cargo/.cargo/.crates2.json
 cargo/.cargo/.package-cache
+
+# Lazygit
+lazygit/.config/lazygit/state.yml
+
+# NPM
+node_modules/
