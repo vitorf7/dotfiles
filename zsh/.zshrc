@@ -8,6 +8,9 @@ fi
 
 export XDG_CONFIG_HOME="$HOME/.config"
 
+# Private Env Vars
+source $HOME/.private_env_vars
+
 # If you come from bash you might have to change your $PATH.
 export HOMEBREW_PATH=/opt/homebrew
 if [[ $(uname -p) == 'i386' ]]; then
@@ -31,7 +34,6 @@ export PATH="$HOMEBREW_PATH/opt/gnu-sed/libexec/gnubin:$PATH"
 export PATH="$HOME/tools/lua-language-server/bin/macOS:$PATH"
 export PATH="$HOMEBREW_PATH/opt/openjdk@11/bin:$PATH"
 export GO111MODULE=on
-export GOPRIVATE=github.com/utilitywarehouse/*
 
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
