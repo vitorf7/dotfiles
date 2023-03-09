@@ -243,7 +243,7 @@ keybinding:
     bulkMenu: 'b'
 customCommands:
   - key: "Z"
-    command: "czg --config=$HOME/.czrc"
+    command: "czg --config=$HOME/.config/.czrc"
     context: "files"
     loadingText: "opening commitizen commit tool"
     subprocess: true
