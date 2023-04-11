@@ -24,6 +24,8 @@ if [[ $(uname -p) == 'i386' ]]; then
   export GOROOT=/usr/local/Cellar/go/1.19.1/libexec
 fi
 
+export NODE_PATH=$HOMEBREW_PATH/lib/node_modules
+
 export PATH="$HOME/bin:/usr/local/bin:$HOMEBREW_PATH/opt:/usr/local/sbin:$HOME/.composer/vendor/bin:./vendor/bin:$HOMEBREW_PATH/opt/node@8/bin:$PATH"
 export PATH="$HOMEBREW_PATH/opt/coreutils/libexec/gnubin:$PATH"
 export PATH="$PATH:$GOPATH/bin"
@@ -33,6 +35,11 @@ export PATH="$HOMEBREW_PATH/opt/findutils/libexec/gnubin:$PATH"
 export PATH="$HOMEBREW_PATH/opt/gnu-sed/libexec/gnubin:$PATH"
 export PATH="$HOME/tools/lua-language-server/bin/macOS:$PATH"
 export PATH="$HOMEBREW_PATH/opt/openjdk@11/bin:$PATH"
+
+if [ -d "$HOME/.local/share/nvim/mason/bin" ] || [ -L "$HOME/.local/share/nvim/mason/bin" ]; then
+  export PATH="$HOME/.local/share/nvim/mason/bin/:$PATH"
+fi
+
 export GO111MODULE=on
 
 # Path to your oh-my-zsh installation.
@@ -154,3 +161,10 @@ alias luamake=$HOME/Code/lua-language-server/3rd/luamake/luamake
 
 # To customize prompt, run `p10k configure` or edit ~/configfiles/zsh/.p10k.zsh.
 [[ ! -f ~/configfiles/zsh/.p10k.zsh ]] || source ~/configfiles/zsh/.p10k.zsh
+
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/google-cloud-sdk/path.zsh.inc"; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/google-cloud-sdk/completion.zsh.inc"; fi
