@@ -1,0 +1,21 @@
+# Node
+npm-debug.log
+
+# Mac
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# inteliJ Idea
+.idea/
+
+# vi
+*~
+*.swp
+
+# VS Code
+.vscode
+
+# Logs
+*.log
