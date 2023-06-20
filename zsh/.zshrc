@@ -8,8 +8,8 @@ fi
 
 export XDG_CONFIG_HOME="$HOME/.config"
 
-# Private Env Vars
-source $HOME/.private_env_vars
+# Private config (Env vars, aliases, etc)
+source $HOME/.private_config
 
 # If you come from bash you might have to change your $PATH.
 export HOMEBREW_PATH=/opt/homebrew
@@ -168,3 +168,9 @@ if [ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/google-cloud-sdk/
 
 # The next line enables shell command completion for gcloud.
 if [ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/google-cloud-sdk/completion.zsh.inc"; fi
+
+export NVM_DIR="$HOME/.nvm"
+  [ -s "$HOMEBREW_PATH/opt/nvm/nvm.sh" ] && \. "$HOMEBREW_PATH/opt/nvm/nvm.sh"  # This loads nvm
+  [ -s "$HOMEBREW_PATH/opt/nvm/etc/bash_completion.d/nvm" ] && \. "$HOMEBREW_PATH/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+
+eval "$(rbenv init - zsh)"

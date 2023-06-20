@@ -60,3 +60,7 @@ function tmux-named() {
 alias brew-up-to-date="brew update && brew upgrade"
 alias brew-force-update-casks="brew update && brew upgrade --cask --greedy --force"
 alias brew-upgrade-everything="brew update && brew upgrade && brew upgrade --cask --greedy --force"
+
+# Exa alias for ls (https://github.com/ogham/exa)
+alias lh="exa --icons -lha"
+alias ls="exa --icons"
