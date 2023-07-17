@@ -174,3 +174,5 @@ export NVM_DIR="$HOME/.nvm"
   [ -s "$HOMEBREW_PATH/opt/nvm/etc/bash_completion.d/nvm" ] && \. "$HOMEBREW_PATH/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 
 eval "$(rbenv init - zsh)"
+
+export DOCKER_HOST="unix://${HOME}/.colima/default/docker.sock"
