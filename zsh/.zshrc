@@ -37,7 +37,7 @@ export PATH="$HOME/tools/lua-language-server/bin/macOS:$PATH"
 export PATH="$HOMEBREW_PATH/opt/openjdk@11/bin:$PATH"
 
 if [ -d "$HOME/.local/share/nvim/mason/bin" ] || [ -L "$HOME/.local/share/nvim/mason/bin" ]; then
-  export PATH="$HOME/.local/share/nvim/mason/bin/:$PATH"
+  export PATH="$HOME/.local/share/nvim/mason/bin:$PATH"
 fi
 
 export GO111MODULE=on
