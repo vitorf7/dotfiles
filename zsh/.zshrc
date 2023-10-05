@@ -1,4 +1,4 @@
-if [ "$TMUX" = "" ]; then tmux; fi
+# if [ "$TMUX" = "" ]; then tmux; fi
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -35,6 +35,7 @@ export PATH="$HOMEBREW_PATH/opt/findutils/libexec/gnubin:$PATH"
 export PATH="$HOMEBREW_PATH/opt/gnu-sed/libexec/gnubin:$PATH"
 export PATH="$HOME/tools/lua-language-server/bin/macOS:$PATH"
 export PATH="$HOMEBREW_PATH/opt/openjdk@11/bin:$PATH"
+export PATH="$HOMEBREW_PATH/opt/curl/bin:$PATH"
 
 if [ -d "$HOME/.local/share/nvim/mason/bin" ] || [ -L "$HOME/.local/share/nvim/mason/bin" ]; then
   export PATH="$HOME/.local/share/nvim/mason/bin:$PATH"
@@ -137,15 +138,17 @@ source $ZSH/oh-my-zsh.sh
 
 source ~/.aliases
 
-if [[ $(uname -p) == 'i386' ]]; then
-  . $HOMEBREW_PREFIX/etc/profile.d/z.sh
-else
-  . $HOMEBREW_PATH/etc/profile.d/z.sh
-fi
+# if [[ $(uname -p) == 'i386' ]]; then
+#   . $HOMEBREW_PREFIX/etc/profile.d/z.sh
+# else
+#   . $HOMEBREW_PATH/etc/profile.d/z.sh
+# fi
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-export FZF_DEFAULT_OPTS="--cycle --multi --reverse --inline-info --preview 'file --mime-type {} | sift -q text/plain && cat {} || echo blob' --preview-window righ    t:60%:hidden --bind \?:toggle-preview --bind pgup:preview-page-up --bind pgdn:preview-page-down"
+# export FZF_DEFAULT_OPTS="--cycle --multi --reverse --inline-info --preview 'file --mime-type {} | sift -q text/plain && cat {} || echo blob' --preview-window right t:60%:hidden --bind \?:toggle-preview --bind pgup:preview-page-up --bind pgdn:preview-page-down"
+export FZF_DEFAULT_OPTS="--height=80% --exact --reverse --border rounded --inline-info --pointer=' ' --marker=' ' --margin=1 --padding=1 --ansi --color='16,bg+:-1,gutter:-1,prompt:5,pointer:5,marker:6,border:4,label:4,header:italic' --preview 'file --mime-type {} | bat --color=always {}' --preview-window='right,60%:hidden' --bind \?:toggle-preview --bind pgup:preview-page-up --bind pgdn:preview-page-down"
+export FZF_CTRL_R_OPTS="--border-label=' history ' --prompt='  '"
+export FZF_TMUX_OPTS="-p 55%,60%"
 
 alias pip=pip3
 
@@ -162,6 +165,7 @@ alias luamake=$HOME/Code/lua-language-server/3rd/luamake/luamake
 # To customize prompt, run `p10k configure` or edit ~/configfiles/zsh/.p10k.zsh.
 [[ ! -f ~/configfiles/zsh/.p10k.zsh ]] || source ~/configfiles/zsh/.p10k.zsh
 
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/google-cloud-sdk/path.zsh.inc"; fi
@@ -174,5 +178,11 @@ export NVM_DIR="$HOME/.nvm"
   [ -s "$HOMEBREW_PATH/opt/nvm/etc/bash_completion.d/nvm" ] && \. "$HOMEBREW_PATH/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 
 eval "$(rbenv init - zsh)"
+
+eval "$(zoxide init zsh)"
+
+export T_SESSION_NAME_INCLUDE_PARENT=true
+
+bindkey -r "^S" # unbind ctrl+s from history-incremental-search-backward so that we can use ctrl+s with t smart tmux session manager.
 
 export DOCKER_HOST="unix://${HOME}/.colima/default/docker.sock"

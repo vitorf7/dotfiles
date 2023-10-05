@@ -86,3 +86,8 @@ alias cat="bat"
 
 # Ngrok
 alias ngrok="ngrok --authtoken=$NGROK_AUTHTOKEN"
+
+# GH GLI
+# unset GITHUB_TOKEN from gh's process environment and run gh command.
+# see https://stackoverflow.com/a/41749660 & https://github.com/cli/cli/issues/3799 for more.
+alias gh="env -u GITHUB_TOKEN gh $1"
