@@ -1,9 +1,3 @@
-if command -v pdl &> /dev/null
-then
-  source $HOME/.pdl_zsh_auto_completion
-  export GITHUB_ACCESS_TOKEN=$(pdl pat get)
-fi
-
 # Added by Toolbox App
 export PATH="$PATH:/usr/local/bin"
 
@@ -16,3 +10,7 @@ fi
 
 FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
 
+# ~/.tmux/plugins
+export PATH=$HOME/.tmux/plugins/t-smart-tmux-session-manager/bin:$PATH
+# ~/.config/tmux/plugins
+export PATH=$HOME/.config/tmux/plugins/t-smart-tmux-session-manager/bin:$PATH
