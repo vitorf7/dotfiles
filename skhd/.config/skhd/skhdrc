@@ -77,3 +77,10 @@ alt - tab : yabai -m space --focus recent
 # send window to monitor and follow focus
 shift + alt - n : yabai -m window --display next; yabai -m display --focus next
 shift + alt - p : yabai -m window --display previous; yabai -m display --focus previous
+
+# open app shortcuts
+cmd + alt + shift - a : open -a "/Applications/Alacritty.app"
+cmd + alt + shift - n : open -a "/Applications/Obsidian.app"
+cmd + alt + shift - b : open -a "/Applications/Arc.app"
+cmd + alt + shift - s : open -a "/Applications/Spotify.app"
+cmd + alt + shift - r : open -a "/Applications/Rambox.app"
