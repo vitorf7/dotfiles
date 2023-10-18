@@ -1,0 +1,4 @@
+config:
+  fallback-icon: "?"
+  multi-pane-icon: ""
+  show-name: true

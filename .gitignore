@@ -1,5 +1,4 @@
 # SSH
-
 ssh/.ssh/workgit.pub
 ssh/.ssh/personalgit.pub
 ssh/.ssh/known_hosts
@@ -20,3 +19,6 @@ lazygit/.config/lazygit/state.yml
 
 # NPM
 node_modules/
+
+# Fish
+fish/.config/fish/fish_variables
