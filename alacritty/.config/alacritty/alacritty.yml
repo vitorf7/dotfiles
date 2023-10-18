@@ -1,17 +1,5 @@
 # Configuration for Alacritty, the GPU enhanced terminal emulator.
 
-# Import additional configuration files
-#
-# Imports are loaded in order, skipping all missing files, with the importing
-# file being loaded last. If a field is already present in a previous import, it
-# will be replaced.
-#
-# All imports must either be absolute paths starting with `/`, or paths relative
-# to the user's home directory starting with `~/`.
-import:
-  - ~/.config/alacritty/themes/catppuccin-mocha.yml
-  # - ~/.config/alacritty/themes/nightfox.yml
-
 # Any items in the `env` entry below will be added as
 # environment variables. Some entries may override variables
 # set by alacritty itself.
@@ -135,7 +123,7 @@ font:
     family: "JetBrainsMono Nerd Font"
 
     # The `style` can be specified to pick a specific face.
-    style: Regular
+    style: Medium
 
   # Bold font face
   bold:
@@ -146,7 +134,7 @@ font:
     family: "JetBrainsMono Nerd Font"
 
     # The `style` can be specified to pick a specific face.
-    style: Bold
+    style: Heavy
 
   # Italic font face
   italic:
@@ -157,7 +145,7 @@ font:
     family: "JetBrainsMono Nerd Font"
 
     # The `style` can be specified to pick a specific face.
-    style: Italic
+    style: Medium Italic
 
   # Bold italic font face
   bold_italic:
@@ -168,7 +156,7 @@ font:
     family: "JetBrainsMono Nerd Font"
 
     # The `style` can be specified to pick a specific face.
-    style: Bold Italic
+    style: Heavy Italic
 
   # Point size
   size: 18.0
@@ -176,16 +164,16 @@ font:
   # Offset is the extra space around each character. `offset.y` can be thought
   # of as modifying the line spacing, and `offset.x` as modifying the letter
   # spacing.
-  offset:
-    x: 0
-    y: 0
+  # offset:
+  #   x: 0
+  #   y: 0
 
   # Glyph offset determines the locations of the glyphs within their cells with
   # the default being at the bottom. Increasing `x` moves the glyph to the
   # right, increasing `y` moves the glyph upward.
-  glyph_offset:
-    x: 0
-    y: 0
+  # glyph_offset:
+  #   x: 0
+  #   y: 0
 
   # Use built-in font for box drawing characters.
   #
@@ -195,7 +183,7 @@ font:
   #builtin_box_drawing: true
 
 # If `true`, bold text is drawn using the bright color variants.
-draw_bold_text_with_bright_colors: true
+# draw_bold_text_with_bright_colors: true
 
 # Colors (Tomorrow Night)
 #colors:
@@ -451,8 +439,8 @@ live_config_reload: true
 # Default:
 #   - (Linux/BSD/macOS) `$SHELL` or the user's login shell, if `$SHELL` is unset
 #   - (Windows) powershell
-#shell:
-#  program: /bin/bash
+shell:
+  program: /opt/homebrew/bin/fish
 #  args:
 #    - --login
 
@@ -929,3 +917,15 @@ key_bindings:
 
 # Highlight window damage information.
 #highlight_damage: false
+
+# Import additional configuration files
+#
+# Imports are loaded in order, skipping all missing files, with the importing
+# file being loaded last. If a field is already present in a previous import, it
+# will be replaced.
+#
+# All imports must either be absolute paths starting with `/`, or paths relative
+# to the user's home directory starting with `~/`.
+import:
+  - ~/.config/alacritty/themes/catppuccin-mocha.yml
+  # - ~/.config/alacritty/themes/nightfox.yml
