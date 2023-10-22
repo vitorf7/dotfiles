@@ -57,7 +57,7 @@ keybindings:
   prs:
     - key: O
       command: >
-        tmux new-window -n {{.RepoName}} -c {{.RepoPath}} ' nvim -c ":Octo pr edit {{.PrNumber}}"'
+        tmux new-window -n {{.RepoName}} -c {{.RepoPath}} 'nvim -c ":Octo pr edit {{.PrNumber}}"'
 repoPaths:
   utilitywarehouse/*: ~/code/uw/*
   vitorf7/*: ~/code/personal/*

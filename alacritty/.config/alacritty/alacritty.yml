@@ -439,8 +439,8 @@ live_config_reload: true
 # Default:
 #   - (Linux/BSD/macOS) `$SHELL` or the user's login shell, if `$SHELL` is unset
 #   - (Windows) powershell
-shell:
-  program: /opt/homebrew/bin/fish
+# shell:
+#   program: /opt/homebrew/bin/fish
 #  args:
 #    - --login
 
