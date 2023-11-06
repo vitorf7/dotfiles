@@ -92,7 +92,7 @@ am_or_rebase = "am/rebase"
 disabled = false
 
 [git_status]
-disabled = false
+disabled = true
 stashed = "   ${count}"
 ahead = " 󰞙  ${count}"
 behind = " 󰞖  ${count}"
@@ -101,7 +101,7 @@ conflicted = "   ${count}"
 deleted = "   ${count}"
 renamed = " 󰗧 ${count}"
 modified = "   ${count}"
-staged = "   ${count}"
+staged = "   ${count}"
 untracked = " 󰧮 ${count}"
 
 [buf]
