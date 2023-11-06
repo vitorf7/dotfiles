@@ -4,6 +4,6 @@
 [submodule "neovim/.config/nvim"]
 	path = neovim/.config/nvim
 	url = git@github.com:vitorf7/nvim.git
-[submodule "neovim_lazyvim/.config/nvim"]
-	path = neovim_lazyvim/.config/nvim
-	url = git@github.com:vitorf7/nvim_lazyvim.git
+[submodule "neovimold/.config/nvimold"]
+	path = neovimold/.config/nvimold
+	url = git@github.com:vitorf7/nvimold.git
