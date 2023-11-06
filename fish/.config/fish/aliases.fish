@@ -12,6 +12,12 @@ alias gs="git switch"
 alias gl="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 alias gdf="git diff"
 alias gch="git checkout"
+function gprune
+    git fetch -p
+    for branch in (git branch -vv | grep ': gone]' | awk '{print $1}')
+        git branch -D $branch
+    end
+end
 
 #PhpSpec
 alias specr="phpspec run"
