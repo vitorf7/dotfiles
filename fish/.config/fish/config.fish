@@ -91,10 +91,15 @@ if test -f "$HOME/google-cloud-sdk/path.zsh.inc"
     source "$HOME/google-cloud-sdk/path.fish.inc"
 end
 
-set -Ux NVM_DIR "$HOME/.nvm"
-if test -s "$HOMEBREW_PATH/opt/nvm/nvm.sh"
-    bass source "$HOMEBREW_PATH/opt/nvm/nvm.sh"
-end
+set -gx NVM_DIR "$HOME/.nvm"
+# bass source (brew --prefix nvm)/nvm.sh --no-use ';' nvm use iojs
+# if test -s "$HOMEBREW_PATH/opt/nvm/nvm.sh"
+#     bass source "$HOMEBREW_PATH/opt/nvm/nvm.sh"
+# end
+# set -gx NVM_DIR “$HOME/.nvm”
+# # This loads nvm 
+# [ -s "/opt/homebrew/opt/nvm/nvm.sh" ]; and . "/opt/homebrew/opt/nvm/nvm.sh"
+# [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ]; and . "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" # This loads nvm bash_completion
 
 set -Ux T_SESSION_NAME_INCLUDE_PARENT true
 
