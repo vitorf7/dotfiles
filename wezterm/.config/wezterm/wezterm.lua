@@ -1,6 +1,15 @@
 local wezterm = require("wezterm")
 local act = wezterm.action
 
+local multiple_actions = function(keys)
+	local actions = {}
+	for key in keys:gmatch(".") do
+		table.insert(actions, act.SendKey({ key = key }))
+	end
+	table.insert(actions, act.SendKey({ key = "\n" }))
+	return act.Multiple(actions)
+end
+
 local config = {
 	term = "xterm-256color",
 	macos_window_background_blur = 10,
@@ -152,6 +161,22 @@ local config = {
 				act.SendKey({ key = "G" }),
 			}),
 		}, -- GH Dash tmux custom binding
+		{
+			mods = "CMD",
+			key = "p",
+			action = act.Multiple({
+				act.SendKey({ key = "\x1b" }), -- escape
+				multiple_actions(":Telescope smart_open"),
+			}),
+		}, -- Neovim Telescope smart_open
+		{
+			mods = "CMD|SHIFT",
+			key = "p",
+			action = act.Multiple({
+				act.SendKey({ key = "\x1b" }), -- escape
+				multiple_actions(":Legendary"),
+			}),
+		}, -- Neovim Legendary
 	},
 
 	window_background_opacity = 0.9,
