@@ -16,7 +16,7 @@ local config = {
 	color_scheme = "Catppuccin Mocha", -- or Macchiato, Frappe, Latte
 	font = wezterm.font_with_fallback({
 		{
-			family = "JetBrainsMono Nerd Font",
+			family = "JetBrainsMono NF",
 			weight = "Bold",
 			harfbuzz_features = { "calt=0", "clig=0", "liga=0" },
 		},
@@ -166,7 +166,7 @@ local config = {
 			key = "p",
 			action = act.Multiple({
 				act.SendKey({ key = "\x1b" }), -- escape
-				multiple_actions(":Telescope smart_open"),
+				multiple_actions(":GoToFile"),
 			}),
 		}, -- Neovim Telescope smart_open
 		{
@@ -174,9 +174,17 @@ local config = {
 			key = "p",
 			action = act.Multiple({
 				act.SendKey({ key = "\x1b" }), -- escape
-				multiple_actions(":Legendary"),
+				multiple_actions(":GoToCommand"),
 			}),
-		}, -- Neovim Legendary
+		}, -- Neovim command pallete
+		{
+			mods = "CMD",
+			key = "o",
+			action = act.Multiple({
+				act.SendKey({ key = "\x1b" }), -- escape
+				multiple_actions(":BrowseFiles"),
+			}),
+		}, -- Neovim command pallete
 	},
 
 	window_background_opacity = 0.9,
