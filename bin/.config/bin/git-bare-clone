@@ -45,8 +45,9 @@ die() {
 }
 
 parse_params() {
-	location='.bare'
 	nosuffix=false
+	barefolder=false
+	location=""
 
 	while :; do
 		case "${1-}" in
@@ -54,6 +55,7 @@ parse_params() {
 		-v | --verbose) set -x ;;
 		--no-color) NO_COLOR=1 ;;
 		-ns | --no-suffix) nosuffix=true ;;
+		-bf | --bare-folder) barefolder=true ;;
 		-l | --location)
 			location="${2-}"
 			shift
@@ -76,6 +78,10 @@ parse_params() {
 		repofolder=$(echo "${args[@]}" | awk -F'/' '{print $NF}')
 	fi
 
+	if [[ "$barefolder" = true ]]; then
+		location=".bare"
+	fi
+
 	return 0
 }
 
@@ -87,8 +93,10 @@ git clone --bare "${args[@]}" "$repofolder/$location"
 pushd "$repofolder/$location" >/dev/null
 msg "${YELLOW}Adjusting origin fetch locations...${NOFORMAT}"
 git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
-popd >/dev/null
-pushd "$repofolder" >/dev/null
-msg "${YELLOW}Setting .git file contents...${NOFORMAT}"
-echo "gitdir: ./$location" >.git
+if [[ "$barefolder" = true ]]; then
+	popd >/dev/null
+	pushd "$repofolder" >/dev/null
+	msg "${YELLOW}Setting .git file contents...${NOFORMAT}"
+	echo "gitdir: ./$location" >.git
+fi
 msg "${GREEN}Success.${NOFORMAT}"
