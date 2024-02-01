@@ -75,3 +75,14 @@ alias ngrok="ngrok --authtoken=$NGROK_AUTHTOKEN"
 # unset GITHUB_TOKEN from gh's process environment and run gh command.
 # see https://stackoverflow.com/a/41749660 & https://github.com/cli/cli/issues/3799 for more.
 alias gh="env -u GITHUB_TOKEN gh $1"
+
+# Sesh (Tmux Session Manager)
+alias t="sesh connect (sesh list -tz | fzf-tmux -p 55%,60% \
+		--no-sort --border-label ' sesh ' --prompt '⚡  ' \
+		--header '  ^a all ^t tmux ^x zoxide ^f find' \
+		--bind 'tab:down,btab:up' \
+		--bind 'ctrl-a:change-prompt(⚡  )+reload(sesh list)' \
+		--bind 'ctrl-t:change-prompt(🪟  )+reload(sesh list -t)' \
+		--bind 'ctrl-x:change-prompt(📁  )+reload(sesh list -z)' \
+		--bind 'ctrl-f:change-prompt(🔎  )+reload(fd -H -d 2 -t d -E .Trash . ~)' \
+)"
