@@ -10,17 +10,36 @@ local multiple_actions = function(keys)
 	return act.Multiple(actions)
 end
 
+local get_random_font = function(fonts)
+	local fontKeys = {}
+	for key, _ in ipairs(fonts) do
+		table.insert(fontKeys, key)
+	end
+	local randomFontKey = fontKeys[math.random(1, #fontKeys)]
+	local fontFamily = fonts[randomFontKey]
+	return wezterm.font_with_fallback({
+		{ family = fontFamily, weight = "Bold" },
+		{ family = "Symbols Nerd Font Mono" },
+	})
+end
+
 local config = {
 	term = "xterm-256color",
 	macos_window_background_blur = 10,
 	color_scheme = "Catppuccin Mocha", -- or Macchiato, Frappe, Latte
-	font = wezterm.font_with_fallback({
-		{
-			family = "JetBrainsMono NF",
-			weight = "Bold",
-			harfbuzz_features = { "calt=0", "clig=0", "liga=0" },
-		},
+	font = get_random_font({
+		"Monaspace Argon",
+		"Monaspace Radon",
+		"CommitMono",
+		"JetBrains Mono",
 	}),
+	-- font = wezterm.font_with_fallback({
+	-- 	{
+	-- 		family = "JetBrainsMono NF",
+	-- 		weight = "Bold",
+	-- 		harfbuzz_features = { "calt=0", "clig=0", "liga=0" },
+	-- 	},
+	-- }),
 	font_size = 17.5,
 
 	window_padding = {
@@ -38,7 +57,7 @@ local config = {
 				act.SendKey({ key = "t" }),
 				act.SendKey({ key = "Enter" }),
 			}),
-		}, -- Activate t-smart-session-manager
+		}, -- Activate Sesh (Tmux Session Manager) when not in tmux
 		-- TMUX Keybindings --
 		-- current prefix for tmux CTRL + Space
 		{
@@ -48,7 +67,7 @@ local config = {
 				act.SendKey({ mods = "CTRL", key = "Space" }),
 				act.SendKey({ key = "T" }),
 			}),
-		}, -- Activate t-smart-session-manager
+		}, -- Activate Sesh (Tmux Session Manager) when in tmux
 		{
 			mods = "CMD",
 			key = "t",
@@ -195,6 +214,8 @@ local config = {
 	enable_tab_bar = false,
 	native_macos_fullscreen_mode = false,
 	window_decorations = "RESIZE",
+
+	enable_kitty_graphics = true,
 }
 
 return config
