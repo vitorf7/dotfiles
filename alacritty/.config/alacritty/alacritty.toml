@@ -1,0 +1,146 @@
+import = ["/Users/vitorfaiante/.config/alacritty/themes/catppuccin-mocha.toml"]
+live_config_reload = true
+
+[env]
+TERM = "xterm-256color"
+
+[font]
+size = 18.0
+
+[font.bold]
+family = "JetBrainsMono Nerd Font"
+style = "Heavy"
+
+[font.bold_italic]
+family = "JetBrainsMono Nerd Font"
+style = "Heavy Italic"
+
+[font.italic]
+family = "JetBrainsMono Nerd Font"
+style = "Medium Italic"
+
+[font.normal]
+family = "JetBrainsMono Nerd Font"
+style = "Medium"
+
+[[keyboard.bindings]]
+action = "ResetFontSize"
+key = "Key0"
+mods = "Command"
+
+[[keyboard.bindings]]
+action = "IncreaseFontSize"
+key = "Equals"
+mods = "Command"
+
+[[keyboard.bindings]]
+action = "DecreaseFontSize"
+key = "Minus"
+mods = "Command"
+
+[[keyboard.bindings]]
+action = "ToggleFullscreen"
+key = "Return"
+mods = "Command|Shift"
+
+[[keyboard.bindings]]
+action = "ToggleSimpleFullscreen"
+key = "Return"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u0000%"
+key = "D"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u0000\""
+key = "D"
+mods = "Command|Shift"
+
+[[keyboard.bindings]]
+chars = "\u0000&"
+key = "W"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u0000c"
+key = "T"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u0000T"
+key = "J"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "T\r"
+key = "K"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u00001"
+key = "Key1"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u00002"
+key = "Key2"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u00003"
+key = "Key3"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u00004"
+key = "Key4"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u00005"
+key = "Key5"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u00006"
+key = "Key6"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u00007"
+key = "Key7"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u00008"
+key = "Key8"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u00009"
+key = "Key9"
+mods = "Command"
+
+[scrolling]
+history = 10000
+multiplier = 10
+
+[selection]
+save_to_clipboard = true
+semantic_escape_chars = ",│`|:\"' ()[]{}<>"
+
+[window]
+decorations = "buttonless"
+dynamic_padding = false
+opacity = 0.9
+startup_mode = "Maximized"
+
+[window.padding]
+x = 10
+y = 20
+
+[window.position]
+x = 0
+y = 0
