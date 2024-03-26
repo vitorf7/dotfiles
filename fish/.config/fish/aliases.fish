@@ -85,4 +85,5 @@ alias t="sesh connect (sesh list -tz | fzf-tmux -p 55%,60% \
 		--bind 'ctrl-t:change-prompt(🪟  )+reload(sesh list -t)' \
 		--bind 'ctrl-x:change-prompt(📁  )+reload(sesh list -z)' \
 		--bind 'ctrl-f:change-prompt(🔎  )+reload(fd -H -d 2 -t d -E .Trash . ~)' \
+		--bind 'ctrl-d:execute(tmux kill-session -t {})+reload(sesh list)' \
 )"

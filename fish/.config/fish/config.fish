@@ -107,3 +107,4 @@ set -Ux DOCKER_HOST "unix://$HOME/.colima/default/docker.sock"
 
 # Run neofetch when the terminal starts
 # neofetch
+source /Users/vitorfaiante/.config/op/plugins.sh
