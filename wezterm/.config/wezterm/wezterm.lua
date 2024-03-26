@@ -1,5 +1,8 @@
 local wezterm = require("wezterm")
+local helpers = require("utils/helpers")
 local act = wezterm.action
+local font = require("utils/font")
+local bg = require("utils/background")
 
 local multiple_actions = function(keys)
 	local actions = {}
@@ -10,43 +13,33 @@ local multiple_actions = function(keys)
 	return act.Multiple(actions)
 end
 
-local get_random_font = function(fonts)
-	local fontKeys = {}
-	for key, _ in ipairs(fonts) do
-		table.insert(fontKeys, key)
-	end
-	local randomFontKey = fontKeys[math.random(1, #fontKeys)]
-	local fontFamily = fonts[randomFontKey]
-	return wezterm.font_with_fallback({
-		{ family = fontFamily, weight = "Bold" },
-		{ family = "Symbols Nerd Font Mono" },
-	})
-end
-
 local config = {
-	term = "xterm-256color",
 	macos_window_background_blur = 10,
-	color_scheme = "Catppuccin Mocha", -- or Macchiato, Frappe, Latte
-	font = get_random_font({
+	color_scheme = helpers.is_dark() and "Catppuccin Mocha" or "Catppuccin Latte", -- or Macchiato, Frappe, Latte
+	font = font.get_font({
 		"Monaspace Argon",
 		"Monaspace Radon",
 		"CommitMono",
 		"JetBrains Mono",
 	}),
-	-- font = wezterm.font_with_fallback({
-	-- 	{
-	-- 		family = "JetBrainsMono NF",
-	-- 		weight = "Bold",
-	-- 		harfbuzz_features = { "calt=0", "clig=0", "liga=0" },
-	-- 	},
-	-- }),
 	font_size = 17.5,
+
+	background = {
+		bg.get_wallpaper(wezterm.home_dir .. "/Pictures/wezterm_bgs/*"),
+		bg.get_background(0.8, 0.9),
+	},
 
 	window_padding = {
 		left = 20,
 		right = 20,
 		top = 20,
 		bottom = 20,
+	},
+
+	set_environment_variables = {
+		BAT_THEME = helpers.is_dark() and "Catppuccin-mocha" or "Catppuccin-latte",
+		TERM = "xterm-256color",
+		LC_ALL = "en_US.UTF-8",
 	},
 
 	keys = {
@@ -204,9 +197,14 @@ local config = {
 				multiple_actions(":BrowseFiles"),
 			}),
 		}, -- Neovim command pallete
+		{
+			mods = "CMD|CTRL",
+			key = "n",
+			action = act.Multiple({
+				multiple_actions("nvims"),
+			}),
+		}, -- Horizontal Split
 	},
-
-	window_background_opacity = 0.9,
 
 	send_composed_key_when_left_alt_is_pressed = true,
 	send_composed_key_when_right_alt_is_pressed = false,
