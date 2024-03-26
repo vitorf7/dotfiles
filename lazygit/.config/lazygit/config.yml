@@ -1,22 +1,44 @@
+# Theme
+# gui:
+#   theme:
+#     activeBorderColor:
+#       - "#a6e3a1" # Green
+#       - bold
+#     inactiveBorderColor:
+#       - "#cdd6f4" # Text
+#     optionsTextColor:
+#       - "#89b4fa" # Blue
+#     selectedLineBgColor:
+#       - "#313244" # Surface0
+#     selectedRangeBgColor:
+#       - "#313244" # Surface0
+#     cherryPickedCommitBgColor:
+#       - "#94e2d5" # Teal
+#     cherryPickedCommitFgColor:
+#       - "#89b4fa" # Blue
+#     unstagedChangesColor:
+#       - red # Red
 gui:
+  border: rounded
   theme:
     activeBorderColor:
-      - "#a6e3a1" # Green
-      - bold
+      - "#5ef1ff"
     inactiveBorderColor:
-      - "#cdd6f4" # Text
+      - "#7b8496"
+    searchingActiveBorderColor:
+      - "#ff5ef1"
     optionsTextColor:
-      - "#89b4fa" # Blue
+      - "#3c4048"
     selectedLineBgColor:
-      - "#313244" # Surface0
-    selectedRangeBgColor:
-      - "#313244" # Surface0
+      - "#3c4048"
     cherryPickedCommitBgColor:
-      - "#94e2d5" # Teal
+      - "#3c4048"
     cherryPickedCommitFgColor:
-      - "#89b4fa" # Blue
+      - "#ff5ea0"
     unstagedChangesColor:
-      - red # Red
+      - "#ffbd5e"
+    defaultFgColor:
+      - "#ffffff"
   nerdFontsVersion: "3" # nerd fonts version to use ("2" or "3"); empty means don't show nerd font icons
 git:
   parseEmoji: true
