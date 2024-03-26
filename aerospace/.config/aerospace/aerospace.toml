@@ -1,12 +1,20 @@
 # Start AeroSpace at login
 start-at-login = true
 
+# Reference: https://github.com/FelixKratz/JankyBorders
 after-startup-command = ['''exec-and-forget \
     /opt/homebrew/bin/borders \
       active_color=0xffe1e3e4 \
       inactive_color=0xff494d64 \
       width=5.0
     ''']
+
+# See: https://nikitabobko.github.io/AeroSpace/guide.html#layouts
+# The 'accordion-padding' specifies the size of accordion padding
+# You can set 0 to disable the padding feature
+accordion-padding = 30
+
+non-empty-workspaces-root-containers-layout-on-startup = 'smart'
 
 # Possible values: tiles|accordion
 default-root-container-layout = 'tiles'
@@ -18,10 +26,9 @@ default-root-container-orientation = 'auto'
 
 # Reference: https://github.com/i3/i3/blob/next/etc/config
 
+# Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide.html#normalization
 enable-normalization-flatten-containers = true
 enable-normalization-opposite-orientation-for-nested-containers = true
-# enable-normalization-flatten-containers = false
-# enable-normalization-opposite-orientation-for-nested-containers = false
 
 # Gaps between windows (inner-*) and between monitor edges (outer-*).
 # Possible values:
