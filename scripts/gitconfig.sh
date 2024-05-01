@@ -26,6 +26,19 @@ cat <<EOF >$HOME/.gitconfig
 [core]
   editor = nvim
   excludesFile = ~/.gitignore_global
+  pager = delta
+[interactive]
+  diffFilter = delta --color-only
+[delta]
+  navigate = true    # use n and N to move between diff sections
+  side-by-side = true
+  # delta detects terminal colors automatically; set one of these to disable auto-detection
+  # dark = true
+  # light = true
+[merge]
+  conflictstyle = diff3
+[diff]
+  colorMoved = default
 [init]
   defaultBranch = master
 [status]
@@ -39,6 +52,18 @@ cat <<EOF >$HOME/.gitconfig
 [alias]
   leaderboard = shortlog --summary --numbered --all --no-merges
   sbr = "!rm ${GIT_PREFIX}$1 && git checkout -- ${GIT_PREFIX}$1 #"
+[filter "strongbox"]
+	clean = strongbox -clean %f
+	smudge = strongbox -smudge %f
+	required = true
+[diff "strongbox"]
+	textconv = strongbox -diff
+[credential "https://github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
 EOF
 
 if [[ $usePrivateModules == "Y" ]]; then
