@@ -47,6 +47,8 @@ end
 set -Ux NODE_PATH $HOMEBREW_PATH/lib/node_modules
 
 fish_add_path ~/.config/bin
+fish_add_path /usr/local/opt/python/libexec/bin
+fish_add_path $HOME/.local/share/bob/nvim-bin
 fish_add_path "$GOPATH/bin"
 fish_add_path "$GOROOT/bin"
 fish_add_path "$HOME/.local/bin"
@@ -72,11 +74,6 @@ fish_add_path $HOME/.config/tmux/plugins/t-smart-tmux-session-manager/bin
 if test -d "$HOME/.local/share/nvim/mason/bin"
     fish_add_path "$HOME/.local/share/nvim/mason/bin"
 end
-
-set -Ux FZF_DEFAULT_COMMAND "fd -H -E '.git'"
-
-# set -Ux T_FZF_PROMPT "🔭 "
-set -Ux T_FZF_PROMPT '  '
 
 alias pip pip3
 
@@ -105,6 +102,12 @@ set -Ux T_SESSION_NAME_INCLUDE_PARENT true
 
 set -Ux DOCKER_HOST "unix://$HOME/.colima/default/docker.sock"
 
-# Run neofetch when the terminal starts
-# neofetch
 source /Users/vitorfaiante/.config/op/plugins.sh
+
+# fish
+fzf --fish | source
+
+set -Ux FZF_DEFAULT_COMMAND "fd -H -E '.git'"
+
+# set -Ux T_FZF_PROMPT "🔭 "
+set -Ux T_FZF_PROMPT '  '
