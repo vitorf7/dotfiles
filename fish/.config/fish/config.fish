@@ -8,7 +8,8 @@
 # A smart and user-friendly command line
 # https://fishshell.com/
 
-eval (/opt/homebrew/bin/brew shellenv)
+# eval (/opt/homebrew/bin/brew shellenv)
+/opt/homebrew/bin/brew shellenv | source
 starship init fish | source # https://starship.rs/
 zoxide init fish | source # 'ajeetdsouza/zoxide'
 status --is-interactive; and rbenv init - fish | source
@@ -111,3 +112,5 @@ set -Ux FZF_DEFAULT_COMMAND "fd -H -E '.git'"
 
 # set -Ux T_FZF_PROMPT "🔭 "
 set -Ux T_FZF_PROMPT '  '
+
+set -Ux fifc_editor nvim
