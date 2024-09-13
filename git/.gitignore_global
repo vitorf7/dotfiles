@@ -21,3 +21,6 @@ Thumbs.db
 *.log
 
 .worktrees
+
+# Go coverage
+coverage.out
