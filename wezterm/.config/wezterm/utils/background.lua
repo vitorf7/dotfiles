@@ -30,14 +30,13 @@ M.get_wallpaper = function(dir)
 	end
 	local wallpaper = h.get_random_entry(wallpapers)
 	return {
-		source = { File = { path = wallpaper } },
-		height = "Cover",
+		source = { File = { path = wallpaper, speed = 0.1 } },
+		height = "Contain",
 		width = "Cover",
 		horizontal_align = "Center",
 		repeat_x = "Repeat",
 		repeat_y = "Repeat",
 		opacity = 1,
-		-- speed = 200,
 	}
 end
 

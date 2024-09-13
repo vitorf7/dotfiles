@@ -45,6 +45,17 @@ local config = {
 	keys = {
 		{
 			mods = "CMD",
+			key = "e",
+			action = act.Multiple({
+				act.SendKey({ key = "n" }),
+				act.SendKey({ key = "v" }),
+				act.SendKey({ key = "i" }),
+				act.SendKey({ key = "m" }),
+				act.SendKey({ key = "Enter" }),
+			}),
+		},
+		{
+			mods = "CMD",
 			key = "j",
 			action = act.Multiple({
 				act.SendKey({ key = "t" }),
