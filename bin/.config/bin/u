@@ -25,14 +25,6 @@ gum spin --spinner globe --title "🐠 fisher plugins updating..." --show-output
 echo "\n" >>/tmp/u-$NOW.txt
 echo "✅ 🐠 fisher plugins updated"
 
-gum spin --spinner globe --title "💤 lazy.nvim syncing..." -- nvim --headless "+Lazy! sync" +qa
-echo "\n" >>/tmp/u-$NOW.txt
-echo "✅ 💤 lazy.nvim synced"
-
-gum spin --spinner globe --title "🧰 mason.nvim updating" -- nvim --headless "+MasonUpdate" +qa
-echo "\n" >>/tmp/u-$NOW.txt
-echo "✅ 🧰 mason.nvim updated"
-
 gum spin --spinner globe --title "🍻 brew updating" --show-output -- brew update >>/tmp/u-$NOW.txt
 echo "\n" >>/tmp/u-$NOW.txt
 echo "✅ 🍻 brew updated"
@@ -52,9 +44,25 @@ else
     echo "No outdated brew packages" >>/tmp/u-$NOW.txt
 end
 
+gum spin --spinner globe --title "🍻 brew upgrading casks" --show-output -- brew upgrade --cask --greedy --force >>/tmp/u-$NOW.txt
+echo "\n" >>/tmp/u-$NOW.txt
+echo "✅ 🍻 brew upgraded casks"
+
 gum spin --spinner globe --title "🍻 brew doctoring" --show-output -- brew doctor >>/tmp/u-$NOW.txt
 echo "\n" >>/tmp/u-$NOW.txt
 echo "✅ 🍻 brew doctored"
+
+gum spin --spinner globe --title " updating neovim nightly" --show-output -- bob update nightly >>/tmp/u-$NOW.txt
+echo "\n" >>/tmp/u-$NOW.txt
+echo "✅  updated neovim nightly"
+
+gum spin --spinner globe --title "💤 lazy.nvim syncing..." -- nvim --headless "+Lazy! sync" +qa
+echo "\n" >>/tmp/u-$NOW.txt
+echo "✅ 💤 lazy.nvim synced"
+
+gum spin --spinner globe --title "🧰 mason.nvim updating" -- nvim --headless "+MasonUpdate" +qa
+echo "\n" >>/tmp/u-$NOW.txt
+echo "✅ 🧰 mason.nvim updated"
 
 echo "✅ 🧾 logged to /tmp/u-$NOW.txt"
 man /tmp/u-$NOW.txt
