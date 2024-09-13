@@ -149,3 +149,8 @@ run = 'move-node-to-workspace 6'
 4 = 1
 5 = 2
 6 = 2
+
+# float windows for certain apps
+[[on-window-detected]]
+if.app-id = 'com.cisco.secureclient.gui'
+run = 'layout floating'
