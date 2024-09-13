@@ -14,6 +14,27 @@ alias gdf="git diff"
 alias gch="git checkout"
 alias gsw="git switch"
 alias grs="git restore"
+alias gbr="git branch"
+alias gbrd="git branch -d"
+alias gbra="git branch -a"
+alias gw="git worktree"
+alias gwr="git worktree remove"
+alias gwl="git worktree list"
+alias gwa="git worktree add"
+
+function gwab -d "Create a new worktree with a branch (from another branch or remote branch if 2nd argument is provided)"
+    set branchName $argv[1]
+
+    # Check if originBranchName is provided as the second argument
+    if count $argv > 1
+        set originBranchName $argv[2]
+    else
+        set originBranchName $branchName
+    end
+
+    git worktree add -b $branchName $branchName $originBranchName
+end
+
 function gprune
     git fetch -p
     for branch in (git branch -vv | grep ': gone]' | awk '{print $1}')
@@ -86,6 +107,9 @@ alias t="sesh connect (sesh list -tz | fzf-tmux -p 55%,60% \
 		--bind 'ctrl-a:change-prompt(⚡  )+reload(sesh list)' \
 		--bind 'ctrl-t:change-prompt(🪟  )+reload(sesh list -t)' \
 		--bind 'ctrl-x:change-prompt(📁  )+reload(sesh list -z)' \
-		--bind 'ctrl-f:change-prompt(🔎  )+reload(fd -H -d 2 -t d -E .Trash . ~)' \
+		--bind 'ctrl-f:change-prompt(🔎  )+reload(fd -H -d 3 -t d -E .Trash . $HOME $HOME/code/)' \
 		--bind 'ctrl-d:execute(tmux kill-session -t {})+reload(sesh list)' \
 )"
+
+## Kill PID using fzf
+alias killpid="kill -9 \$(lsof -i -n -P | fzf | awk '{print \$2}')"
