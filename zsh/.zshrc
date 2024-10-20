@@ -185,4 +185,4 @@ export T_SESSION_NAME_INCLUDE_PARENT=true
 
 bindkey -r "^S" # unbind ctrl+s from history-incremental-search-backward so that we can use ctrl+s with t smart tmux session manager.
 
-export DOCKER_HOST="unix://${HOME}/.colima/default/docker.sock"
+export DOCKER_HOST="unix://${HOME}/.config/colima/default/docker.sock"

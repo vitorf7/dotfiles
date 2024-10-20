@@ -42,6 +42,14 @@ function gprune
     end
 end
 
+alias gsh="switch-to-head-branch"
+function switch-to-head-branch -d "Find name of the origin/HEAD branch and switch to it"
+    set gitOutput (git symbolic-ref refs/remotes/origin/HEAD)
+    set branchName (string replace 'refs/remotes/origin/' '' $gitOutput)
+
+    git switch $branchName
+end
+
 #PhpSpec
 alias specr="phpspec run"
 alias specrcat="phpspec run --format nyan.cat"
