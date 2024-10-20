@@ -101,7 +101,7 @@ set -gx NVM_DIR "$HOME/.nvm"
 
 set -Ux T_SESSION_NAME_INCLUDE_PARENT true
 
-set -Ux DOCKER_HOST "unix://$HOME/.colima/default/docker.sock"
+set -Ux DOCKER_HOST "unix://$HOME/.config/colima/default/docker.sock"
 
 source /Users/vitorfaiante/.config/op/plugins.sh
 
