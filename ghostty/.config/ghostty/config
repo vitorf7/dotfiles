@@ -1,0 +1,66 @@
+term = xterm-256color
+
+# UI config
+theme = "dark:catppuccin-mocha,light:catppuccin-latte"
+background-opacity = 0.9
+background-blur-radius = 15
+window-padding-balance = true
+window-padding-x = 20
+window-padding-y = 20
+macos-non-native-fullscreen = true
+window-decoration = false
+macos-titlebar-style = hidden
+cursor-style = block
+
+# Font config
+font-family = Symbols Nerd Font Mono
+font-family = "Monaspace Radon""
+font-size = 17.5
+
+shell-integration = fish
+shell-integration-features = cursor,sudo,title
+
+
+# Keybindings
+#
+# Reloads config
+keybind = super+r=reload_config
+# Open quick terminal
+keybind = global:super+ctrl+shift+space=toggle_quick_terminal
+# Open text editor
+keybind = super+e=text:nvim\x0D
+# Open Sesh
+keybind = super+j=text:t\x0D
+
+# Tmux Keybindings (tmux prefix CTRL + Space => #x00 escape sequence)
+#
+# Open Sesh
+keybind = super+k=text:\x00T
+# New Tab
+keybind = super+t=text:\x00c
+# Vertical Split
+keybind = super+d=text:\x00%
+# Horizontal Split (\x22 is double quote)
+keybind = super+shift+d=text:\x00\x22
+# Select tab number (1-9)
+keybind = cmd+1=text:\x00\x31
+keybind = cmd+2=text:\x00\x32
+keybind = cmd+3=text:\x00\x33
+keybind = super+4=text:\x00\x34
+keybind = super+5=text:\x00\x35
+keybind = super+6=text:\x00\x36
+keybind = super+7=text:\x00\x37
+keybind = super+8=text:\x00\x38
+keybind = super+9=text:\x00\x39
+# Lazygit tmux custom binding
+keybind = super+g=text:\x00g
+# GH Dash tmux custom binding
+keybind = super+G=text:\x00G
+# Neovim Telescope smart_open
+keybind = super+p=text:\x1b:GoToFile\x0D
+# Neovim Command pallete
+keybind = super+shift+p=text:\x1b:GoToCommand\x0D
+# Neovim browse files
+keybind = super+o=text:\x1b:BrowseFiles\x0D
+# nvims tmux custom binding
+keybind = super+ctrl+n=text:nvims\x0D
