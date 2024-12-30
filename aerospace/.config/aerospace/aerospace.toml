@@ -114,9 +114,14 @@ enter = 'mode main'
 esc = 'mode main'
 
 
-# workspace 1 - Wezterm
+# workspace 1 - Wezterm (terminal)
 [[on-window-detected]]
 if.app-id = 'com.github.wez.wezterm'
+run = 'move-node-to-workspace 1'
+
+# workspace 1 - Ghostty (terminal)
+[[on-window-detected]]
+if.app-id = 'com.mitchellh.ghostty'
 run = 'move-node-to-workspace 1'
 
 # workspace 2 - Arc Browser (main)
