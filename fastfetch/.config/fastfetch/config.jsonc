@@ -1,135 +1,154 @@
 {
-  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
-  "display": {
-    "separator": "  "
-  },
-  "modules": [
-    {
-      "type": "custom", // HardwareStart
-      "format": "┌─────────── {#1}Hardware Information{#} ───────────┐" // {#1} is the same as `\u001b[1m`. {#} is `\u001b[m`
+    "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+    "logo": {
+        "source": "insert your logo here",
+        "type": "kitty",
+        "height": 2,
+        "width": 2,
+        "padding": {
+            "left": 1
+        }
     },
-    {
-      "type": "host",
-      "key": "  󰌢"
-    },
-    {
-      "type": "cpu",
-      "key": "  󰻠"
-    },
-    {
-      "type": "gpu",
-      "key": "  󰍛"
-    },
-    {
-      "type": "disk",
-      "key": "  "
-    },
-    {
-      "type": "memory",
-      "key": "  󰑭"
-    },
-    {
-      "type": "swap",
-      "key": "  󰓡"
-    },
-    {
-      "type": "display",
-      "key": "  󰍹"
-    },
-    {
-      "type": "brightness",
-      "key": "  󰃞"
-    },
-    {
-      "type": "battery",
-      "key": "  "
-    },
-    {
-      "type": "poweradapter",
-      "key": "  "
-    },
-    {
-      "type": "bluetooth",
-      "key": "  "
-    },
-    {
-      "type": "sound",
-      "key": "  "
-    },
-    {
-      "type": "gamepad",
-      "key": "  "
-    },
-    {
-      "type": "custom", // SoftwareStart
-      "format": "├─────────── {#1}Software Information{#} ───────────┤"
-    },
-    {
-      "type": "title",
-      "key": "  ",
-      "format": "{1}@{2}"
-    },
-    {
-      "type": "os",
-      "key": "  " // Just get your distro's logo off nerdfonts.com
-    },
-    {
-      "type": "kernel",
-      "key": "  ",
-      "format": "{1} {2}"
-    },
-    {
-      "type": "lm",
-      "key": "  󰧨"
-    },
-    {
-      "type": "de",
-      "key": "  "
-    },
-    {
-      "type": "wm",
-      "key": "  "
-    },
-    {
-      "type": "shell",
-      "key": "  "
-    },
-    {
-      "type": "terminal",
-      "key": "  "
-    },
-    {
-      "type": "terminalfont",
-      "key": "  "
-    },
-    {
-      "type": "theme",
-      "key": "  󰉼"
-    },
-    {
-      "type": "icons",
-      "key": "  󰀻"
-    },
-    {
-      "type": "wallpaper",
-      "key": "  󰸉"
-    },
-    {
-      "type": "packages",
-      "key": "  󰏖"
-    },
-    {
-      "type": "uptime",
-      "key": "  󰅐"
-    },
-    {
-      "type": "custom", // InformationEnd
-      "format": "└────────────────────────────────────────────┘"
-    },
-    {
-      "type": "colors",
-      "paddingLeft": 2,
-      "symbol": "circle"
-    }
-  ]
+    "modules": [
+        "break",
+        {
+            "type": "custom",
+            "format": "\u001b[33m┌──────────────────────Hardware──────────────────────┐"
+        },
+        {
+            "type": "host",
+            "key": " PC",
+            "keyColor": "red",
+            "format": "MacBook Pro (14-inch, 2024)"
+        },
+        {
+            "type": "cpu",
+            "key": "│ ├",
+            "showPeCoreCount": true,
+            "keyColor": "red"
+        },
+        {
+            "type": "gpu",
+            "key": "│ ├󰢮",
+            "keyColor": "red"
+        },
+        {
+            "type": "memory",
+            "key": "│ ├",
+            "keyColor": "red"
+        },
+        {
+            "type": "disk",
+            "key": "│ └",
+            "keyColor": "red",
+            "format": "{1} / {2} ({3}) - {9}"
+        },
+        {
+            "type": "custom",
+            "format": "\u001b[33m└────────────────────────────────────────────────────┘"
+        },
+        "break",
+        {
+            "type": "custom",
+            "format": "\u001b[33m┌──────────────────────Software──────────────────────┐"
+        },
+        {
+            "type": "os",
+            "key": "󰀵 OS",
+            "keyColor": "green"
+        },
+        {
+            "type": "kernel",
+            "key": "│ ├",
+            "keyColor": "green"
+        },
+        {
+            "type": "packages",
+            "key": "│ ├󰏖",
+            "keyColor": "green"
+        },
+        {
+            "type": "terminal",
+            "key": "│ ├",
+            "keyColor": "green"
+        },
+        {
+            "type": "shell",
+            "key": "└ └",
+            "keyColor": "green"
+        },
+        "break",
+        {
+            "type": "de",
+            "key": " DE",
+            "keyColor": "blue"
+        },
+        {
+            "type": "lm",
+            "key": "│ ├",
+            "keyColor": "blue"
+        },
+        {
+            "type": "wm",
+            "key": "│ ├",
+            "keyColor": "blue"
+        },
+        {
+            "type": "wmtheme",
+            "key": "│ ├󰉼",
+            "keyColor": "blue"
+        },
+        {
+            "type": "font",
+            "key": "│ ├",
+            "keyColor": "blue"
+        },
+        {
+            "type": "cursor",
+            "key": "│ ├󰆿",
+            "keyColor": "blue"
+        },
+        {
+            "type": "custom",
+            "format": "\u001b[33m└────────────────────────────────────────────────────┘"
+        },
+        "break",
+        {
+            "type": "custom",
+            "format": "\u001b[33m┌───────────────────Miscellaneous────────────────────┐"
+        },
+        {
+            "type": "uptime",
+            "key": "  Uptime",
+            "keyColor": "magenta"
+        },
+        {
+            "type": "battery",
+            "key": "  Battery",
+            "keyColor": "magenta",
+            "format": "{4} ({12} hours, {13} minutes remaining)"
+        },
+        {
+            "type": "media",
+            "key": "  Music",
+            "keyColor": "magenta",
+            "format": "{1} - {4}"
+        },
+        {
+            "type": "datetime",
+            "key": "  Date and Time",
+            "keyColor": "magenta",
+            "format": "{3}/{11}/{1} - {14}:{18} {22}"
+        },
+        {
+            "type": "custom",
+            "format": "\u001b[33m└────────────────────────────────────────────────────┘"
+        },
+        {
+            "type": "colors",
+            "paddingLeft": 20,
+            "symbol": "star"
+        },
+        "break"
+    ]
 }
