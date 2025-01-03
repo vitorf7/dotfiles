@@ -1,15 +1,19 @@
 term = xterm-256color
 
 # UI config
-theme = "dark:catppuccin-mocha,light:catppuccin-latte"
+# theme = "dark:catppuccin-mocha,light:catppuccin-latte"
+theme = "dark:cyberdream,light:cyberdream-light"
 background-opacity = 0.9
 background-blur-radius = 25
-window-padding-balance = true
-window-padding-x = 20
-window-padding-y = 20
+
 macos-non-native-fullscreen = true
-window-decoration = false
 macos-titlebar-style = hidden
+window-decoration = false
+window-padding-balance = true
+window-padding-color = background
+window-padding-x = 15
+window-padding-y = 15
+
 
 # Font config
 font-family = "Symbols Nerd Font Mono"
