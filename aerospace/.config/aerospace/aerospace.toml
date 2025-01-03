@@ -6,8 +6,15 @@ after-startup-command = ['''exec-and-forget \
     /opt/homebrew/bin/borders \
       active_color=0xffe1e3e4 \
       inactive_color=0xff494d64 \
-      width=5.0
+      width=5.0 && sketchybar
     ''']
+
+# Notify Sketchybar about workspace change
+exec-on-workspace-change = [
+  '/bin/bash',
+  '-c',
+  'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE',
+]
 
 # See: https://nikitabobko.github.io/AeroSpace/guide.html#layouts
 # The 'accordion-padding' specifies the size of accordion padding
@@ -41,7 +48,7 @@ gaps.inner.horizontal = 15
 gaps.inner.vertical = 15
 gaps.outer.left = 15
 gaps.outer.bottom = 15
-gaps.outer.top = 15
+gaps.outer.top = 55
 gaps.outer.right = 15
 
 [mode.main.binding]
