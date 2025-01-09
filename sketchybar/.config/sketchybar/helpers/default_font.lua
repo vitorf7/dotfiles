@@ -1,13 +1,14 @@
 return {
-  text = "SF Pro", -- Used for text
-  numbers = "SF Mono", -- Used for numbers
+	text = "Monaspace Neon", -- Used for text
+	numbers = "Monaspace Neon", -- Used for numbers
+	weather = "Monaspace Radon", -- Used for weather
 
-  -- Unified font style map
-  style_map = {
-    ["Regular"] = "Regular",
-    ["Semibold"] = "Semibold",
-    ["Bold"] = "Bold",
-    ["Heavy"] = "Heavy",
-    ["Black"] = "Black",
-  }
+	-- Unified font style map
+	style_map = {
+		["Regular"] = "Regular",
+		["Semibold"] = "Semibold",
+		["Bold"] = "Bold",
+		["Heavy"] = "Heavy",
+		["Black"] = "Black",
+	},
 }
