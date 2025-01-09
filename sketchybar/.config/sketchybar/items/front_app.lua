@@ -1,53 +1,59 @@
 local colors = require("colors")
 local settings = require("settings")
-local app_icons = require("helpers.app_icons")
 
-local space_id = sbar.exec("aerospace list-workspaces --focused")
+-- Events that get pushed by yabai
+sbar.add("event", "window_focus")
+sbar.add("event", "title_change")
 
--- Create the front app item
 local front_app = sbar.add("item", "front_app", {
-	label = {
-		drawing = true,
-		color = colors.white,
-		font = {
-			family = settings.font.text,
-			style = settings.font.style_map["Semibold"],
-			size = 12,
-		},
-	},
+	position = "left",
+	display = "active",
 	icon = {
-		background = {
-			drawing = true,
-			image = {
-				scale = 0.75,
-				padding_right = settings.paddings,
-			},
+		font = {
+			style = settings.font.style_map["Black"],
+			size = 13.0,
 		},
 	},
-    background = {
-        color = colors.bg1,
-        border_width = 0,
-        height = 26,
-      },
+	label = {
+		font = {
+			style = settings.font.style_map["Black"],
+			size = 13.0,
+		},
+	},
 	updates = true,
 })
 
--- Event: Front app switched
-front_app:subscribe("front_app_switched", function(env)
-	sbar.exec("aerospace list-windows --focused --format '%{monitor-id}'", function(monitor_id, exit_code)
-		front_app:set({
-			icon = {
-				background = {
-					image = "app." .. env.INFO,
-				},
-			},
-			label = {
-				drawing = true,
-				string = env.INFO,
-			},
-			display = monitor_id
-		})
+local function set_window_title()
+	-- Offloading the "yabai -m query --windows --window" script to an external shell script so that we can determine whether the space has no windows
+	sbar.exec("~/.scripts/query_window.sh", function(result)
+		if result ~= "empty" and type(result) == "table" and result.title then
+			local window_title = result.title
+			if #window_title > 50 then
+				window_title = window_title:sub(1, 50) .. "…"
+			end
+			front_app:set({ label = { string = window_title } })
+		else
+			front_app:set({ label = { string = "-" }, icon = { string = "empty" } })
+		end
 	end)
+end
+
+front_app:subscribe("front_app_switched", function()
+	set_window_title()
 end)
 
-return front_app
+front_app:subscribe("space_change", function()
+	set_window_title()
+end)
+
+front_app:subscribe("window_focus", function()
+	set_window_title()
+end)
+
+front_app:subscribe("title_change", function()
+	set_window_title()
+end)
+
+front_app:subscribe("front_app_switched", function(env)
+	front_app:set({ icon = { string = env.INFO .. ":" } })
+end)

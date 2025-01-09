@@ -6,8 +6,8 @@ after-startup-command = ['''exec-and-forget \
     /opt/homebrew/bin/borders \
       active_color=0xffe1e3e4 \
       inactive_color=0xff494d64 \
-      width=5.0 && sketchybar
-    ''']
+      width=5.0
+    ''', 'exec-and-forget /opt/homebrew/bin/sketchybar']
 
 # Notify Sketchybar about workspace change
 exec-on-workspace-change = [
@@ -90,7 +90,7 @@ ctrl-6 = 'workspace 6'
 ctrl-7 = 'workspace 7'
 ctrl-8 = 'workspace 8'
 ctrl-9 = 'workspace 9'
-ctrl-0 = 'workspace 10'
+# ctrl-0 = 'workspace 10'
 
 alt-shift-1 = 'move-node-to-workspace 1'
 alt-shift-2 = 'move-node-to-workspace 2'
@@ -101,7 +101,7 @@ alt-shift-6 = 'move-node-to-workspace 6'
 alt-shift-7 = 'move-node-to-workspace 7'
 alt-shift-8 = 'move-node-to-workspace 8'
 alt-shift-9 = 'move-node-to-workspace 9'
-alt-shift-0 = 'move-node-to-workspace 10'
+# alt-shift-0 = 'move-node-to-workspace 10'
 
 alt-shift-c = 'reload-config'
 
@@ -161,7 +161,9 @@ run = 'move-node-to-workspace 6'
 4 = 1
 5 = 2
 6 = 2
-
+7 = 2
+8 = 2
+9 = 1
 # float windows for certain apps
 [[on-window-detected]]
 if.app-id = 'com.cisco.secureclient.gui'
