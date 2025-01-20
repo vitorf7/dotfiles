@@ -2,9 +2,9 @@ term = xterm-256color
 
 # UI config
 # theme = "dark:catppuccin-mocha,light:catppuccin-latte"
-theme = "dark:cyberdream,light:cyberdream-light"
-background-opacity = 0.9
-background-blur-radius = 25
+theme = "dark:rose-pine,light:rose-pine-dawn"
+background-opacity = 0.85
+background-blur-radius = 15
 
 macos-non-native-fullscreen = true
 macos-titlebar-style = hidden
