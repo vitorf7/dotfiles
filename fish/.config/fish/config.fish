@@ -20,7 +20,14 @@ set -g direnv_fish_mode eval_on_arrow # trigger direnv at prompt, and on every a
 
 # override the default greeting
 function fish_greeting
-    /opt/homebrew/bin/fastfetch
+    # Specify the directory containing images
+    set image_dir ~/Pictures/wezterm_bgs
+
+    # Get a random image file from the specified directory
+    set random_image (find $image_dir -type f \( -iname '*.jpg' -o -iname '*.png' -o -iname '*.gif' \) | shuf -n 1)
+
+    #/opt/homebrew/bin/fastfetch --kitty-icat ~/Pictures/wezterm_bgs/my-hero-academia-students-2k-wallpaper-2560x1440-uhdpaper.com-996.0_b-3665781936.jpg --logo-height 50 --logo-width 50
+    /opt/homebrew/bin/fastfetch --kitty-icat (echo $random_image) --logo-height 50 --logo-width 50
 end
 
 set -U fish_key_bindings fish_vi_key_bindings
@@ -30,7 +37,7 @@ set -Ux EDITOR nvim # 'neovim/neovim' text editor
 set -Ux PAGER "~/.local/bin/nvimpager" # 'lucc/nvimpager'
 set -Ux VISUAL nvim
 
-set -Ux NODE_PATH $HOMEBREW_PATH/lib/node_modules
+set -Ux NODE_PATH $HOMEBREW_PREFIX/lib/node_modules
 
 set -Ux XDG_CONFIG_HOME "$HOME/.config"
 set -Ux STARSHIP_CONFIG "$HOME/.config/starship.toml"
@@ -83,6 +90,7 @@ set -Ux GOPATH (go env GOPATH)
 
 fish_add_path $GOPATH/bin
 fish_add_path $HOME/.local/share/bob/nvim-bin
+fish_add_path $HOME/.local/bin
 fish_add_path $HOME/.config/bin # my custom scripts
 fish_add_path $HOME/.cargo/bin
 fish_add_path $HOME/Library/Python/3.9/bin
@@ -95,17 +103,6 @@ if test -d "$HOME/.local/share/nvim/mason/bin"
     fish_add_path "$HOME/.local/share/nvim/mason/bin"
 end
 
-#
-#set -Ux GOPATH $HOME/Code/go
-#set -Ux GOROOT $HOMEBREW_PATH/opt/go/libexec
-#set -Ux GOBIN $HOME/Code/go/bin
-#set -Ux GO111MODULE on
-#
-#if test $osProcessor = i386
-#    set -Ux GOROOT /usr/local/Cellar/go/1.19.1/libexec
-#end
-#
-#
 ##fish_add_path ~/.config/bin
 ##fish_add_path /usr/local/opt/python/libexec/bin
 ##fish_add_path "$GOPATH/bin"
