@@ -44,12 +44,12 @@ enable-normalization-opposite-orientation-for-nested-containers = true
 #                 In this example, 24 is a default value when there is no match.
 #                 Monitor pattern is the same as for 'workspace-to-monitor-force-assignment'.
 #                 See: https://nikitabobko.github.io/AeroSpace/guide.html#assign-workspaces-to-monitors
-gaps.inner.horizontal = 15
-gaps.inner.vertical = 15
-gaps.outer.left = 15
-gaps.outer.bottom = 15
-gaps.outer.top = 55
-gaps.outer.right = 15
+gaps.inner.horizontal = 10
+gaps.inner.vertical = 10
+gaps.outer.left = 10
+gaps.outer.bottom = 10
+gaps.outer.top = 50        # Sketchybar height (40) + same gap as bottom
+gaps.outer.right = 10
 
 [mode.main.binding]
 alt-h = 'focus left'
