@@ -18,7 +18,7 @@ local media_cover = sbar.add("item", {
 	updates = true,
 	popup = {
 		align = "center",
-		horizontal = true,
+		horizontal = false,
 	},
 })
 
@@ -50,6 +50,20 @@ local media_title = sbar.add("item", {
 		max_chars = 16,
 		y_offset = -5,
 	},
+})
+
+sbar.add("item", {
+	position = "popup." .. media_cover.name,
+	background = {
+		image = {
+			string = "media.artwork",
+			scale = 4.0,
+		},
+		color = colors.transparent,
+	},
+	icon = { drawing = false },
+	label = { drawing = false },
+	click_script = "nowplaying-cli previous",
 })
 
 sbar.add("item", {

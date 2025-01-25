@@ -10,7 +10,7 @@ sbar.bar({
 	margin = 10,
 	corner_radius = 10,
 	y_offset = 2,
-	border_color = colors.transparent,
+	border_color = colors.bar.bg,
 	border_width = 2,
 	blur_radius = 10,
 })
