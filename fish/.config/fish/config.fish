@@ -68,7 +68,7 @@ set -Ux T_SESSION_NAME_INCLUDE_PARENT true
 
 set -Ux DOCKER_HOST "unix://$HOME/.config/colima/default/docker.sock"
 
-source /Users/vitorfaiante/.config/op/plugins.sh
+source $HOME/.config/op/plugins.sh
 
 # fish
 fzf --fish | source
