@@ -28,6 +28,7 @@ brew "bat"
 brew "bob"
 brew "btop"
 brew "certbot"
+brew "cfssl"
 brew "cmake"
 brew "cocoapods"
 brew "lima"
@@ -197,6 +198,10 @@ cask "visual-studio-code@insiders"
 cask "vlc"
 cask "wezterm"
 cask "whatsapp"
+cask "zen-browser"
 cask "zoom"
 mas "HP Smart", id: 1474276998
+mas "Keynote", id: 409183694
+mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
+mas "Xcode", id: 497799835
