@@ -131,9 +131,13 @@ run = 'move-node-to-workspace 1'
 # if.app-id = 'com.mitchellh.ghostty'
 # run = 'move-node-to-workspace 1'
 
-# workspace 2 - Arc Browser (main)
+# workspace 2 - Arc Browser, Zen Browser (main)
 [[on-window-detected]]
 if.app-id = 'company.thebrowser.Browser'
+run = 'move-node-to-workspace 2'
+
+[[on-window-detected]]
+if.app-id = 'app.zen-browser.zen'
 run = 'move-node-to-workspace 2'
 
 # workspace 3 - Rambox
@@ -146,7 +150,7 @@ run = 'move-node-to-workspace 3'
 if.app-id = 'md.obsidian'
 run = 'move-node-to-workspace 4'
 
-# workspace 5 - Arc Browser (secondary window)
+# workspace 5 - Arc Browser, Zen Browser (secondary window)
 #
 
 # workspace 6 - Spotify
