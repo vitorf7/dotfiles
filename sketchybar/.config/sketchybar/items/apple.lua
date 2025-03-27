@@ -3,6 +3,7 @@ local icons = require("icons")
 local settings = require("settings")
 
 local apple = sbar.add("item", {
+	default = true,
 	icon = {
 		font = { size = 20.0 },
 		string = icons.apple,
@@ -15,4 +16,5 @@ local apple = sbar.add("item", {
 	padding_left = 1,
 	padding_right = 1,
 	click_script = "$CONFIG_DIR/helpers/menus/bin/menus -s 0",
+	subscribe = "logo mouse.clicked window_focus front_app_switched space_change title_change",
 })

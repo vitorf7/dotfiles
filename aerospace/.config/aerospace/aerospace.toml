@@ -1,5 +1,7 @@
-# Start AeroSpace at login
-start-at-login = true
+# You can use it to add commands that run after login to macOS user session.
+# 'start-at-login' needs to be 'true' for 'after-login-command' to work
+# Available commands: https://nikitabobko.github.io/AeroSpace/commands
+after-login-command = []
 
 # Reference: https://github.com/FelixKratz/JankyBorders
 after-startup-command = ['''exec-and-forget \
@@ -16,6 +18,13 @@ exec-on-workspace-change = [
   'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE',
 ]
 
+# Start AeroSpace at login
+start-at-login = true
+
+# Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide.html#normalization
+enable-normalization-flatten-containers = true
+enable-normalization-opposite-orientation-for-nested-containers = true
+
 # See: https://nikitabobko.github.io/AeroSpace/guide.html#layouts
 # The 'accordion-padding' specifies the size of accordion padding
 # You can set 0 to disable the padding feature
@@ -31,11 +40,12 @@ default-root-container-layout = 'tiles'
 #               tall monitor (anything higher than wide) gets vertical orientation
 default-root-container-orientation = 'auto'
 
-# Reference: https://github.com/i3/i3/blob/next/etc/config
+# You can effectively turn off macOS "Hide application" (cmd-h) feature by toggling this flag
+# Useful if you don't use this macOS feature, but accidentally hit cmd-h or cmd-alt-h key
+# Also see: https://nikitabobko.github.io/AeroSpace/goodies#disable-hide-app
+automatically-unhide-macos-hidden-apps = false
 
-# Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide.html#normalization
-enable-normalization-flatten-containers = true
-enable-normalization-opposite-orientation-for-nested-containers = true
+# Reference: https://github.com/i3/i3/blob/next/etc/config
 
 # Gaps between windows (inner-*) and between monitor edges (outer-*).
 # Possible values:
@@ -44,12 +54,13 @@ enable-normalization-opposite-orientation-for-nested-containers = true
 #                 In this example, 24 is a default value when there is no match.
 #                 Monitor pattern is the same as for 'workspace-to-monitor-force-assignment'.
 #                 See: https://nikitabobko.github.io/AeroSpace/guide.html#assign-workspaces-to-monitors
-gaps.inner.horizontal = 10
-gaps.inner.vertical = 10
-gaps.outer.left = 10
-gaps.outer.bottom = 10
-gaps.outer.top = 50        # Sketchybar height (40) + same gap as bottom
-gaps.outer.right = 10
+[gaps]
+inner.horizontal = 10
+inner.vertical = 10
+outer.left = 10
+outer.bottom = 10
+outer.top = 50        # Sketchybar height (40) + same gap as bottom
+outer.right = 10
 
 [mode.main.binding]
 alt-h = 'focus left'
@@ -92,15 +103,15 @@ ctrl-8 = 'workspace 8'
 ctrl-9 = 'workspace 9'
 # ctrl-0 = 'workspace 10'
 
-alt-shift-1 = 'move-node-to-workspace 1'
-alt-shift-2 = 'move-node-to-workspace 2'
-alt-shift-3 = 'move-node-to-workspace 3'
-alt-shift-4 = 'move-node-to-workspace 4'
-alt-shift-5 = 'move-node-to-workspace 5'
-alt-shift-6 = 'move-node-to-workspace 6'
-alt-shift-7 = 'move-node-to-workspace 7'
-alt-shift-8 = 'move-node-to-workspace 8'
-alt-shift-9 = 'move-node-to-workspace 9'
+alt-shift-1 = 'move-node-to-workspace 1 --focus-follows-window'
+alt-shift-2 = 'move-node-to-workspace 2 --focus-follows-window'
+alt-shift-3 = 'move-node-to-workspace 3 --focus-follows-window'
+alt-shift-4 = 'move-node-to-workspace 4 --focus-follows-window'
+alt-shift-5 = 'move-node-to-workspace 5 --focus-follows-window'
+alt-shift-6 = 'move-node-to-workspace 6 --focus-follows-window'
+alt-shift-7 = 'move-node-to-workspace 7 --focus-follows-window'
+alt-shift-8 = 'move-node-to-workspace 8 --focus-follows-window'
+alt-shift-9 = 'move-node-to-workspace 9 --focus-follows-window'
 # alt-shift-0 = 'move-node-to-workspace 10'
 
 alt-shift-c = 'reload-config'
