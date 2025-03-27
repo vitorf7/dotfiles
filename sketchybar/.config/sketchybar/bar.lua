@@ -13,4 +13,5 @@ sbar.bar({
 	border_color = colors.bar.bg,
 	border_width = 2,
 	blur_radius = 10,
+	sticky = "on",
 })

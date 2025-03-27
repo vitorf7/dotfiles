@@ -3,12 +3,22 @@ local colors = require("colors")
 
 -- Equivalent to the --default domain
 sbar.default({
-	updates = "when_shown",
+	background = {
+		height = 28,
+		corner_radius = 9,
+		border_width = 2,
+		border_color = colors.bg2,
+		image = {
+			corner_radius = 9,
+			border_color = colors.lightblack,
+			border_width = 1,
+		},
+	},
 	icon = {
 		font = {
 			family = settings.font.text,
 			style = settings.font.style_map["Bold"],
-			size = 14.0
+			size = 14.0,
 		},
 		color = colors.dirty_white,
 		padding_left = settings.paddings,
@@ -19,22 +29,11 @@ sbar.default({
 		font = {
 			family = settings.font.text,
 			style = settings.font.style_map["Light"],
-			size = 13.0
+			size = 13.0,
 		},
 		color = colors.dirty_white,
 		padding_left = settings.paddings,
 		padding_right = settings.paddings,
-	},
-	background = {
-		height = 28,
-		corner_radius = 9,
-		border_width = 2,
-		border_color = colors.bg2,
-		image = {
-			corner_radius = 9,
-			border_color = colors.lightblack,
-			border_width = 1
-		}
 	},
 	popup = {
 		background = {
@@ -49,4 +48,5 @@ sbar.default({
 	padding_left = 5,
 	padding_right = 5,
 	scroll_texts = true,
+	updates = "on",
 })

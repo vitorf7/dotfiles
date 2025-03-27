@@ -1,4 +1,3 @@
--- items/workspaces.lua
 local colors = require("colors")
 local settings = require("settings")
 local app_icons = require("helpers.app_icons")
@@ -6,30 +5,8 @@ local app_icons = require("helpers.app_icons")
 local query_workspaces =
 	"aerospace list-workspaces --all --format '%{workspace}%{monitor-appkit-nsscreen-screens-id}' --json"
 
--- Add padding to the left
-local root = sbar.add("item", {
-	icon = {
-		color = colors.with_alpha(colors.white, 0.3),
-		highlight_color = colors.white,
-		drawing = false,
-	},
-	label = {
-		color = colors.grey,
-		highlight_color = colors.white,
-		drawing = false,
-	},
-	background = {
-		color = colors.bg0,
-		border_width = 1,
-		height = 28,
-		border_color = colors.black,
-		corner_radius = 9,
-		drawing = false,
-	},
-	padding_left = 6,
-	padding_right = 0,
-})
-
+-- Root is used to handle event subscriptions
+local root = sbar.add("item", { drawing = false })
 local workspaces = {}
 
 local function withWindows(f)
@@ -85,17 +62,8 @@ local function updateWindow(workspace_index, args)
 				local monitor_id = visible_workspace["monitor-appkit-nsscreen-screens-id"]
 				icon_line = " —"
 				workspaces[workspace_index]:set({
-					icon = { drawing = true },
-					label = {
-						string = icon_line,
-						drawing = true,
-						-- padding_right = 20,
-						font = "sketchybar-app-font:Regular:16.0",
-						y_offset = -1,
-					},
-					background = { drawing = true },
-					padding_right = 1,
-					padding_left = 1,
+					drawing = true,
+					label = { string = icon_line },
 					display = monitor_id,
 				})
 				return
@@ -103,37 +71,22 @@ local function updateWindow(workspace_index, args)
 		end
 		if no_app and workspace_index ~= focused_workspaces then
 			workspaces[workspace_index]:set({
-				icon = { drawing = false },
-				label = { drawing = false },
-				background = { drawing = false },
-				padding_right = 0,
-				padding_left = 0,
+				drawing = false,
 			})
 			return
 		end
 		if no_app and workspace_index == focused_workspaces then
 			icon_line = " —"
+
 			workspaces[workspace_index]:set({
-				icon = { drawing = true },
-				label = {
-					string = icon_line,
-					drawing = true,
-					-- padding_right = 20,
-					font = "sketchybar-app-font:Regular:16.0",
-					y_offset = -1,
-				},
-				background = { drawing = true },
-				padding_right = 1,
-				padding_left = 1,
+				drawing = true,
+				label = { string = icon_line },
 			})
 		end
 
 		workspaces[workspace_index]:set({
-			icon = { drawing = true },
-			label = { drawing = true, string = icon_line },
-			background = { drawing = true },
-			padding_right = 1,
-			padding_left = 1,
+			drawing = true,
+			label = { string = icon_line },
 		})
 	end)
 end
@@ -167,33 +120,30 @@ sbar.exec(query_workspaces, function(workspaces_and_monitors)
 		local workspace_index = entry.workspace
 
 		local workspace = sbar.add("item", {
-			icon = {
-				color = colors.with_alpha(colors.white, 0.3),
-				-- highlight_color = colors.red,
-				highlight_color = colors.white,
-				drawing = false,
-				font = { family = settings.font.numbers },
-				string = workspace_index,
-				padding_left = 10,
-				padding_right = 5,
-			},
-			label = {
-				padding_right = 10,
-				-- color = colors.grey,
-				color = colors.with_alpha(colors.white, 0.3),
-				highlight_color = colors.white,
-				font = "sketchybar-app-font:Regular:16.0",
-				y_offset = -1,
-			},
-			padding_right = 2,
-			padding_left = 2,
 			background = {
-				color = colors.bg3,
-				border_width = 1,
-				height = 28,
-				border_color = colors.bg2,
+				color = colors.bg1,
+				drawing = true,
 			},
 			click_script = "aerospace workspace " .. workspace_index,
+			drawing = false, -- Hide all items at first
+			icon = {
+				color = colors.with_alpha(colors.white, 0.3),
+				drawing = true,
+				font = { family = settings.font.numbers },
+				highlight_color = colors.white,
+				padding_left = 5,
+				padding_right = 4,
+				string = workspace_index,
+			},
+			label = {
+				color = colors.with_alpha(colors.white, 0.3),
+				drawing = true,
+				font = "sketchybar-app-font:Regular:16.0",
+				highlight_color = colors.white,
+				padding_left = 2,
+				padding_right = 12,
+				y_offset = -1,
+			},
 		})
 
 		workspaces[workspace_index] = workspace
@@ -206,20 +156,23 @@ sbar.exec(query_workspaces, function(workspaces_and_monitors)
 				workspace:set({
 					icon = { highlight = is_focused },
 					label = { highlight = is_focused },
-					background = {
-						border_width = is_focused and 2 or 1,
-					},
 					blur_radius = 30,
 				})
 			end)
 		end)
 	end
 
-	-- initial setup
+	-- Initial setup
 	updateWindows()
 	updateWorkspaceMonitor()
 
-	root:subscribe("aerospace_focus_change", function()
+	-- Subscribe to window creation/destruction events
+	root:subscribe("aerospace_workspace_change", function()
+		updateWindows()
+	end)
+
+	-- Subscribe to front app changes too
+	root:subscribe("front_app_switched", function()
 		updateWindows()
 	end)
 
@@ -233,7 +186,6 @@ sbar.exec(query_workspaces, function(workspaces_and_monitors)
 		workspaces[focused_workspace]:set({
 			icon = { highlight = true },
 			label = { highlight = true },
-			background = { border_width = 2 },
 		})
 	end)
 end)
