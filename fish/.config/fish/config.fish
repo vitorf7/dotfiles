@@ -34,7 +34,7 @@ set -U fish_key_bindings fish_vi_key_bindings
 #
 #set -Ux BAT_THEME Catppuccin-mocha # 'sharkdp/bat' cat clone
 set -Ux EDITOR nvim # 'neovim/neovim' text editor
-set -Ux PAGER "~/.local/bin/nvimpager" # 'lucc/nvimpager'
+set -Ux PAGER "/opt/homebrew/bin/delta"
 set -Ux VISUAL nvim
 
 set -Ux NODE_PATH $HOMEBREW_PREFIX/lib/node_modules
@@ -87,6 +87,7 @@ end
 
 # golang - https://golang.google.cn/
 set -Ux GOPATH (go env GOPATH)
+set -Ux GO111MODULE on
 
 fish_add_path $GOPATH/bin
 fish_add_path $HOME/.local/share/bob/nvim-bin
