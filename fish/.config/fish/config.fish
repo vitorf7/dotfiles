@@ -12,10 +12,15 @@ if test -z "$IN_NIX_SHELL"
     eval (/opt/homebrew/bin/brew shellenv)
 end
 
-/opt/homebrew/bin/starship init fish | source # https://starship.rs/
-/opt/homebrew/bin/zoxide init fish | source # 'ajeetdsouza/zoxide'
-/opt/homebrew/bin/direnv hook fish | source # https://direnv.net/
-/opt/homebrew/bin/fx --comp fish | source # https://fx.wtf/
+set starshipCLI (which starship)
+set zoxideCLI (which zoxide)
+set direnvCLI (which direnv)
+set fxCLI (which fx)
+
+$starshipCLI init fish | source # https://starship.rs/
+$zoxideCLI init fish | source # 'ajeetdsouza/zoxide'
+$direnvCLI hook fish | source # https://direnv.net/
+$fxCLI --comp fish | source # https://fx.wtf/
 set -g direnv_fish_mode eval_on_arrow # trigger direnv at prompt, and on every arrow-based directory change (default)
 
 # override the default greeting
@@ -36,6 +41,7 @@ set -U fish_key_bindings fish_vi_key_bindings
 set -Ux EDITOR nvim # 'neovim/neovim' text editor
 set -Ux PAGER "/opt/homebrew/bin/delta"
 set -Ux VISUAL nvim
+set -Ux SUDO_EDITOR $HOME/.local/share/bob/nvim-bin/nvim
 
 set -Ux NODE_PATH $HOMEBREW_PREFIX/lib/node_modules
 
