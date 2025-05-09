@@ -8,6 +8,8 @@
 # - FAT32 for Boot partition
 # - Bluetooth, NetworkManager, GNOME, Pipewire
 # - GRUB bootloader
+# - Timeshift
+# - Zram
 
 set -e
 
@@ -144,6 +146,13 @@ check_uefi() {
     fi
 }
 
+check_internet() {
+    if ! ping -c 2 archlinux.org &> /dev/null; then
+        print_message "$RED" "No internet connection detected!"
+        exit 1
+    fi
+}
+
 # Function to confirm before proceeding
 confirm() {
     print_message "$RED" "WARNING: This will ERASE ALL DATA on $DISK!"
@@ -173,19 +182,16 @@ installer_initial_setup() {
 # Function to prepare disk
 prepare_disk() {
     print_message "$BLUE" "Preparing disk $DISK..."
-    
-    # Create partition table
-    parted -s "$DISK" mklabel gpt
-    
-    # Create boot partition
-    parted -s "$DISK" mkpart primary fat32 1MiB ${BOOT_SIZE}MiB
-    parted -s "$DISK" set 1 esp on
-    
-    # Create root partition
-    parted -s "$DISK" mkpart primary ${BOOT_SIZE}MiB 100%
 
+    if ! confirm; then
+        print_message "$RED" "Installation aborted."
+        exit 1
+    fi
+     
     read -p "Will this be installed as a dual booted system? (y/n): " confirm_dualboot
     if [[ "$confirm_dualboot" =~ ^[Yy]$ ]]; then
+      partition_disk
+
       # Get target disk
       print_message "$BLUE" "Available disks:"
       lsblk
@@ -197,6 +203,11 @@ prepare_disk() {
       ROOT_PARTITION="$root_partition_addr"
 
     else
+      # Create partition table
+      parted -s "$DISK" mklabel gpt
+
+      partition_disk
+
       # Derive partition names from disk path
       if [[ "$DISK" =~ "nvme" ]]; then
           BOOT_PARTITION="${DISK}p1"
@@ -256,10 +267,19 @@ prepare_disk() {
     lsblk
 }
 
+partition_disk() {
+    # Create boot partition
+    parted -s "$DISK" mkpart boot fat32 1MiB ${BOOT_SIZE}MiB
+    parted -s "$DISK" set 1 boot on
+
+    # Create root partition
+    parted -s "$DISK" mkpart root ${BOOT_SIZE}MiB 100%
+}
+
 # Function to install base system
 install_base() {
     print_message "$BLUE" "Installing base system..."
-    pacstrap /mnt base base-devel linux linux-firmware linux-headers
+    pacstrap /mnt base base-devel linux linux-firmware linux-headers linux-lts linux-lts-headers
    
     # Generate fstab
     genfstab -U /mnt >> /mnt/etc/fstab
@@ -332,19 +352,28 @@ EOF
       pipewire alsa-utils pipewire-pulse pipewire-jack pipewire-alsa \
       neovim git tmux fish fzf zram-generator \
       intel-media-driver libva-intel-driver \
-      nvidia nvidia-settings nvidia-utils \
+      nvidia nvidia-settings nvidia-utils nvidia-lts nvidia-dkms lib32-nvidia-utils \
       xdg-utils xdg-user-dirs \
-      kitty firefox go
+      kitty firefox go egl-wayland
     
+    # Configure NVIDIA modules early loading
+    print_message "$BLUE" "Configuring NVIDIA modules"
+    arch-chroot /mnt mkdir -p /etc/modprobe.d
+arch-chroot /mnt cat << NVIDIA > /etc/modprobe.d/nvidia.conf
+options nvidia_drm modeset=1
+options nvidia NVreg_PreserveVideoMemoryAllocations=1
+NVIDIA
+
     # Configure mkinitcpio with encryption hooks
 
     print_message "$BLUE" "Adding mkinitcpio MODULES"
-    arch-chroot /mnt sed -i 's/^MODULES.*/MODULES=(btrfs)/' /etc/mkinitcpio.conf
+    arch-chroot /mnt sed -i 's/^MODULES.*/MODULES=(btrfs nvidia nvidia_modeset nvidia_uvm nvidia_drm)/' /etc/mkinitcpio.conf
     print_message "$BLUE" "Adding mkinitcpio HOOKS"
     arch-chroot /mnt sed -i 's/filesystems fsck/encrypt filesystems fsck/' /etc/mkinitcpio.conf
 
     print_message "$BLUE" "Generating mkinitcpio"
     arch-chroot /mnt mkinitcpio -P linux
+    arch-chroot /mnt mkinitcpio -P linux-lts
 }
 
 # Function to install GRUB bootloader
@@ -487,19 +516,15 @@ main() {
     
     check_root
     check_uefi
+    check_internet
     get_user_config
-    
-    if ! confirm; then
-        print_message "$RED" "Installation aborted."
-        exit 1
-    fi
     
     prepare_disk
     install_base
+    enable_multilib
     configure_system
     install_bootloader
     setup_zram
-    enable_multilib
     install_yay 
     install_aur_packages
     setup_gaming_essentials
