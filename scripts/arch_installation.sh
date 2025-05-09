@@ -413,7 +413,7 @@ setup_zram() {
     mkdir -p /mnt/etc/systemd/zram-generator.conf.d
     cat > /mnt/etc/systemd/zram-generator.conf.d/zram.conf << EOF
 [zram0]
-zram-size = ram / 2
+zram-size = min(ram, 8192)
 compression-algorithm = zstd
 swap-priority = 100
 EOF
