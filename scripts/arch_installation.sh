@@ -357,18 +357,10 @@ EOF
       xdg-utils xdg-user-dirs \
       kitty firefox go egl-wayland
     
-    # Configure NVIDIA modules early loading
-    print_message "$BLUE" "Configuring NVIDIA modules"
-    arch-chroot /mnt mkdir -p /etc/modprobe.d
-arch-chroot /mnt cat << NVIDIA > /etc/modprobe.d/nvidia.conf
-options nvidia_drm modeset=1
-options nvidia NVreg_PreserveVideoMemoryAllocations=1
-NVIDIA
-
     # Configure mkinitcpio with encryption hooks
 
     print_message "$BLUE" "Adding mkinitcpio MODULES"
-    arch-chroot /mnt sed -i 's/^MODULES.*/MODULES=(btrfs nvidia nvidia_modeset nvidia_uvm nvidia_drm)/' /etc/mkinitcpio.conf
+    arch-chroot /mnt sed -i 's/^MODULES.*/MODULES=(btrfs)/' /etc/mkinitcpio.conf
     print_message "$BLUE" "Adding mkinitcpio HOOKS"
     arch-chroot /mnt sed -i 's/filesystems fsck/encrypt filesystems fsck/' /etc/mkinitcpio.conf
 
@@ -463,19 +455,6 @@ install_aur_packages() {
 
     print_message "$GREEN" "yay AUR packages installed."
 }
-
-setup_timeshift_grub_btrfs() {
-    print_message "$BLUE" "Setting up timeshift-autosnap and grub-btrfs"
-
-    arch-chroot /mnt sudo -u $USERNAME yay -S --noconfirm timeshift-autosnap
-
-    arch-chroot /mnt sed -i 's/updateGrub.*/updateGrub=false/' /etc/timeshift-autosnap.conf
-
-    arch-chroot /mnt sed -i 's%ExecStart.*%ExecStart=/usr/bin/grub-btrfsd --syslog --timeshift-auto%' /etc/systemd/system/grub-btrfsd.service
-
-    print_message "$GREEN" "Setting up timeshift-autosnap and grub-btrfs completed."
-}
-
 
 setup_gaming_essentials() {
   print_message "$BLUE" "Setting up gaming essentials..."
