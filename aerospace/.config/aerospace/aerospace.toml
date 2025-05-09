@@ -18,6 +18,9 @@ exec-on-workspace-change = [
   'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE',
 ]
 
+# Mouse follows focus when focused monitor changes
+on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+
 # Start AeroSpace at login
 start-at-login = true
 
@@ -63,10 +66,18 @@ outer.top = 50        # Sketchybar height (40) + same gap as bottom
 outer.right = 10
 
 [mode.main.binding]
-alt-h = 'focus left'
-alt-j = 'focus down'
-alt-k = 'focus up'
-alt-l = 'focus right'
+# See: https://nikitabobko.github.io/AeroSpace/goodies#open-a-new-window-with-applescript
+# alt-enter = '''exec-and-forget osascript -e '
+#     tell application "Ghostty"
+#         do script
+#         activate
+#     end tell'
+#     '''
+
+alt-h = 'focus --boundaries-action wrap-around-the-workspace left'
+alt-j = 'focus --boundaries-action wrap-around-the-workspace down'
+alt-k = 'focus --boundaries-action wrap-around-the-workspace up'
+alt-l = 'focus --boundaries-action wrap-around-the-workspace right'
 
 alt-shift-h = 'move left'
 alt-shift-j = 'move down'
