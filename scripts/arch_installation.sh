@@ -353,7 +353,7 @@ EOF
       pipewire alsa-utils pipewire-pulse pipewire-jack pipewire-alsa \
       neovim git tmux fish fzf zram-generator \
       intel-media-driver libva-intel-driver \
-      nvidia nvidia-settings nvidia-utils nvidia-lts nvidia-dkms lib32-nvidia-utils \
+      nvidia nvidia-settings nvidia-utils nvidia-lts lib32-nvidia-utils \
       xdg-utils xdg-user-dirs \
       kitty firefox go egl-wayland
     
