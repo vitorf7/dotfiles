@@ -190,7 +190,8 @@ prepare_disk() {
      
     read -p "Will this be installed as a dual booted system? (y/n): " confirm_dualboot
     if [[ "$confirm_dualboot" =~ ^[Yy]$ ]]; then
-      partition_disk
+      print_message "$BLUE" "Dual boot detected. Please manually partition the disk first."
+      cfdisk $DISK
 
       # Get target disk
       print_message "$BLUE" "Available disks:"
