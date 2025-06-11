@@ -33,7 +33,7 @@ set -l OUTDATED (brew outdated)
 echo $OUTDATED >>/tmp/u-$NOW.txt
 
 if test -n "$OUTDATED"
-    gum spin --spinner globe --title "🍻 brew upgrading" --show-output -- brew upgrade >>/tmp/u-$NOW.txt
+    gum spin --spinner globe --title "🍻 brew upgrading" --show-output -- brew-up-to-date >>/tmp/u-$NOW.txt
     echo "\n" >>/tmp/u-$NOW.txt
     echo "✅ 🍻 brew upgraded"
 
@@ -44,13 +44,17 @@ else
     echo "No outdated brew packages" >>/tmp/u-$NOW.txt
 end
 
-gum spin --spinner globe --title "🍻 brew upgrading casks" --show-output -- brew upgrade --cask --greedy --force >>/tmp/u-$NOW.txt
+gum spin --spinner globe --title "🍻 brew upgrading casks" --show-output -- brew-force-update-casks >>/tmp/u-$NOW.txt
 echo "\n" >>/tmp/u-$NOW.txt
 echo "✅ 🍻 brew upgraded casks"
 
 gum spin --spinner globe --title "🍻 brew doctoring" --show-output -- brew doctor >>/tmp/u-$NOW.txt
 echo "\n" >>/tmp/u-$NOW.txt
 echo "✅ 🍻 brew doctored"
+
+gum spin --spinner globe --title "🦀 cargo updating" --show-output -- cargo install-update -a >>/tmp/u-$NOW.txt
+echo "\n" >>/tmp/u-$NOW.txt
+echo "✅ 🦀 cargo updated"
 
 gum spin --spinner globe --title " updating neovim nightly" --show-output -- bob update nightly >>/tmp/u-$NOW.txt
 echo "\n" >>/tmp/u-$NOW.txt
