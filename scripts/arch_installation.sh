@@ -29,7 +29,7 @@ USERNAME="archuser"
 ROOT_PASSWORD=""
 USER_PASSWORD=""
 DISK=""
-BOOT_SIZE=1024 # Size in MiB
+BOOT_SIZE=3073 # Size in MiB
 LUKS_NAME="cryptroot"
 
 # Function to print colored messages
