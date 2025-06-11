@@ -69,3 +69,5 @@ keybind = super+shift+p=text:\x1b:GoToCommand\x0D
 keybind = super+o=text:\x1b:BrowseFiles\x0D
 # nvims tmux custom binding
 keybind = super+ctrl+n=text:nvims\x0D
+# clear
+keybind = ctrl+alt+k=text:clear\x0D
