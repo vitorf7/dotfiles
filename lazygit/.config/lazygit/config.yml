@@ -42,6 +42,7 @@ gui:
   nerdFontsVersion: "3" # nerd fonts version to use ("2" or "3"); empty means don't show nerd font icons
 git:
   parseEmoji: true
+  overrideGpg: true
   paging:
     colorArg: always
     # For this to work, first install `brew install git-delta`
@@ -55,23 +56,23 @@ customCommands:
     command: "czg"
     context: "files"
     loadingText: "opening commitizen commit tool"
-    subprocess: true
+    output: terminal
   - key: "O"
     command: 'nvim -c ":Octo pr create"'
     context: "localBranches"
     loadingText: "Opening Octo..."
-    subprocess: true
+    output: terminal
   - key: "<c-z>"
     context: "files"
     command: 'lumen -p ollama -m "qwen2.5-coder:7b" draft | tee >(pbcopy)'
     loadingText: "Generating message..."
-    showOutput: true
+    output: popup
   - key: "<c-x>"
     context: "files"
     command: 'lumen -p ollama -m "qwen2.5-coder:7b" draft -c {{.Form.Context | quote}} | tee >(pbcopy)'
     loadingText: "Generating message..."
-    showOutput: true
     prompts:
       - type: "input"
         title: "Context"
         key: "Context"
+    output: popup
