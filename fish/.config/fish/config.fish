@@ -105,6 +105,7 @@ fish_add_path $HOME/Library/Python/3.9/bin
 fish_add_path $HOME/.tmux/plugins/t-smart-tmux-session-manager/bin
 # ~/.config/tmux/plugins
 fish_add_path $HOME/.config/tmux/plugins/t-smart-tmux-session-manager/bin
+fish_add_path $HOME/.krew/bin
 
 if test -d "$HOME/.local/share/nvim/mason/bin"
     fish_add_path "$HOME/.local/share/nvim/mason/bin"
