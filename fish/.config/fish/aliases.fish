@@ -121,3 +121,6 @@ alias t="sesh connect (sesh list -tz | fzf-tmux -p 55%,60% \
 
 ## Kill PID using fzf
 alias killpid="kill -9 \$(lsof -i -n -P | fzf | awk '{print \$2}')"
+
+## kubectl but with colors
+alias kubectl="kubecolor"
