@@ -56,6 +56,10 @@ gum spin --spinner globe --title "🦀 cargo updating" --show-output -- cargo in
 echo "\n" >>/tmp/u-$NOW.txt
 echo "✅ 🦀 cargo updated"
 
+gum spin --spinner globe --title "🚪 closing all neovim instances" --show-output -- close_neovim_in_tmux >>/tmp/u-$NOW.txt
+echo "\n" >>/tmp/u-$NOW.txt
+echo "✅ 🚪 closed all neovim instances"
+
 gum spin --spinner globe --title " updating neovim nightly" --show-output -- bob update nightly >>/tmp/u-$NOW.txt
 echo "\n" >>/tmp/u-$NOW.txt
 echo "✅  updated neovim nightly"
