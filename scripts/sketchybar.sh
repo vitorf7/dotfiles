@@ -3,6 +3,7 @@ echo "Installing Dependencies"
 brew install lua
 brew install switchaudio-osx
 brew install nowplaying-cli
+brew install media-control
 
 brew tap FelixKratz/formulae
 brew install sketchybar
