@@ -180,6 +180,16 @@ run = 'move-node-to-workspace 4'
 if.app-id = 'com.spotify.client'
 run = 'move-node-to-workspace 6'
 
+# float windows for certain apps
+[[on-window-detected]]
+if.app-id = 'com.cisco.secureclient.gui'
+run = 'layout floating'
+
+# workspace 7 - Slack
+[[on-window-detected]]
+if.app-id = 'com.now.gg.BlueStacks'
+run = ['layout floating']
+
 [workspace-to-monitor-force-assignment]
 1 = 1
 2 = 1
@@ -190,7 +200,3 @@ run = 'move-node-to-workspace 6'
 7 = 2
 8 = 2
 9 = 1
-# float windows for certain apps
-[[on-window-detected]]
-if.app-id = 'com.cisco.secureclient.gui'
-run = 'layout floating'
