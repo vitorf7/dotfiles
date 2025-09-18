@@ -16,6 +16,8 @@ set starshipCLI (which starship)
 set zoxideCLI (which zoxide)
 set direnvCLI (which direnv)
 set fxCLI (which fx)
+set fastfetchCLI (which fastfetch)
+set deltaCLI (which delta)
 
 $starshipCLI init fish | source # https://starship.rs/
 $zoxideCLI init fish | source # 'ajeetdsouza/zoxide'
@@ -26,22 +28,22 @@ set -g direnv_fish_mode eval_on_arrow # trigger direnv at prompt, and on every a
 # override the default greeting
 function fish_greeting
     # Specify the directory containing images
-    set image_dir ~/Pictures/wezterm_bgs
+    set image_dir $HOME/Pictures/terminal_bgs
 
     # Get a random image file from the specified directory
     set random_image (find $image_dir -type f \( -iname '*.jpg' -o -iname '*.png' -o -iname '*.gif' \) | shuf -n 1)
 
-    #/opt/homebrew/bin/fastfetch --kitty-icat ~/Pictures/wezterm_bgs/my-hero-academia-students-2k-wallpaper-2560x1440-uhdpaper.com-996.0_b-3665781936.jpg --logo-height 50 --logo-width 50
-    /opt/homebrew/bin/fastfetch --kitty-icat (echo $random_image) --logo-height 50 --logo-width 50
+    $fastfetchCLI --kitty-icat (echo $random_image) --logo-height 50 --logo-width 50
 end
 
 set -U fish_key_bindings fish_vi_key_bindings
 #
 #set -Ux BAT_THEME Catppuccin-mocha # 'sharkdp/bat' cat clone
 set -Ux EDITOR nvim # 'neovim/neovim' text editor
-set -Ux PAGER "/opt/homebrew/bin/delta"
+set -Ux PAGER $deltaCLI
 set -Ux VISUAL nvim
 set -Ux SUDO_EDITOR $HOME/.local/share/bob/nvim-bin/nvim
+set -Ux JAVA_HOME /Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home
 
 set -Ux NODE_PATH $HOMEBREW_PREFIX/lib/node_modules
 
@@ -50,7 +52,9 @@ set -Ux STARSHIP_CONFIG "$HOME/.config/starship.toml"
 
 source $XDG_CONFIG_HOME/fish/aliases.fish
 # Private config (Env vars, aliases, etc)
-source $XDG_CONFIG_HOME/fish/private_config.fish
+if test -e $XDG_CONFIG_HOME/fish/private_config.fish
+    source $XDG_CONFIG_HOME/fish/private_config.fish
+end
 
 alias pip pip3
 
@@ -61,6 +65,8 @@ alias vim nvim
 alias luamake $HOME/Code/lua-language-server/3rd/luamake/luamake
 
 set -gx NVM_DIR "$HOME/.nvm"
+set --universal nvm_default_version latest
+set --global nvm_data $HOME/.nvm
 # bass source (brew --prefix nvm)/nvm.sh --no-use ';' nvm use iojs
 # if test -s "$HOMEBREW_PATH/opt/nvm/nvm.sh"
 #     bass source "$HOMEBREW_PATH/opt/nvm/nvm.sh"
@@ -106,10 +112,14 @@ fish_add_path $HOME/.tmux/plugins/t-smart-tmux-session-manager/bin
 # ~/.config/tmux/plugins
 fish_add_path $HOME/.config/tmux/plugins/t-smart-tmux-session-manager/bin
 fish_add_path $HOME/.krew/bin
+fish_add_path $HOME/.rbenv/bin
 
 if test -d "$HOME/.local/share/nvim/mason/bin"
     fish_add_path "$HOME/.local/share/nvim/mason/bin"
 end
+
+# set rbenvCLI (which rbenv)
+# eval ($rbenvCLI init -)
 
 ##fish_add_path ~/.config/bin
 ##fish_add_path /usr/local/opt/python/libexec/bin
@@ -131,3 +141,6 @@ end
 ##fish_add_path "$HOMEBREW_PATH/opt/curl/bin"
 ##fish_add_path "$HOME/.cargo/bin"
 ##
+
+# Added by `rbenv init` on Wed 13 Aug 2025 13:11:31 BST
+status --is-interactive; and rbenv init - --no-rehash fish | source

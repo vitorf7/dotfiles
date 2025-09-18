@@ -122,5 +122,110 @@ alias t="sesh connect (sesh list -tz | fzf-tmux -p 55%,60% \
 ## Kill PID using fzf
 alias killpid="kill -9 \$(lsof -i -n -P | fzf | awk '{print \$2}')"
 
-## kubectl but with colors
+## kubectl
 alias kubectl="kubecolor"
+alias k ="kubectl"
+
+function close_neovim_in_tmux
+    # Get a list of all tmux sessions
+    set sessions (tmux list-sessions -F "#{session_name}" 2>/dev/null)
+    
+    if test -z "$sessions"
+        echo "No tmux sessions found"
+        return
+    end
+
+    set found_nvim false
+
+    # Loop through each session
+    for session in $sessions
+        # Get all windows in the session
+        set windows (tmux list-windows -t $session -F "#{window_index}" 2>/dev/null)
+
+        # Loop through each window
+        for window in $windows
+            # Get all panes in the window
+            set panes (tmux list-panes -t $session:$window -F "#{pane_id}" 2>/dev/null)
+
+            for pane in $panes
+                # Check the command running in the pane (including full command line)
+                set cmd (tmux display-message -p -t $pane "#{pane_current_command}" 2>/dev/null)
+                set full_cmd (tmux display-message -p -t $pane "#{pane_current_path} #{pane_current_command}" 2>/dev/null)
+
+                # Check for nvim, vim, or any variation
+                if string match -q "*nvim*" "$cmd" "$full_cmd"
+                    set found_nvim true
+                    echo "Found Neovim in $session:$window:$pane (command: $cmd)"
+
+                    # Try multiple approaches to quit Neovim
+                    # First, try gentle quit
+                    tmux send-keys -t $pane 'Escape' ':qa!' 'Enter'
+                    sleep 0.5
+
+                    # Check if still running
+                    set new_cmd (tmux display-message -p -t $pane "#{pane_current_command}" 2>/dev/null)
+                    if string match -q "*nvim*" "$new_cmd"
+                        echo "Gentle quit failed, trying force quit for $pane"
+                        # Try Ctrl+C followed by quit
+                        tmux send-keys -t $pane 'C-c'
+                        sleep 0.2
+                        tmux send-keys -t $pane 'Escape' ':qa!' 'Enter'
+                        sleep 0.5
+
+                        # Final check and nuclear option
+                        set final_cmd (tmux display-message -p -t $pane "#{pane_current_command}" 2>/dev/null)
+                        if string match -q "*nvim*" "$final_cmd"
+                            echo "Force quitting process in $pane"
+                            tmux send-keys -t $pane 'C-z'  # Suspend
+                            sleep 0.2
+                            tmux send-keys -t $pane 'kill %1' 'Enter'  # Kill suspended job
+                        end
+                    else
+                        echo "Successfully closed Neovim in $pane"
+                    end
+                end
+            end
+        end
+    end
+
+    if not $found_nvim
+        echo "No Neovim instances found in tmux sessions"
+    else
+        echo "Waiting for processes to fully terminate..."
+        sleep 1
+        echo "Done processing Neovim instances"
+    end
+end
+
+function kill_all_neovim
+    echo "Looking for all Neovim processes..."
+    
+    # Find all nvim processes
+    set nvim_pids (pgrep -f "nvim" 2>/dev/null)
+    
+    if test -z "$nvim_pids"
+        echo "No Neovim processes found"
+        return
+    end
+    
+    echo "Found Neovim processes: $nvim_pids"
+    
+    # First try graceful termination
+    for pid in $nvim_pids
+        echo "Sending TERM signal to PID $pid"
+        kill -TERM $pid 2>/dev/null
+    end
+    
+    sleep 2
+    
+    # Check what's still running and force kill if necessary
+    set remaining_pids (pgrep -f "nvim" 2>/dev/null)
+    if test -n "$remaining_pids"
+        echo "Force killing remaining processes: $remaining_pids"
+        for pid in $remaining_pids
+            kill -KILL $pid 2>/dev/null
+        end
+    end
+    
+    echo "All Neovim processes terminated"
+end
