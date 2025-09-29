@@ -108,15 +108,25 @@ alias ngrok="ngrok --authtoken=$NGROK_AUTHTOKEN"
 alias gh="env -u GITHUB_TOKEN gh $1"
 
 # Sesh (Tmux Session Manager)
-alias t="sesh connect (sesh list -tz | fzf-tmux -p 55%,60% \
-		--no-sort --border-label ' sesh ' --prompt '⚡  ' \
-		--header '  ^a all ^t tmux ^x zoxide ^f find' \
-		--bind 'tab:down,btab:up' \
-		--bind 'ctrl-a:change-prompt(⚡  )+reload(sesh list)' \
-		--bind 'ctrl-t:change-prompt(🪟  )+reload(sesh list -t)' \
-		--bind 'ctrl-x:change-prompt(📁  )+reload(sesh list -z)' \
-		--bind 'ctrl-f:change-prompt(🔎  )+reload(fd -H -d 3 -t d -E .Trash . $HOME $HOME/code/)' \
-		--bind 'ctrl-d:execute(tmux kill-session -t {})+reload(sesh list)' \
+alias t="sesh connect (sesh list --icons | fzf \
+    --no-sort --ansi \
+    --border-label ' Tmux Sessions ' \
+    --prompt '🔭  ' \
+    --input-border --input-label ' Search ' \
+    --header-border --header-label ' Actions ' --header '  ^a all ^t tmux ^g configs ^x zoxide ^d tmux kill ^f find' \
+    --bind 'tab:down,btab:up' \
+    --bind 'ctrl-a:change-prompt(⚡  )+reload(sesh list --icons)' \
+    --bind 'ctrl-t:change-prompt(🪟  )+reload(sesh list -t --icons)' \
+    --bind 'ctrl-g:change-prompt(⚙️  )+reload(sesh list -c --icons)' \
+    --bind 'ctrl-x:change-prompt(📁  )+reload(sesh list -z --icons)' \
+    --bind 'ctrl-f:change-prompt(🔎  )+reload(fd -H -d 2 -t d -E .Trash . ~ $HOME $HOME/code)' \
+    --bind 'ctrl-d:execute(tmux kill-session -t {2..})+change-prompt(⚡  )+reload(sesh list --icons)' \
+    --preview-label 'Preview' --preview-window 'right:55%' --preview 'sesh preview {}' \
+    --color 'border:#aaaaaa,label:#cccccc' \
+    --color 'preview-border:#9999cc,preview-label:#ccccff' \
+    --color 'list-border:#669966,list-label:#99cc99' \
+    --color 'input-border:#996666,input-label:#ffcccc' \
+    --color 'header-border:#6699cc,header-label:#99ccff' \
 )"
 
 ## Kill PID using fzf
