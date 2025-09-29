@@ -86,9 +86,10 @@ source $HOME/.config/op/plugins.sh
 fzf --fish | source
 
 set -Ux FZF_DEFAULT_COMMAND "fd -H -E '.git'"
+set -Ux FZF_DEFAULT_OPTS "--layout=reverse --info=inline --margin=8,15 --border"
 
-# set -Ux T_FZF_PROMPT "🔭 "
-set -Ux T_FZF_PROMPT '  '
+set -Ux T_FZF_PROMPT "🔭 "
+# set -Ux T_FZF_PROMPT '  '
 
 set -Ux fifc_editor nvim
 
@@ -117,6 +118,9 @@ fish_add_path $HOME/.rbenv/bin
 if test -d "$HOME/.local/share/nvim/mason/bin"
     fish_add_path "$HOME/.local/share/nvim/mason/bin"
 end
+
+# set -e SSH_AUTH_SOCK
+# set -Ux SSH_AUTH_SOCK $HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock
 
 # set rbenvCLI (which rbenv)
 # eval ($rbenvCLI init -)
