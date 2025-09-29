@@ -3,7 +3,8 @@ term = xterm-256color
 # UI config
 # theme = "dark:catppuccin-mocha,light:catppuccin-latte"
 theme = "dark:Rose Pine,light:Rose Pine Dawn"
-background-opacity = 0.85
+background-opacity-cells = true
+background-opacity = 0.75
 background-blur-radius = 15
 
 macos-non-native-fullscreen = true
