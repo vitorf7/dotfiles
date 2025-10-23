@@ -119,6 +119,11 @@ if test -d "$HOME/.local/share/nvim/mason/bin"
     fish_add_path "$HOME/.local/share/nvim/mason/bin"
 end
 
+# if fzf-git.fish file exists then source it
+if test -e "$HOME/.config/fzf-git/fzf-git.fish"
+    source "$HOME/.config/fzf-git/fzf-git.fish"
+end
+
 # set -e SSH_AUTH_SOCK
 # set -Ux SSH_AUTH_SOCK $HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock
 
