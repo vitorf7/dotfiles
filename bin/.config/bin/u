@@ -74,3 +74,8 @@ echo "✅ 🧰 mason.nvim updated"
 
 echo "✅ 🧾 logged to /tmp/u-$NOW.txt"
 man /tmp/u-$NOW.txt
+
+# git clone https://github.com/junegunn/fzf-git.sh.git and make sure it is up to date
+gum spin --spinner globe --title "  git fzf updating" --show-output -- git clone https://github.com/junegunn/fzf-git.sh.git $HOME/.config/fzf-git >>/tmp/u-$NOW.txt
+echo "\n" >>/tmp/u-$NOW.txt
+echo "✅   git fzf updated"
