@@ -43,13 +43,24 @@ gui:
 git:
   parseEmoji: true
   overrideGpg: true
-  paging:
-    colorArg: always
-    # For this to work, first install `brew install git-delta`
-    # https://github.com/dandavison/delta
-    # https://github.com/jesseduffield/lazygit/issues/155#issuecomment-2260986940
-    pager: delta --dark --paging=never --syntax-theme "Catppuccin Mocha" -s --wrap-max-lines=10
-    # pager: delta --dark --paging=never --syntax-theme base16-256 -s
+  pagers:
+    - colorArg: always
+      # For this to work, first install `brew install git-delta`
+      # https://github.com/dandavison/delta
+      # https://github.com/jesseduffield/lazygibrew install difftastict/issues/155#issuecomment-2260986940
+      pager: delta --dark --paging=never --syntax-theme "Catppuccin Mocha" -s --wrap-max-lines=10
+      # pager: delta --dark --paging=never --syntax-theme base16-256 -s
+    - colorArg: always
+      pager: diff-so-fancy
+    - colorArg: always
+      pager: ydiff -p cat -s --wrap --width={{columnWidth}}
+    - externalDiffCommand: difft --color=always
+  mainBranches:
+    - main
+    - master
+    - develop
+    - trunk
+  fetchAll: true
 #
 customCommands:
   - key: "Z"
