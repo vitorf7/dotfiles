@@ -1,0 +1,11 @@
+@theme "meterial-you/material-colors.rasi"
+* {
+    bg0:    @surface;
+    bg1:    @surface-dim;
+    bg2:    #4C566A80;
+    bg3:    @primary-fixed-dim;
+    fg0:    @on-surface;
+    fg1:    #ECEFF4;
+    fg2:    @primary;
+    fg3:    @on-surface-variant;
+}
