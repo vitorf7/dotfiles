@@ -19,7 +19,7 @@
   "bar.workspaces.workspaceMask": false,
   "bar.workspaces.showWsIcons": false,
   "bar.network.showWifiInfo": true,
-  "theme.matugen": true,
+  "theme.matugen": false,
   "theme.bar.transparent": true,
   "wallpaper.pywal": true,
   "menus.dashboard.shortcuts.enabled": true,
