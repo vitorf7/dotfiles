@@ -304,7 +304,15 @@ arch-chroot /mnt cat << EOFCHROOT > /etc/xdg/reflector/reflector.conf
 --sort rate
 EOFCHROOT
 
+    print_message "$BLUE" "Enabling multilib repository..."
+    
+    # Uncomment multilib section in pacman.conf
+    arch-chroot /mnt sed -i '/\[multilib\]/,/Include/ s/^#//' /etc/pacman.conf
+    
+    # Update package database
     arch-chroot /mnt pacman -Syy
+    
+    print_message "$GREEN" "Multilib repository enabled."
     
     # Set timezone
     arch-chroot /mnt ln -sf "/usr/share/zoneinfo/$TIMEZONE" /etc/localtime
@@ -332,7 +340,7 @@ EOF
     
     # Add user
     print_message "$BLUE" "Creating user $USERNAME..."
-    arch-chroot /mnt useradd -m -g users -G wheel "$USERNAME"
+    arch-chroot /mnt useradd -m -g users -G wheel -s /usr/bin/fish "$USERNAME"
     echo "$USERNAME:$USER_PASSWORD" | arch-chroot /mnt chpasswd
 
     # Install sudo
@@ -348,14 +356,14 @@ EOF
       btrfs-progs grub grub-btrfs efibootmgr networkmanager network-manager-applet \
       openssh git iptables-nft ipset firewalld acpid reflector \
       intel-ucode mesa gnome gnome-tweaks gnome-extra gdm \
-      wayland hyprland hyprpaper hyprlock wofi \
+      wayland hyprland hyprpaper hyprlock wofi waybar \
       man-db man-pages man texinfo bluez bluez-utils \
       pipewire alsa-utils pipewire-pulse pipewire-jack pipewire-alsa \
       neovim git tmux fish fzf zram-generator \
       intel-media-driver libva-intel-driver \
       nvidia nvidia-settings nvidia-utils nvidia-lts lib32-nvidia-utils \
-      xdg-utils xdg-user-dirs \
-      kitty firefox go egl-wayland
+      xdg-utils xdg-user-dirs os-prober \
+      kitty firefox go egl-wayland nodejs yarn npm rust cargo fastftech fd eza startship
     
     # Configure mkinitcpio with encryption hooks
 
@@ -416,19 +424,6 @@ EOF
     arch-chroot /mnt zramctl
     
     print_message "$GREEN" "zram-generator configured."
-}
-
-# Function to enable multilib repository
-enable_multilib() {
-    print_message "$BLUE" "Enabling multilib repository..."
-    
-    # Uncomment multilib section in pacman.conf
-    arch-chroot /mnt sed -i '/\[multilib\]/,/Include/ s/^#//' /etc/pacman.conf
-    
-    # Update package database
-    arch-chroot /mnt pacman -Sy
-    
-    print_message "$GREEN" "Multilib repository enabled."
 }
 
 # Function to install yay AUR helper
@@ -501,7 +496,6 @@ main() {
     
     prepare_disk
     install_base
-    enable_multilib
     configure_system
     install_bootloader
     setup_zram
