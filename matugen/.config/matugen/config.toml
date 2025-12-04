@@ -1,0 +1,16 @@
+[config.wallpaper]
+command = "awww"
+arguments = [
+  "img",
+  "--transition-type",
+  "center",
+  "--transition-fps",
+  "60",
+  "--transition-step",
+  "255",
+]
+set = true
+
+[templates.rofi]
+input_path = '~/.config/matugen/templates/rofi-colors.rasi'
+output_path = '~/.local/share/rofi/themes/meterial-you/material-colors.rasi'
