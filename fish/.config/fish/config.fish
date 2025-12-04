@@ -9,7 +9,9 @@
 # https://fishshell.com/
 
 if test -z "$IN_NIX_SHELL"
-    eval (/opt/homebrew/bin/brew shellenv)
+    if command -s /opt/homebrew/bin/brew > /dev/null
+        eval (/opt/homebrew/bin/brew shellenv)
+    end
 end
 
 set starshipCLI (which starship)
@@ -45,7 +47,9 @@ set -Ux VISUAL nvim
 set -Ux SUDO_EDITOR $HOME/.local/share/bob/nvim-bin/nvim
 set -Ux JAVA_HOME /Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home
 
-set -Ux NODE_PATH $HOMEBREW_PREFIX/lib/node_modules
+if  test -n $HOMEBREW_PATH
+    set -Ux NODE_PATH $HOMEBREW_PREFIX/lib/node_modules
+end
 
 set -Ux XDG_CONFIG_HOME "$HOME/.config"
 set -Ux STARSHIP_CONFIG "$HOME/.config/starship.toml"
