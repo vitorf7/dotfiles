@@ -30,7 +30,7 @@ set -g direnv_fish_mode eval_on_arrow # trigger direnv at prompt, and on every a
 # override the default greeting
 function fish_greeting
     # Specify the directory containing images
-    set image_dir $HOME/Pictures/terminal_bgs
+    set image_dir $HOME/Pictures/backgrounds
 
     # Get a random image file from the specified directory
     set random_image (find $image_dir -type f \( -iname '*.jpg' -o -iname '*.png' -o -iname '*.gif' \) | shuf -n 1)
