@@ -1,0 +1,19 @@
+* {
+    bg: #191724;
+    cur: #1f1d2e;
+    fgd: #e0def4;
+    cmt: #6e6a86;
+    cya: #9ccfd8;
+    grn: #31748f;
+    ora: #ebbcba;
+    pur: #c4a7e7;
+    red: #eb6f92;
+    yel: #f6c177;
+
+    background:     @bg;
+    background-alt: @cur;
+    foreground:     @fgd;
+    selected:       @grn;
+    active:         @grn;
+    urgent:         @red;
+}
