@@ -17,8 +17,7 @@ window-padding-y = 15
 
 
 # Font config
-font-family = "Monaspace Radon"
-font-family = "Symbols Nerd Font Mono"
+font-family = "MonaspiceRn Nerd Font Mono"
 font-size = 17.5
 
 shell-integration = fish
