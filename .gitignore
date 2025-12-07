@@ -29,3 +29,5 @@ fish/.config/fish/functions/*
 
 # Matugen generated files
 waybar/.config/waybar/colors/colors.css
+hyprland/.config/hypr/hyprlock/matugen/matugen-hyprlock.conf
+swaync/.config/swaync/matugen/matugen-swaync.css
