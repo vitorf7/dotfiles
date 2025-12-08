@@ -9,16 +9,15 @@
 /* wallust-wlogout */
 
 /* Importing wllust colors */
-@import '$HOME/.config/waybar/colors/colors.css';
+@import '../../.config/waybar/colors/colors.css';
 
 
 window {
     font-family: MonaspiceRn Nerd Font Propo;
     font-size: 16pt;
-    color: @primary;
+    color: @foreground;
     /* text */
-    background-color: @surface-alpha;
-
+    background-color: alpha(@surface, 0.6);
 }
 
 button {
