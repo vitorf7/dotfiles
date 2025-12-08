@@ -79,7 +79,9 @@ tooltip label {
 #power-profiles-daemon,
 #custom-notification,
 #tray,
-#window {
+#window,
+#custom-launcher,
+#custom-power-menu {
   background: @primary_container;
   padding: 0 15px;
   margin: 0 0 0 12px;
@@ -104,6 +106,14 @@ tooltip label {
 }
 
 #custom-notification {
+  color: @surface_tint;
+}
+
+#custom-launcher {
+  color: @surface_tint;
+}
+
+#custom-power-menu {
   color: @surface_tint;
   margin: 0 12px;
 }
