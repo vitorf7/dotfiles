@@ -108,6 +108,11 @@
           "command": "shutdown now"
         },
         {
+          "label": "",
+          "command": "bash -c $HOME/.config/hypr/scripts/sunsetToggle.sh",
+          "type": "toggle"
+        },
+        {
           "label": "󰀝",
           "command": "bash -c $HOME/.config/hypr/scripts/airplaneMode.sh",
           "type": "toggle"
