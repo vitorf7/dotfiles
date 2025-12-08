@@ -4,6 +4,7 @@
   "spacing": 5,
   "margin-top": 15,
   "modules-left": [
+    "custom/launcher",
     "clock",
     "hyprland/workspaces"
   ],
@@ -16,7 +17,8 @@
     "network",
     "battery",
     "power-profiles-daemon",
-    "custom/notification"
+    "custom/notification",
+    "custom/power-menu"
   ],
   "clock": {
     "timezone": "Europe/London",
@@ -131,5 +133,15 @@
     "on-click": "swaync-client -t -sw",
     "on-click-right": "swaync-client -d -sw",
     "escape": true
+  },
+  "custom/power-menu": {
+    "format": "",
+    "tooltip-format": "Click to launch wlogout",
+    "on-click": "~/.config/hypr/scripts/wlogout.sh"
+  },
+  "custom/launcher": {
+    "format": "󰣇",
+    "tooltip": false,
+    "on-click": "~/.config/rofi/scripts/sidelauncher"
   }
 }
