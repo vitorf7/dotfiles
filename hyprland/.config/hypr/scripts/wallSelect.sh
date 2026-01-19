@@ -47,7 +47,7 @@ scale_factor=$(hyprctl monitors -j | jq -r --arg mon "$focused_monitor" '.[] | s
 # Calculate icon size
 icon_size=$(echo "scale=2; ($monitor_width * 14) / ($scale_factor * 96)" | bc)
 rofi_override="element-icon{size:${icon_size}px;}"
-rofi_command="rofi -i -show -dmenu -theme $HOME/.config/rofi/applets/wallSelect.rasi -theme-str $rofi_override"
+rofi_command="rofi -i -show -dmenu -p Wallpapers -theme $HOME/.config/rofi/applets/wallSelect.rasi -theme-str $rofi_override"
 
 # Detect number of cores and set a sensible number of jobs
 get_optimal_jobs() {
