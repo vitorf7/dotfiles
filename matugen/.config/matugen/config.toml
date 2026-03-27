@@ -43,6 +43,11 @@ output_path = '~/.config/gtk-3.0/gtk.css'
 input_path = '~/.config/matugen/templates/matugen-gtk.css'
 output_path = '~/.config/gtk-4.0/gtk.css'
 
+[templates.vicinae]
+input_path = '~/.config/matugen/templates/vicinae.toml'
+output_path = '~/.local/share/vicinae/themes/matugen.toml'
+post_hook = 'vicinae theme set matugen'
+
 # # Qt5
 # [templates.qt5]
 # input_path = '~/.config/matugen/templates/qtct-colors.conf'
