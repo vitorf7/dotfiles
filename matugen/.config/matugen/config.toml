@@ -1,15 +1,15 @@
 [config.wallpaper]
-command = "awww"
-arguments = [
-  "img",
-  "--transition-type",
-  "center",
-  "--transition-fps",
-  "60",
-  "--transition-step",
-  "255",
-]
+command = "awww img --transition-type center --transition-fps 60 --transition-step 255 \"{{image}}\""
 set = true
+# arguments = [
+#   "img",
+#   "--transition-type",
+#   "center",
+#   "--transition-fps",
+#   "60",
+#   "--transition-step",
+#   "255",
+# ]
 
 # Rofi
 [templates.rofi]
