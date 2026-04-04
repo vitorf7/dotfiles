@@ -1,0 +1,6 @@
+/* Matugen nwg-dock-hyprland Hotspot Template
+   The hotspot is an invisible trigger area for auto-hide mode */
+
+window {
+    all: unset;
+}

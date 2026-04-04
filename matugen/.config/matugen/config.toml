@@ -1,15 +1,6 @@
 [config.wallpaper]
 command = "awww img --transition-type center --transition-fps 60 --transition-step 255 \"{{image}}\""
 set = true
-# arguments = [
-#   "img",
-#   "--transition-type",
-#   "center",
-#   "--transition-fps",
-#   "60",
-#   "--transition-step",
-#   "255",
-# ]
 
 # Rofi
 [templates.rofi]
@@ -48,18 +39,14 @@ input_path = '~/.config/matugen/templates/vicinae.toml'
 output_path = '~/.local/share/vicinae/themes/matugen.toml'
 post_hook = 'vicinae theme set matugen'
 
-# # Qt5
-# [templates.qt5]
-# input_path = '~/.config/matugen/templates/qtct-colors.conf'
-# output_path = '~/.config/qt5ct/colors/matugen-qt5ct.conf'
-#
-# # Qt6
-# [templates.qt6]
-# input_path = '~/.config/matugen/templates/qtct-colors.conf'
-# output_path = '~/.config/qt6ct/colors/matugen-qt6ct.conf'
+# nwg-dock-hyprland
+[templates.nwg-dock-hyprland]
+input_path = '~/.config/matugen/templates/matugen-dock.css'
+output_path = '~/.config/nwg-dock-hyprland/style.css'
+post_hook = 'pkill -USR1 -f nwg-dock-hyprland'
 
-# Pywalfox
-# [templates.pywalfox]
-# input_path = '~/.config/matugen/templates/pywalfox-colors.json'
-# output_path = '~/.cache/wal/colors.json'
-# post_hook = 'pywalfox update'
+# AGS Bar
+[templates.ags]
+input_path = '~/.config/matugen/templates/ags-colors.scss'
+output_path = '~/.config/ags/colors.scss'
+post_hook = 'killall -SIGUSR1 gjs 2>/dev/null || true'
