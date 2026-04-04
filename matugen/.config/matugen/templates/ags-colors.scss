@@ -1,0 +1,17 @@
+/*
+* AGS Colors
+* Generated with Matugen
+*/
+
+/*-----Surface Transparent Background------*/
+$surface-alpha: {{colors.surface.default.rgba | set_alpha: 0.5}};
+
+/*-----All Colors--------*/
+<$ for name, value in colors $>
+${{name}}: {{value.default.hex}};
+<$ endfor $>
+
+/*-----Additional Alpha Variants------*/
+$primary-alpha: {{colors.primary.default.rgba | set_alpha: 0.8}};
+$secondary-alpha: {{colors.secondary.default.rgba | set_alpha: 0.8}};
+$surface-container-alpha: {{colors.surface_container.default.rgba | set_alpha: 0.7}};
