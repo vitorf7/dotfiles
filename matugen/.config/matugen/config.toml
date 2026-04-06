@@ -44,9 +44,3 @@ post_hook = 'vicinae theme set matugen'
 input_path = '~/.config/matugen/templates/matugen-dock.css'
 output_path = '~/.config/nwg-dock-hyprland/style.css'
 post_hook = 'pkill -USR1 -f nwg-dock-hyprland'
-
-# AGS Bar
-[templates.ags]
-input_path = '~/.config/matugen/templates/ags-colors.scss'
-output_path = '~/.config/ags/colors.scss'
-post_hook = 'killall -SIGUSR1 gjs 2>/dev/null || true'
