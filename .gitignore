@@ -32,3 +32,6 @@ waybar/.config/waybar/colors/colors.css
 hyprland/.config/hypr/hyprlock/matugen/matugen-hyprlock.conf
 swaync/.config/swaync/matugen/matugen-swaync.css
 rofi/.config/rofi/matugen/matugen-rofi.rasi
+
+# rofi images
+rofi/.config/rofi/images/*
