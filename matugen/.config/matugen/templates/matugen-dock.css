@@ -1,90 +1,9 @@
-/* Matugen nwg-dock-hyprland Template
-   Auto-hiding dock for Hyprland with Material Design 3 colors */
-
-/* Main dock window */
-window {
-    background-color: {{colors.surface.default.rgba | set_alpha: 0.9}};
-    border-radius: 12px;
-    border: 2px solid #{{colors.outline.default.hex_stripped}};
-    padding: 4px;
-}
-
-/* Container box */
-box {
-    padding: 4px;
-}
-
-/* Individual dock buttons */
-button {
-    background-color: transparent;
-    border: none;
-    border-radius: 8px;
-    padding: 4px;
-    margin: 2px;
-    transition: all 0.2s ease;
-}
-
-/* Button hover effect */
-button:hover {
-    background-color: {{colors.surface_variant.default.rgba | set_alpha: 0.5}};
-}
-
-/* Active window indicator - 2px border in primary color */
-button.active {
-    border: 2px solid #{{colors.primary.default.hex_stripped}};
-    background-color: {{colors.primary_container.default.rgba | set_alpha: 0.5}};
-}
-
-/* Pinned apps styling */
-button.pinned {
-    opacity: 0.9;
-}
-
-button.pinned:hover {
-    opacity: 1.0;
-}
-
-/* Launcher button - distinct styling */
-button.launcher {
-    background-color: #{{colors.primary_container.default.hex_stripped}};
-    border-radius: 12px;
-}
-
-button.launcher:hover {
-    background-color: {{colors.primary.default.rgba | set_alpha: 0.13}};
-}
-
-/* Task indicator dots */
-.task-dot {
-    background-color: #{{colors.on_surface.default.hex_stripped}};
-    border-radius: 50%;
-    min-height: 6px;
-    min-width: 6px;
-    margin: 2px;
-}
-
-.task-dot.active {
-    background-color: #{{colors.primary.default.hex_stripped}};
-    min-height: 8px;
-    min-width: 8px;
-}
-
-/* Icon images */
-image {
-    opacity: 1.0;
-    transition: opacity 0.2s ease;
-}
-
-button:hover image {
-    opacity: 0.9;
-}
-
-/* Tooltip styling */
-tooltip {
-    background-color: #{{colors.inverse_surface.default.hex_stripped}};
-    color: #{{colors.inverse_on_surface.default.hex_stripped}};
-    border-radius: 6px;
-    padding: 6px 10px;
-    font-family: "GeistMono Nerd Font", sans-serif;
-    font-size: 13px;
-}
+/*
+* Css Colors
+* Generated with Matugen
+*/
+@define-color blur_background {{colors.surface.default.rgba | set_alpha: 0.3}};
+@define-color blur_background8 {{colors.surface.default.rgba | set_alpha: 0.8}};
+<* for name, value in colors *>
+    @define-color {{name}} {{value.default.hex}};
+<* endfor *>

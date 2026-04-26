@@ -40,7 +40,13 @@ output_path = '~/.local/share/vicinae/themes/matugen.toml'
 post_hook = 'vicinae theme set matugen'
 
 # nwg-dock-hyprland
-[templates.nwg-dock-hyprland]
+[templates.nwgdock]
 input_path = '~/.config/matugen/templates/matugen-dock.css'
-output_path = '~/.config/nwg-dock-hyprland/style.css'
-post_hook = 'pkill -USR1 -f nwg-dock-hyprland'
+output_path = '~/.config/nwg-dock-hyprland/colors.css'
+post_hook = 'killall -9 nwg-dock-hyprland && ~/.config/nwg-dock-hyprland/launch.sh & disown'
+
+# AGS
+[templates.ags]
+input_path = '~/.config/matugen/templates/ags-colors.scss'
+output_path = '~/.config/ags/colors.scss'
+post_hook = 'ags quit && ags run & disown'
