@@ -1,0 +1,14 @@
+/*
+* Css Colors
+* Generated with Matugen
+*/
+
+/*-----Surface Transparent Background------*/
+$surface-alpha: {{colors.surface.default.rgba | set_alpha: 0.5}};
+$blur_background: {{colors.surface.default.rgba | set_alpha: 0.3}};
+$blur_background8: {{colors.surface.default.rgba | set_alpha: 0.8}};
+
+/*-----All Colors--------*/
+<* for name, value in colors *>
+${{name}}: {{value.default.hex}};
+<* endfor *>
