@@ -6,13 +6,13 @@
   "modules-left": [
     "custom/launcher",
     "clock",
-    "hyprland/workspaces"
-  ],
-  "modules-center": [
-    "tray",
     "hyprland/window"
   ],
+  "modules-center": [
+    "hyprland/workspaces"
+  ],
   "modules-right": [
+    "tray",
     "pulseaudio",
     "network",
     "battery",
@@ -24,6 +24,9 @@
     "timezone": "Europe/London",
     "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
     "format-alt": "{:%d-%m-%Y}"
+  },
+  "hyprland/window": {
+    "separate-outputs": true
   },
   "hyprland/workspaces": {
     "format": "{name}",
@@ -42,7 +45,8 @@
   },
   "tray": {
     "icon-size": 21,
-    "spacing": 10
+    "spacing": 10,
+    "show-passive-items": true
   },
   "pulseaudio": {
     "scroll-step": 1, // %, can be a float
