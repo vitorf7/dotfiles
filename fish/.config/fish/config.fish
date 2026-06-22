@@ -20,12 +20,14 @@ set direnvCLI (which direnv)
 set fxCLI (which fx)
 set fastfetchCLI (which fastfetch)
 set deltaCLI (which delta)
+set miseCLI (which mise)
 
 $starshipCLI init fish | source # https://starship.rs/
 $zoxideCLI init fish | source # 'ajeetdsouza/zoxide'
 $direnvCLI hook fish | source # https://direnv.net/
 $fxCLI --comp fish | source # https://fx.wtf/
 set -g direnv_fish_mode eval_on_arrow # trigger direnv at prompt, and on every arrow-based directory change (default)
+eval "$($miseCLI activate fish)"   # or bash/fish
 
 # override the default greeting
 function fish_greeting
@@ -103,7 +105,7 @@ if test -f "$HOME/google-cloud-sdk/path.zsh.inc"
 end
 
 # golang - https://golang.google.cn/
-set -Ux GOPATH (go env GOPATH)
+set -Ux GOPATH $HOME/go
 set -Ux GO111MODULE on
 
 fish_add_path $GOPATH/bin
@@ -157,3 +159,30 @@ end
 
 # Added by `rbenv init` on Wed 13 Aug 2025 13:11:31 BST
 status --is-interactive; and rbenv init - --no-rehash fish | source
+
+if set -q IN_NIX_SHELL
+    set -l nix_paths
+    set -l other_paths
+    set -l nix_prefixes /nix/store /nix/var/nix $HOME/.nix-profile
+
+    for dir in $PATH
+        set -l is_nix 0
+
+        for prefix in $nix_prefixes
+            if string match -q "$prefix*" -- $dir
+                set is_nix 1
+                break
+            end
+        end
+
+        if test $is_nix -eq 1
+            contains -- $dir $nix_paths
+            or set -a nix_paths $dir
+        else
+            contains -- $dir $other_paths
+            or set -a other_paths $dir
+        end
+    end
+
+    set -gx PATH $nix_paths $other_paths
+end

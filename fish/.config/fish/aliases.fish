@@ -72,9 +72,9 @@ function docker-fatality
     echo '============ FLAWLESS VICTORY ============'
 end
 
-alias brew-up-to-date="brew update && brew upgrade"
-alias brew-force-update-casks="brew update && brew upgrade --cask --greedy --force"
-alias brew-upgrade-everything="brew update && brew upgrade && brew upgrade --cask --greedy --force"
+alias brew-up-to-date="brew update && brew upgrade -y"
+alias brew-force-update-casks="brew update && brew upgrade -y --cask --greedy --force"
+alias brew-upgrade-everything="brew update && brew upgrade -y && brew upgrade -y --cask --greedy --force"
 
 # Exa alias for ls (https://github.com/ogham/exa)
 alias lh="eza --icons -lha"
