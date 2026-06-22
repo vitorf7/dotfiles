@@ -3,7 +3,7 @@ function nvimold
 end
 
 function nvims
-    set items nvimold nvim-lazy nvim-mobily nvim-snacks
+    set items nvim-kick nvimold nvim-lazy nvim-mobily nvim-snacks nvim-scratch
     set config (printf "%s\n" $items | fzf --prompt=" Neovim Config = " --height=~50% --layout=reverse --border --exit-0)
     if [ -z $config ]
         echo "Nothing selected"
