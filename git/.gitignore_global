@@ -24,3 +24,12 @@ Thumbs.db
 
 # Go coverage
 coverage.out
+
+# Cursor
+.cursor/
+
+# Claude
+.claude/
+
+# Mise
+mise.toml
