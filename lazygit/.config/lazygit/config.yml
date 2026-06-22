@@ -40,6 +40,10 @@ gui:
     defaultFgColor:
       - "#ffffff"
   nerdFontsVersion: "3" # nerd fonts version to use ("2" or "3"); empty means don't show nerd font icons
+os:
+  shell: fish
+  shellArg: -c
+
 git:
   parseEmoji: true
   overrideGpg: true
