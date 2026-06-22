@@ -18,6 +18,7 @@ window-padding-y = 15
 
 # Font config
 font-family = "MonaspiceRn Nerd Font Mono"
+font-family = "Symbols Nerd Font Mono"
 font-size = 17.5
 
 shell-integration = fish
@@ -32,6 +33,8 @@ clipboard-write = allow
 keybind = super+r=reload_config
 # Open quick terminal
 keybind = global:super+ctrl+shift+space=toggle_quick_terminal
+# Open text editor
+keybind = super+shift+e=text:NVIM_APPNAME=nvim-kick nvim\x0D
 # Open text editor
 keybind = super+e=text:nvim\x0D
 # Open Sesh
@@ -71,3 +74,5 @@ keybind = super+o=text:\x1b:BrowseFiles\x0D
 keybind = super+ctrl+n=text:nvims\x0D
 # clear
 keybind = ctrl+alt+k=text:clear\x0D
+# AI Agent
+keybind = super+shift+a=text:startAIAgent\x0D
