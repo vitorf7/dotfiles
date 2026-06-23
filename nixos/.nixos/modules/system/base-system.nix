@@ -13,7 +13,7 @@
   programs.nix-ld.enable = true;
   programs.fish.enable = true;
   
-  users.users.vitor = {
+  users.users.vitorf7 = {
     isNormalUser = true;
     extraGroups = [ "networkmanager" "wheel" "video" "audio" ];
     shell = pkgs.fish;
@@ -25,19 +25,19 @@
   nixpkgs.config.allowUnfree = true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-  programs.hyprland.enable = lib.mkIf config.vitor.desktop.hyprland.enable true;
-  services.xserver.enable = lib.mkIf config.vitor.desktop.hyprland.enable true;
-  services.displayManager.gdm.enable = lib.mkIf config.vitor.desktop.hyprland.enable true;
+  programs.hyprland.enable = lib.mkIf config.vitorf7.desktop.hyprland.enable true;
+  services.xserver.enable = lib.mkIf config.vitorf7.desktop.hyprland.enable true;
+  services.displayManager.gdm.enable = lib.mkIf config.vitorf7.desktop.hyprland.enable true;
   
-  services.pipewire = lib.mkIf config.vitor.desktop.hyprland.enable {
+  services.pipewire = lib.mkIf config.vitorf7.desktop.hyprland.enable {
     enable = true;
     alsa.enable = true;
     pulse.enable = true;
   };
   
-  hardware.bluetooth = lib.mkIf config.vitor.desktop.hyprland.enable {
+  hardware.bluetooth = lib.mkIf config.vitorf7.desktop.hyprland.enable {
     enable = true;
     powerOnBoot = true;
   };
-  services.blueman.enable = lib.mkIf config.vitor.desktop.hyprland.enable true;
+  services.blueman.enable = lib.mkIf config.vitorf7.desktop.hyprland.enable true;
 }

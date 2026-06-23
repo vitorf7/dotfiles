@@ -15,9 +15,9 @@
   services.spice-vdagentd.enable = true;
 
   # Wrapper Module Switches
-  vitor.desktop.hyprland.enable = true;
-  vitor.hardware.fingerprint.enable = false;
-  vitor.hardware.nvidia.enable = false;
+  vitorf7.desktop.hyprland.enable = true;
+  vitorf7.hardware.fingerprint.enable = false;
+  vitorf7.hardware.nvidia.enable = false;
 
-  system.stateVersion = "24.05";
+  system.stateVersion = "26.05";
 }
