@@ -10,9 +10,9 @@
 
   networking.hostName = "thinkpad-t480";
 
-  vitor.desktop.hyprland.enable = true;
-  vitor.hardware.fingerprint.enable = true;
-  vitor.hardware.nvidia.enable = true;
+  vitorf7.desktop.hyprland.enable = true;
+  vitorf7.hardware.fingerprint.enable = true;
+  vitorf7.hardware.nvidia.enable = true;
 
-  system.stateVersion = "24.05";
+  system.stateVersion = "26.05";
 }
