@@ -39,14 +39,7 @@ Once the hash is fixed and the ARM build is verified, remove this line from `hyp
 broken = stdenv.isAarch64;
 ```
 
-### 2. Mouseless hash
-
-Check the [mouseless releases page](https://github.com/elitek7/mouseless/releases) for the latest Linux AppImage. Update `.nixos/pkgs/mouseless.nix` with:
-- The correct `version`
-- The correct `url` (matching the release asset filename)
-- The real `hash` (get it the same way as hyprmod above)
-
-### 3. Hardware configuration (per machine)
+### 2. Hardware configuration (per machine)
 
 Each host directory has a placeholder `hardware-configuration.nix`. Replace it with the real one generated on the target machine:
 
@@ -88,8 +81,8 @@ Then set `gtk.theme.name` and `gtk.theme.package` in the same file.
 ├── lib/
 │   └── mkHost.nix             Host builder helper (reduces boilerplate)
 ├── pkgs/
-│   ├── hyprmod.nix            Custom derivation — needs real hash
-│   └── mouseless.nix          Custom derivation — needs real hash + URL
+│   ├── hyprmod.nix            Custom derivation — needs real hash (see step 1 above)
+│   └── mouseless.nix          Custom derivation — hashes baked in for v1.0.0-preview.3
 ├── modules/
 │   ├── options.nix            Custom option declarations
 │   ├── system/

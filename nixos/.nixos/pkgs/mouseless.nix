@@ -1,32 +1,27 @@
-{ lib, appimageTools, fetchurl }:
+{ lib, appimageTools, fetchurl, stdenv }:
 
-# mouseless.click is distributed as a Linux AppImage.
-# Steps to update:
-#   1. Find the latest AppImage URL at https://github.com/elitek7/mouseless/releases
-#   2. Run: nix hash file --sri --type sha256 $(nix-prefetch-url --print-path <url> | tail -1)
-#   3. Paste the hash below and update version + url.
 let
-  version = "0.1.0"; # update this
   pname = "mouseless";
-in
-appimageTools.wrapAppImage {
-  inherit pname version;
+  version = "1.0.0-preview.3";
 
-  src = fetchurl {
-    url = "https://github.com/elitek7/mouseless/releases/download/v${version}/Mouseless-${version}.AppImage";
-    # Replace with the real hash after running the steps above:
-    hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+  sources = {
+    x86_64-linux = {
+      url = "https://github.com/cymian/mouseless/releases/download/v${version}/Mouseless_v${version}_arch-20260510.0.525573_x86_64.AppImage";
+      hash = "sha256-xbdHt92VqCksnHho4Riq4GiW4u3xpi47P7J9Oe8VmxQ=";
+    };
+    aarch64-linux = {
+      url = "https://github.com/cymian/mouseless/releases/download/v${version}/Mouseless_v${version}_debian-12_aarch64.AppImage";
+      hash = "sha256-yrr5Cma46WAheIF5/eetIAzEWlCMztJdrbCFVy3khLs=";
+    };
   };
 
-  extraPkgs = pkgs: with pkgs; [
-    xorg.libX11
-    xorg.libXcomposite
-    xorg.libXdamage
-    xorg.libXrandr
-  ];
+  src = fetchurl sources.${stdenv.system};
+in
+appimageTools.wrapAppImage {
+  inherit pname version src;
 
   meta = with lib; {
-    description = "Keyboard-driven browsing and app control (mouseless.click)";
+    description = "Keyboard-driven launcher and window manager companion (mouseless.click)";
     homepage = "https://mouseless.click";
     license = licenses.unfree;
     platforms = [ "x86_64-linux" "aarch64-linux" ];
