@@ -91,7 +91,8 @@ Then set `gtk.theme.name` and `gtk.theme.package` in the same file.
 │   │   ├── bluetooth.nix      Bluetooth + blueman (active when hyprland.enable)
 │   │   ├── display.nix        GDM + Hyprland session (active when hyprland.enable)
 │   │   ├── fingerprint.nix    fprintd + PAM (active when fingerprint.enable)
-│   │   └── nvidia-hybrid.nix  NVIDIA PRIME offload (active when nvidia.enable)
+│   │   ├── nvidia-hybrid.nix  NVIDIA PRIME offload (active when nvidia.enable)
+│   │   └── vm.nix             QEMU guest + SPICE agent (active when vm.enable)
 │   └── home/
 │       ├── default.nix        Home-manager entry point
 │       ├── core.nix           Shell, editor, CLI tools + dotfile symlinks
