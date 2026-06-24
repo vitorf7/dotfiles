@@ -10,6 +10,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    zen-browser = {
+      url = "github:youwen5/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # TODO: add nix-darwin for macOS M1 support
     # nix-darwin = {
     #   url = "github:LnL7/nix-darwin/master";

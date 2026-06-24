@@ -14,13 +14,15 @@ lib.mkIf isDesktop {
     waybar
     swaynotificationcenter
     networkmanagerapplet
-    zen-browser
-    spotify
     vicinae
     swayosd
 
+    inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
+
     self.packages.${pkgs.system}.hyprmod
     self.packages.${pkgs.system}.mouseless
+  ] ++ lib.optionals pkgs.stdenv.isx86_64 [
+    spotify
   ];
 
   xdg.configFile = {
