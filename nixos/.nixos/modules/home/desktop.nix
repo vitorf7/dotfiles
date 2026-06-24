@@ -10,7 +10,7 @@ lib.mkIf isDesktop {
     hypridle
     hyprsunset
     wlogout
-    rofi-wayland
+    rofi
     waybar
     swaynotificationcenter
     networkmanagerapplet
