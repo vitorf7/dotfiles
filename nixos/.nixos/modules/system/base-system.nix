@@ -5,6 +5,7 @@
     ./audio.nix
     ./bluetooth.nix
     ./display.nix
+    ./vm.nix
   ];
 
   boot.loader.grub.enable = true;

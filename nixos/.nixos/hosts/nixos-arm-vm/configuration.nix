@@ -10,11 +10,6 @@
 
   networking.hostName = "nixos-vm";
 
-  # VM-Specific Additions for clipboard and resolution scaling
-  services.qemuGuest.enable = true;
-  services.spice-vdagentd.enable = true;
-
-  # Wrapper Module Switches
   vitorf7.desktop.hyprland.enable = true;
   vitorf7.hardware.vm.enable = true;
   vitorf7.hardware.fingerprint.enable = false;
