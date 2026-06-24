@@ -22,6 +22,12 @@ in
     bat
     fastfetch
     starship
+    neovim
+    fx
+    direnv
+    delta
+    mise
+    rbenv
   ];
 
   xdg.configFile = {
