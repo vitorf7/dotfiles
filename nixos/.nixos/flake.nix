@@ -27,10 +27,17 @@
 
       systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ];
 
-      perSystem = { pkgs, ... }: {
-        packages.hyprmod = pkgs.callPackage ./pkgs/hyprmod.nix { };
-        packages.mouseless = pkgs.callPackage ./pkgs/mouseless.nix { };
-      };
+      perSystem = { system, ... }:
+        let
+          pkgs = import inputs.nixpkgs {
+            inherit system;
+            config.allowUnfree = true;
+          };
+        in
+        {
+          packages.hyprmod = pkgs.callPackage ./pkgs/hyprmod.nix { };
+          packages.mouseless = pkgs.callPackage ./pkgs/mouseless.nix { };
+        };
 
       flake = {
         nixosConfigurations =
