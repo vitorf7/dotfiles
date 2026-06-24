@@ -11,7 +11,7 @@ inputs.nixpkgs.lib.nixosSystem {
     {
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
-      home-manager.extraSpecialArgs = { inherit self; };
+      home-manager.extraSpecialArgs = { inherit inputs self; };
       home-manager.users.vitorf7 = import (root + "/modules/home/default.nix");
     }
   ] ++ extraModules;
