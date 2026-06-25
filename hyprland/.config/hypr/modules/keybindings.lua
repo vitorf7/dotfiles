@@ -175,3 +175,11 @@ hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause"), {
 hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), {
 	locked = true,
 })
+
+-- Clamshell mode: toggle internal display on lid open/close
+hl.bind("switch:on:Lid Switch", hl.dsp.exec_cmd(hyprScripts .. "/clamshell.sh"), {
+	locked = true,
+})
+hl.bind("switch:off:Lid Switch", hl.dsp.exec_cmd(hyprScripts .. "/clamshell.sh"), {
+	locked = true,
+})
