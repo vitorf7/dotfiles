@@ -6,6 +6,8 @@
     ./desktop.nix
     ./theming.nix
     ./dev.nix
+    ./quickshell.nix
+    ./qs_brain_shell.nix
   ];
 
   home = {

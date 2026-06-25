@@ -15,6 +15,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    brain-shell = {
+      url = "github:Brainitech/Brain_Shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # TODO: add nix-darwin for macOS M1 support
     # nix-darwin = {
     #   url = "github:LnL7/nix-darwin/master";

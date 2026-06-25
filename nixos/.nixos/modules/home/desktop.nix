@@ -21,6 +21,14 @@ lib.mkIf isDesktop {
 
     self.packages.${pkgs.system}.hyprmod
     self.packages.${pkgs.system}.mouseless
+
+    # Webcam control and virtual camera tooling
+    v4l-utils
+
+    # Audio: works with Elgato Wave mic and any USB audio device via PipeWire.
+    # easyeffects provides noise suppression, EQ, and compressor for the mic.
+    easyeffects
+    alsa-utils
   ] ++ lib.optionals pkgs.stdenv.isx86_64 [
     spotify
   ];
