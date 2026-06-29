@@ -239,3 +239,15 @@ function kill_all_neovim
     
     echo "All Neovim processes terminated"
 end
+
+function nrs
+    z $HOME/.nixos
+    sudo nixos-rebuild switch --flake ".#$argv[1]"
+    z -
+end
+
+function hm
+    z $HOME/.nixos
+    home-manager switch --flake ".#$argv[1]"
+    z -
+end
