@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, ... }:
 
 let
   dotfilesPath = "${config.home.homeDirectory}/dotfiles";
@@ -8,7 +8,9 @@ in
     enable = true;
     settings = {
       gpg.format = "ssh";
-      "gpg \"ssh\"".program = "${lib.getExe' pkgs._1password-gui "op-ssh-sign"}";
+      # Use the stable system symlink rather than a nix store path, which
+      # would change on every 1Password update and break signing after rebuild.
+      "gpg \"ssh\"".program = "/run/current-system/sw/bin/op-ssh-sign";
       commit.gpgsign = true;
       # signingKey, user.name, and user.email live in ~/.gitconfig.local
       # (not committed — run scripts/setup-gitconfig-local.sh to create it)
