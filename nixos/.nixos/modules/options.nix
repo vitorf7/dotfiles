@@ -2,6 +2,7 @@
 
 {
   options.vitorf7 = {
+    desktop.enable = lib.mkEnableOption "General desktop environment (browser, fonts, themes, audio)";
     desktop.hyprland.enable = lib.mkEnableOption "Hyprland Wayland Desktop Ecosystem";
     hardware.nvidia.enable = lib.mkEnableOption "Nvidia PRIME Hybrid Graphics";
     hardware.fingerprint.enable = lib.mkEnableOption "Fingerprint Reader Support";

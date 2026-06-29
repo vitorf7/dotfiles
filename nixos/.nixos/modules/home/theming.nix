@@ -1,8 +1,7 @@
 { pkgs, lib, osConfig, ... }:
 
-lib.mkIf osConfig.vitorf7.desktop.hyprland.enable {
+lib.mkIf osConfig.vitorf7.desktop.enable {
   home.packages = with pkgs; [
-    nwg-look
     papirus-icon-theme
     # Add your preferred GTK theme package here, e.g.:
     # rose-pine-gtk-theme
@@ -23,6 +22,6 @@ lib.mkIf osConfig.vitorf7.desktop.hyprland.enable {
 
   qt = {
     enable = true;
-    platformTheme.name = "gtk";
+    platformTheme.name = "gtk3";
   };
 }

@@ -2,11 +2,12 @@
 { system, host, extraModules ? [] }:
 
 inputs.nixpkgs.lib.nixosSystem {
-  inherit system;
   specialArgs = { inherit self; };
   modules = [
+    { nixpkgs.hostPlatform = system; }
     (root + "/hosts/${host}/configuration.nix")
     (root + "/modules/options.nix")
+    inputs.brain-shell.nixosModules.default
     inputs.home-manager.nixosModules.home-manager
     {
       home-manager.useGlobalPkgs = true;
