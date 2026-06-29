@@ -13,7 +13,6 @@ in
     ghostty
     tmux
     bob-nvim
-    git
     stow
     ripgrep
     fd
@@ -28,13 +27,15 @@ in
     delta
     mise
     rbenv
+    eza
+    tree-sitter
   ];
 
   xdg.configFile = {
     "fish".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/fish/.config/fish";
     "ghostty".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/ghostty/.config/ghostty";
     "tmux".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/tmux";
-    "nvim".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.nixos/nvim-kick";
+    "nvim".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nvim-kick";
     "starship.toml".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/starship/.config/starship.toml";
     "bat".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/bat/.config/bat";
     "fastfetch".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/fastfetch/.config/fastfetch";

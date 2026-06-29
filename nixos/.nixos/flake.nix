@@ -16,7 +16,7 @@
     };
 
     brain-shell = {
-      url = "github:Brainitech/Brain_Shell";
+      url = "github:Brainitech/Brain_Shell/dev";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

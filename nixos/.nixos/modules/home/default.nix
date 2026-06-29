@@ -4,6 +4,7 @@
   imports = [
     ./core.nix
     ./desktop.nix
+    ./hyprland.nix
     ./theming.nix
     ./dev.nix
     ./quickshell.nix

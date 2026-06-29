@@ -1,26 +1,31 @@
-{ config, pkgs, lib, osConfig, self, inputs, ... }:
+{ config, pkgs, lib, osConfig, inputs, ... }:
 
-let
-  dotfilesPath = "${config.home.homeDirectory}/dotfiles";
-  isDesktop = osConfig.vitorf7.desktop.hyprland.enable;
-in
-lib.mkIf isDesktop {
+lib.mkIf osConfig.vitorf7.desktop.enable {
+  programs.ssh = {
+    enable = true;
+    enableDefaultConfig = false;
+    settings = {
+      "*" = {
+        IdentityAgent = "${config.home.homeDirectory}/.1password/agent.sock";
+      };
+      "github.com" = {
+        HostName = "github.com";
+        User = "git";
+        IdentityFile = "~/.ssh/personalgit.pub";
+      };
+      "personalgit" = {
+        HostName = "github.com";
+        User = "git";
+        IdentityFile = "~/.ssh/personalgit.pub";
+        IdentitiesOnly = true;
+      };
+    };
+  };
+
   home.packages = with pkgs; [
-    hyprlock
-    hypridle
-    hyprsunset
-    wlogout
-    rofi
-    waybar
-    swaynotificationcenter
-    networkmanagerapplet
-    vicinae
-    swayosd
-
     inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
 
-    self.packages.${pkgs.system}.hyprmod
-    self.packages.${pkgs.system}.mouseless
+    nerd-fonts.monaspace
 
     # Webcam control and virtual camera tooling
     v4l-utils
@@ -32,13 +37,4 @@ lib.mkIf isDesktop {
   ] ++ lib.optionals pkgs.stdenv.isx86_64 [
     spotify
   ];
-
-  xdg.configFile = {
-    "hypr".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/hyprland/.config/hypr";
-    "rofi".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/rofi/.config/rofi";
-    "waybar".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/waybar/.config/waybar";
-    "swaync".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/swaync/.config/swaync";
-    "wlogout".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/wlogout/.config/wlogout";
-    "matugen".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/matugen/.config/matugen";
-  };
 }

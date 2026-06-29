@@ -5,6 +5,8 @@
     ./audio.nix
     ./bluetooth.nix
     ./display.nix
+    ./hyprland.nix
+    ./qs_brain_shell.nix
     ./vm.nix
     ./quickshell.nix
   ];

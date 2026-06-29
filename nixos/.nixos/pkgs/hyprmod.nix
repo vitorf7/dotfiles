@@ -5,6 +5,7 @@
 , gobject-introspection
 , gtk4
 , libadwaita
+, lua5_4
 , python3Packages
 , wrapGAppsHook4
 }:
@@ -134,6 +135,7 @@ python3Packages.buildPythonApplication {
   dontWrapGApps = true;
   preFixup = ''
     makeWrapperArgs+=("''${gappsWrapperArgs[@]}")
+    makeWrapperArgs+=(--prefix PATH : ${lib.makeBinPath [ lua5_4 ]})
   '';
 
   postInstall = ''
