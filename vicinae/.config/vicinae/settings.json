@@ -1,0 +1,83 @@
+// This configuration is merged with the default vicinae configuration file, which you can obtain by running the `vicinae config default` command.
+// Every item defined in this file takes precedence over the values defined in the default config or any other imported file.
+//
+// You can make manual edits to this file, however you should keep in mind that this file may be written to by vicinae when a configuration change is made through the GUI.
+// When that happens, any custom comments or formatting will be lost.
+//
+// If you want to maintain a configuration file with your own comments and formatting, you should create a separate file and add it to the 'imports' array.
+//
+// Learn more about configuration at https://docs.vicinae.com/config
+
+{
+   "$schema": "https://vicinae.com/schemas/config.json",
+   "font": {
+      "normal": {
+         "family": "MonaspiceNe Nerd Font Propo",
+         "size": 14
+      }
+   },
+   "theme": {
+      "dark": {
+         "name": "matugen"
+      }
+   },
+   "launcher_window": {
+      "opacity": 0.9
+   },
+   "providers": {
+      "@Matis_Olives/wallpaper": {
+         "preferences": {
+            "command": "/home/vitorf7/.config/hypr/scripts/matugenMagick.sh %img% --dark",
+            "directory": "/home/vitorf7/Pictures/backgrounds"
+         }
+      },
+      "@abielzulio/store.raycast.chatgpt": {
+         "preferences": {
+            "isAutoFullInput": true,
+            "isAutoLoadText": false,
+            "isAutoSaveConversation": true,
+            "isAutoTTS": false,
+            "isCustomModel": false,
+            "isHistoryPaused": false,
+            "proxyProtocol": "http",
+            "useApiEndpoint": false,
+            "useAzure": false,
+            "useProxy": false,
+            "useStream": true,
+            "useVisionModel": false
+         }
+      },
+      "@joshmedeski/store.raycast.sesh": {
+         "entrypoints": {
+            "cmd-connect": {
+               "preferences": {
+                  "environmentPath": "/usr/local/bin:/usr/bin:/opt/homebrew/bin:/run/current-system/sw/bin",
+                  "openWithApp": "Ghostty"
+               }
+            }
+         }
+      },
+      "@leonkohli/store.vicinae.process-manager": {
+         "preferences": {
+            "clear-search-after-kill": false,
+            "close-window-after-kill": false,
+            "process-limit": "100",
+            "refresh-interval": "2000",
+            "search-in-paths": true,
+            "search-in-pid": true,
+            "show-path": false,
+            "show-pid": true,
+            "show-system-processes": false,
+            "sort-by-memory": true
+         }
+      },
+      "Matis_Olives/wallpaper": {
+         "preferences": {
+            "directory": "/home/vitorf7/Pictures/backgrounds",
+            "command": "/home/vitorf7/.config/hypr/scripts/matugenMagick.sh %img% --dark",
+            "recursive": false,
+            "columns": "3"
+         }
+      }
+   }
+}
