@@ -17,6 +17,9 @@
       }
    },
    "theme": {
+      "light": {
+         "name": "matugen"
+      },
       "dark": {
          "name": "matugen"
       }
