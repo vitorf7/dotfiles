@@ -18,11 +18,6 @@ in
     };
   };
 
-  # npm install -g writes to the Nix store by default, which is read-only.
-  # Redirect the global prefix to a writable user directory instead.
-  home.sessionVariables.NPM_CONFIG_PREFIX = "${config.home.homeDirectory}/.npm-global";
-  home.sessionPath = [ "${config.home.homeDirectory}/.npm-global/bin" ];
-
   home.packages = with pkgs; [
     k9s
     lazygit
