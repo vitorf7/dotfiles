@@ -10,7 +10,10 @@ in
   ];
 
   home.packages = with pkgs; [
+    nix-ld
+    os-prober
     ghostty
+    kitty
     tmux
     bob-nvim
     stow
@@ -29,6 +32,7 @@ in
     rbenv
     eza
     tree-sitter
+    sesh
   ];
 
   xdg.configFile = {
