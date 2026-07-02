@@ -11,29 +11,7 @@ lib.mkIf osConfig.vitorf7.desktop.enable {
     name = "rose-pine-hyprcursor";
     package = pkgs.rose-pine-hyprcursor;
     size = 24;
-    gtk.enable = true;
-  };
-
-  gtk = {
-    enable = true;
-    theme = {
-      name = "Rose-Pine";
-      package = pkgs.rose-pine-gtk-theme;
-    };
-    iconTheme = {
-      name = "Papirus-Dark";
-      package = pkgs.papirus-icon-theme;
-    };
-    font = {
-      name = "Sans";
-      size = 11;
-    };
-    gtk3.extraConfig = {
-      gtk-application-prefer-dark-theme = 1;
-    };
-    gtk4.extraConfig = {
-      gtk-application-prefer-dark-theme = 1;
-    };
+    gtk.enable = false;
   };
 
   # FreeDesktop color-scheme preference — read by Ghostty, GTK4 apps,
