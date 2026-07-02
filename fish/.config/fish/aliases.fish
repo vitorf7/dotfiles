@@ -241,13 +241,25 @@ function kill_all_neovim
 end
 
 function nrs
+    if test (count $argv) -gt 0
+        set flake $argv[1]
+    else
+        set flake (hostname -s)
+    end
+    echo "Rebuilding NixOS flake: $flake"
     z $HOME/.nixos
-    sudo nixos-rebuild switch --flake ".#$argv[1]"
+    sudo nixos-rebuild switch --flake ".#$flake"
     z -
 end
 
 function hm
+    if test (count $argv) -gt 0
+        set flake $argv[1]
+    else
+        set flake (hostname -s)
+    end
+    echo "Switching home-manager flake: $flake"
     z $HOME/.nixos
-    home-manager switch --flake ".#$argv[1]"
+    home-manager switch --flake ".#$flake"
     z -
 end
