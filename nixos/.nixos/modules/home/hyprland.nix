@@ -16,6 +16,7 @@ lib.mkIf osConfig.vitorf7.desktop.hyprland.enable {
     vicinae
     swayosd
     nwg-look
+    avizo
 
     self.packages.${pkgs.stdenv.hostPlatform.system}.hyprmod
     self.packages.${pkgs.stdenv.hostPlatform.system}.mouseless
