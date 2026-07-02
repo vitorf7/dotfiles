@@ -1,6 +1,17 @@
 local terminal = "ghostty"
 local mainMod = "ALT"
-local browser = "zen-browser"
+
+local function find_cmd(...)
+  for _, cmd in ipairs({...}) do
+    local handle = io.popen("command -v " .. cmd .. " 2>/dev/null")
+    local result = handle:read("*a")
+    handle:close()
+    if result ~= "" then return cmd end
+  end
+  return select(1, ...)
+end
+
+local browser = find_cmd("zen-browser", "zen")
 local music = "spotify-launcher"
 local social = "rambox"
 local notes = "obsidian"
