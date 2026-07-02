@@ -35,3 +35,6 @@ rofi/.config/rofi/matugen/matugen-rofi.rasi
 
 # rofi images
 rofi/.config/rofi/images/*
+
+# nix hardware configs
+nixos/.nixos/hosts/**/hardware-configuration.nix
