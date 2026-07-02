@@ -106,6 +106,10 @@ if test -f "$HOME/google-cloud-sdk/path.zsh.inc"
     source "$HOME/google-cloud-sdk/path.fish.inc"
 end
 
+# npm - redirect global installs away from the read-only Nix store
+set -Ux NPM_CONFIG_PREFIX "$HOME/.npm-global"
+fish_add_path $HOME/.npm-global/bin
+
 # golang - https://golang.google.cn/
 set -Ux GOPATH $HOME/go
 set -Ux GO111MODULE on
