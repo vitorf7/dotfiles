@@ -17,6 +17,7 @@ lib.mkIf osConfig.vitorf7.desktop.hyprland.enable {
     swayosd
     nwg-look
     avizo
+    nwg-dock-hyprland
 
     self.packages.${pkgs.stdenv.hostPlatform.system}.hyprmod
     self.packages.${pkgs.stdenv.hostPlatform.system}.mouseless
