@@ -10,6 +10,7 @@ in
   ];
 
   home.packages = with pkgs; [
+    killall
     nix-ld
     os-prober
     ghostty
@@ -33,16 +34,19 @@ in
     eza
     tree-sitter
     sesh
+    gh
   ];
 
   xdg.configFile = {
     "fish".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/fish/.config/fish";
     "ghostty".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/ghostty/.config/ghostty";
-    "tmux".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/tmux";
+    "tmux".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/tmux/.config/tmux";
     "nvim".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nvim-kick";
     "starship.toml".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/starship/.config/starship.toml";
     "bat".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/bat/.config/bat";
     "fastfetch".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/fastfetch/.config/fastfetch";
+    "lazygit".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/lazygit/.config/lazygit";
+    "gh".source = config.lib.file.mkOutOfStoreSymlink "${dotfilesPath}/gh/.config/gh";
   };
 
   home.file = {
