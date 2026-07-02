@@ -46,7 +46,7 @@ output_path = '~/.config/nwg-dock-hyprland/colors.css'
 post_hook = 'killall -9 nwg-dock-hyprland && ~/.config/nwg-dock-hyprland/launch.sh & disown'
 
 # AGS
-[templates.ags]
-input_path = '~/.config/matugen/templates/ags-colors.scss'
-output_path = '~/.config/ags/colors.scss'
-post_hook = 'ags quit && ags run & disown'
+# [templates.ags]
+# input_path = '~/.config/matugen/templates/ags-colors.scss'
+# output_path = '~/.config/ags/colors.scss'
+# post_hook = 'ags quit && ags run & disown'
