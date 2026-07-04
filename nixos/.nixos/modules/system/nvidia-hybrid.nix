@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, pkgs, lib, ... }:
 
 lib.mkIf config.vitorf7.hardware.nvidia.enable {
   services.xserver.videoDrivers = [ "nvidia" ];
@@ -16,5 +16,11 @@ lib.mkIf config.vitorf7.hardware.nvidia.enable {
       intelBusId = "PCI:0:2:0";
       nvidiaBusId = "PCI:1:0:0";
     };
+  };
+
+  hardware.graphics = {
+    enable = true;
+    extraPackages = with pkgs; [ intel-media-driver ];
+    extraPackages32 = with pkgs.pkgsi686Linux; [ intel-media-driver ];
   };
 }
