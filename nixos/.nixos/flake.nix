@@ -20,6 +20,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    ambxst = {
+      url = "github:Axenide/Ambxst";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # TODO: add nix-darwin for macOS M1 support
     # nix-darwin = {
     #   url = "github:LnL7/nix-darwin/master";

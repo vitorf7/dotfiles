@@ -1,0 +1,342 @@
+[startup]
+exec-once = "ambxst"
+[appearance]
+[appearance.gaps]
+inner = 2
+outer = 4
+[appearance.border]
+width = 2
+active_color = "rgb(f1be6d)"
+inactive_color = "rgb(25211c)"
+rounding = 16
+[appearance.opacity]
+active = 1.0
+inactive = 1.0
+[appearance.blur]
+enabled = true
+size = 4
+passes = 2
+[appearance.shadow]
+enabled = true
+size = 8
+color = "rgba(00000080)"
+[appearance.animations]
+enabled = true
+
+[general]
+layout = "dwindle"
+
+[[keybinds]]
+modifiers = ["SUPER"]
+key = "Super_L"
+dispatcher = "exec"
+argument = "ambxst run launcher"
+flags = "r"
+enabled = true
+
+[[keybinds]]
+modifiers = ["SUPER"]
+key = "D"
+dispatcher = "exec"
+argument = "ambxst run dashboard"
+flags = ""
+enabled = true
+
+[[keybinds]]
+modifiers = ["SUPER"]
+key = "A"
+dispatcher = "exec"
+argument = "ambxst run assistant"
+flags = ""
+enabled = true
+
+[[keybinds]]
+modifiers = ["SUPER"]
+key = "V"
+dispatcher = "exec"
+argument = "ambxst run clipboard"
+flags = ""
+enabled = true
+
+[[keybinds]]
+modifiers = ["SUPER"]
+key = "PERIOD"
+dispatcher = "exec"
+argument = "ambxst run emoji"
+flags = ""
+enabled = true
+
+[[keybinds]]
+modifiers = ["SUPER"]
+key = "N"
+dispatcher = "exec"
+argument = "ambxst run notes"
+flags = ""
+enabled = true
+
+[[keybinds]]
+modifiers = ["SUPER"]
+key = "T"
+dispatcher = "exec"
+argument = "ambxst run tmux"
+flags = ""
+enabled = true
+
+[[keybinds]]
+modifiers = ["SUPER"]
+key = "COMMA"
+dispatcher = "exec"
+argument = "ambxst run wallpapers"
+flags = ""
+enabled = true
+
+[[keybinds]]
+modifiers = ["SUPER"]
+key = "TAB"
+dispatcher = "exec"
+argument = "ambxst run overview"
+flags = ""
+enabled = true
+
+[[keybinds]]
+modifiers = ["SUPER"]
+key = "ESCAPE"
+dispatcher = "exec"
+argument = "ambxst run powermenu"
+flags = ""
+enabled = true
+
+[[keybinds]]
+modifiers = ["SUPER", "SHIFT"]
+key = "C"
+dispatcher = "exec"
+argument = "ambxst run config"
+flags = ""
+enabled = true
+
+[[keybinds]]
+modifiers = ["SUPER"]
+key = "L"
+dispatcher = "exec"
+argument = "loginctl lock-session"
+flags = ""
+enabled = true
+
+[[keybinds]]
+modifiers = ["SUPER"]
+key = "S"
+dispatcher = "exec"
+argument = "ambxst run tools"
+flags = ""
+enabled = true
+
+[[keybinds]]
+modifiers = ["SUPER", "SHIFT"]
+key = "S"
+dispatcher = "exec"
+argument = "ambxst run screenshot"
+flags = ""
+enabled = true
+
+[[keybinds]]
+modifiers = ["SUPER", "SHIFT"]
+key = "R"
+dispatcher = "exec"
+argument = "ambxst run screenrecord"
+flags = ""
+enabled = true
+
+[[keybinds]]
+modifiers = ["SUPER", "SHIFT"]
+key = "A"
+dispatcher = "exec"
+argument = "ambxst run lens"
+flags = ""
+enabled = true
+
+[[keybinds]]
+modifiers = ["SUPER", "ALT"]
+key = "B"
+dispatcher = "exec"
+argument = "ambxst reload"
+flags = ""
+enabled = true
+
+[[keybinds]]
+modifiers = ["SUPER", "CTRL", "ALT"]
+key = "B"
+dispatcher = "exec"
+argument = "ambxst quit"
+flags = ""
+enabled = true
+
+[[keybinds]]
+modifiers = ["SUPER"]
+key = "mouse:272"
+dispatcher = "movewindow"
+argument = ""
+flags = "m"
+enabled = true
+
+[[keybinds]]
+modifiers = ["SUPER"]
+key = "mouse:273"
+dispatcher = "resizewindow"
+argument = ""
+flags = "m"
+enabled = true
+
+[[keybinds]]
+modifiers = []
+key = "XF86AudioPlay"
+dispatcher = "exec"
+argument = "playerctl play-pause"
+flags = ""
+enabled = true
+
+[[keybinds]]
+modifiers = []
+key = "XF86AudioPrev"
+dispatcher = "exec"
+argument = "playerctl previous"
+flags = ""
+enabled = true
+
+[[keybinds]]
+modifiers = []
+key = "XF86AudioNext"
+dispatcher = "exec"
+argument = "playerctl next"
+flags = ""
+enabled = true
+
+[[keybinds]]
+modifiers = []
+key = "XF86AudioMedia"
+dispatcher = "exec"
+argument = "playerctl play-pause"
+flags = "l"
+enabled = true
+
+[[keybinds]]
+modifiers = []
+key = "XF86AudioStop"
+dispatcher = "exec"
+argument = "playerctl stop"
+flags = "l"
+enabled = true
+
+[[keybinds]]
+modifiers = []
+key = "XF86AudioRaiseVolume"
+dispatcher = "exec"
+argument = "wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 10%+"
+flags = "le"
+enabled = true
+
+[[keybinds]]
+modifiers = []
+key = "XF86AudioLowerVolume"
+dispatcher = "exec"
+argument = "wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 10%-"
+flags = "le"
+enabled = true
+
+[[keybinds]]
+modifiers = []
+key = "XF86AudioMute"
+dispatcher = "exec"
+argument = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+flags = "le"
+enabled = true
+
+[[keybinds]]
+modifiers = []
+key = "XF86MonBrightnessUp"
+dispatcher = "exec"
+argument = "ambxst brightness +5"
+flags = "le"
+enabled = true
+
+[[keybinds]]
+modifiers = []
+key = "XF86MonBrightnessDown"
+dispatcher = "exec"
+argument = "ambxst brightness -5"
+flags = "le"
+enabled = true
+
+[[keybinds]]
+modifiers = []
+key = "XF86Calculator"
+dispatcher = "exec"
+argument = "notify-send \"Soon\""
+flags = ""
+enabled = true
+
+[[keybinds]]
+modifiers = ["SUPER", "SHIFT"]
+key = "V"
+dispatcher = "togglespecialworkspace"
+argument = ""
+flags = ""
+enabled = true
+
+[[keybinds]]
+modifiers = ["SUPER", "ALT"]
+key = "V"
+dispatcher = "movetoworkspace"
+argument = "special"
+flags = ""
+enabled = true
+
+[[layer_rules]]
+namespace = "quickshell"
+no_anim = true
+
+[[layer_rules]]
+namespace = "quickshell"
+blur = true
+
+[[layer_rules]]
+namespace = "quickshell"
+blur_popups = true
+
+[[layer_rules]]
+namespace = "quickshell"
+ignore_alpha = true
+ignore_alpha_value = 1.00
+
+[[layer_rules]]
+namespace = "selection"
+no_anim = true
+
+[[layer_rules]]
+namespace = "fabric"
+blur = true
+ignore_alpha_value = 0.4
+
+[[layer_rules]]
+namespace = "ambxst"
+blur = true
+blur_popups = true
+no_anim = true
+ignore_alpha_value = 0.5
+
+[[layer_rules]]
+namespace = "overview"
+blur = true
+blur_popups = true
+no_anim = true
+
+[[layer_rules]]
+namespace = "presets"
+blur = true
+blur_popups = true
+no_anim = true
+
+[input]
+[input.keyboard]
+layouts = ""
+variants = ""
+

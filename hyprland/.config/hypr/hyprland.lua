@@ -29,3 +29,9 @@ require("modules.windowrules")
 
 -- HyprMod managed settings
 require("hyprland-gui")
+
+-- Ambxst
+loadfile(os.getenv("HOME") .. "/.local/share/ambxst/hyprland.lua")()
+
+-- OVERRIDES
+-- Down here you can write or source anything that you want to override from Ambxst's settings.

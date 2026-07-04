@@ -8,6 +8,7 @@ lib.mkIf osConfig.vitorf7.desktop.hyprland.enable {
     hyprlock
     hypridle
     hyprsunset
+    hyprshot
     wlogout
     rofi
     waybar

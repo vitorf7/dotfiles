@@ -13,7 +13,8 @@
   vitorf7.desktop.enable = true;
   vitorf7.desktop.hyprland.enable = true;
   vitorf7.desktop.quickshell.enable = true;
-  vitorf7.desktop.qs_brain_shell.enable = true;
+  vitorf7.desktop.qs_brain_shell.enable = false;
+  vitorf7.desktop.ambxst.enable = true;
   vitorf7.hardware.fingerprint.enable = true;
   vitorf7.hardware.nvidia.enable = true;
 

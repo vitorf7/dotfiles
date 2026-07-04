@@ -9,5 +9,6 @@
     hardware.vm.enable = lib.mkEnableOption "VM guest optimizations (QEMU/SPICE)";
     desktop.quickshell.enable = lib.mkEnableOption "Quickshell framework + common shell runtime deps";
     desktop.qs_brain_shell.enable = lib.mkEnableOption "Brain_Shell Quickshell config (requires quickshell.enable)";
+    desktop.ambxst.enable = lib.mkEnableOption "Ambxst Quickshell shell";
   };
 }
