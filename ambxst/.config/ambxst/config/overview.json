@@ -1,6 +1,6 @@
 {
-    "columns": 5,
-    "rows": 2,
-    "scale": 0.15,
-    "workspaceSpacing": 8
+  "rows": 2,
+  "columns": 5,
+  "scale": 0.15,
+  "workspaceSpacing": 8
 }
