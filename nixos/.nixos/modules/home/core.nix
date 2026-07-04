@@ -29,6 +29,7 @@ in
     fx
     direnv
     delta
+    git
     mise
     rbenv
     eza
