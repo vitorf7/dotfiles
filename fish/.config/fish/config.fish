@@ -31,13 +31,26 @@ eval "$($miseCLI activate fish)"   # or bash/fish
 
 # override the default greeting
 function fish_greeting
-    # Specify the directory containing images
-    set image_dir $HOME/Pictures/backgrounds
+    # Select the image directory, preferring Wallpapers, then backgrounds
+    set image_dir ""
+    if test -d $HOME/Pictures/Wallpapers
+        set image_dir $HOME/Pictures/Wallpapers
+    else if test -d $HOME/Pictures/backgrounds
+        set image_dir $HOME/Pictures/backgrounds
+    end
 
-    # Get a random image file from the specified directory
-    set random_image (find $image_dir -type f \( -iname '*.jpg' -o -iname '*.png' -o -iname '*.gif' \) | shuf -n 1)
+    if test -n "$image_dir"
+        # Get a random image file from the selected directory
+        set random_image (find $image_dir -type f \( -iname '*.jpg' -o -iname '*.png' -o -iname '*.gif' \) | shuf -n 1)
 
-    $fastfetchCLI --kitty-icat (echo $random_image) --logo-height 50 --logo-width 50
+        if test -n "$random_image"
+            $fastfetchCLI --kitty-icat (echo $random_image) --logo-height 50 --logo-width 50
+        else
+            $fastfetchCLI
+        end
+    else
+        $fastfetchCLI
+    end
 end
 
 set -U fish_key_bindings fish_vi_key_bindings
