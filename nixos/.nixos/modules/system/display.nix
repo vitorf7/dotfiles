@@ -18,4 +18,9 @@ lib.mkIf config.vitorf7.desktop.enable {
     enable = true;
     polkitPolicyOwners = [ "vitorf7" ];
   };
+
+  environment.etc."1password/custom_allowed_browsers" = {
+    text = "zen\n";
+    mode = "0755";
+  };
 }
