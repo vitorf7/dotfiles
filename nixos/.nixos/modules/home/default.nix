@@ -9,6 +9,7 @@
     ./dev.nix
     ./quickshell.nix
     ./qs_brain_shell.nix
+    ./ambxst.nix
   ];
 
   home = {

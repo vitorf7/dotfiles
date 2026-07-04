@@ -7,6 +7,7 @@
     ./display.nix
     ./hyprland.nix
     ./qs_brain_shell.nix
+    ./ambxst.nix
     ./vm.nix
     ./quickshell.nix
   ];
@@ -35,6 +36,8 @@
 
   nixpkgs.config.allowUnfree = true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  
+  programs.gpu-screen-recorder.enable = true;
 
   # v4l2loopback: virtual camera support (OBS virtual cam, video calls, etc.)
   # uvcvideo (real webcam driver) loads automatically — no config needed.
