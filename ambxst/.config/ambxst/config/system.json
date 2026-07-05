@@ -1,46 +1,48 @@
 {
-    "disks": ["/"],
-    "updateServiceEnabled": true,
+    "disks": [
+        "/"
+    ],
     "idle": {
         "general": {
-            "lock_cmd": "ambxst lock",
+            "after_sleep_cmd": "ambxst screen on",
             "before_sleep_cmd": "loginctl lock-session",
-            "after_sleep_cmd": "ambxst screen on"
+            "lock_cmd": "ambxst lock"
         },
         "listeners": [
             {
-                "timeout": 150,
+                "onResume": "ambxst brightness -r",
                 "onTimeout": "ambxst brightness 10 -s",
-                "onResume": "ambxst brightness -r"
+                "timeout": 150
             },
             {
-                "timeout": 300,
-                "onTimeout": "loginctl lock-session"
+                "onTimeout": "loginctl lock-session",
+                "timeout": 300
             },
             {
-                "timeout": 330,
+                "onResume": "ambxst screen on",
                 "onTimeout": "ambxst screen off",
-                "onResume": "ambxst screen on"
+                "timeout": 330
             },
             {
-                "timeout": 1800,
-                "onTimeout": "ambxst suspend"
+                "onTimeout": "ambxst suspend",
+                "timeout": 1800
             }
         ]
     },
     "ocr": {
-        "eng": true,
-        "spa": true,
-        "lat": false,
-        "jpn": false,
         "chi_sim": false,
         "chi_tra": false,
-        "kor": false
+        "eng": true,
+        "jpn": false,
+        "kor": false,
+        "lat": false,
+        "spa": true
     },
     "pomodoro": {
-        "workTime": 1500,
-        "restTime": 300,
         "autoStart": false,
-        "syncSpotify": false
-    }
+        "restTime": 300,
+        "syncSpotify": false,
+        "workTime": 1500
+    },
+    "updateServiceEnabled": true
 }
