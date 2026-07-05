@@ -13,6 +13,9 @@ in
     killall
     nix-ld
     os-prober
+    gcc
+    gnumake
+    unzip
     ghostty
     kitty
     tmux
