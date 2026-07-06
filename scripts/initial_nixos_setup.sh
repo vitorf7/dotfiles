@@ -1,17 +1,21 @@
 #!/usr/bin/env bash
 # initial_nixos_setup.sh — Bootstrap a fresh NixOS machine from dotfiles
 #
-# Usage: ./scripts/initial_nixos_setup.sh <hostname>
+# Remote one-liner (clones dotfiles automatically if absent, pulls if present):
+#   bash <(curl -sL https://raw.githubusercontent.com/vitorf7/dotfiles/master/scripts/initial_nixos_setup.sh) <hostname>
+#   # or: curl -sL <URL> | bash -s -- <hostname>
 #
-# Run this once after cloning your dotfiles to $HOME/dotfiles on a fresh NixOS
-# install.  It will:
-#   1. Stow the nixos package  ($HOME/.nixos symlink)
-#   2. Copy /etc/nixos/hardware-configuration.nix into the host directory
+# Local (dotfiles already cloned):
+#   ./scripts/initial_nixos_setup.sh <hostname>
+#
+# What it does:
+#   1. Clone/pull dotfiles to $HOME/dotfiles (skipped when running locally)
+#   2. Stow the nixos package  ($HOME/.nixos symlink)
+#   3. Copy /etc/nixos/hardware-configuration.nix into the host directory
 #      and git-stage it (required — Nix flakes ignore untracked files)
-#   3. Run `nixos-rebuild boot --flake .#<hostname>` (activates on next reboot)
+#   4. Run `nixos-rebuild boot --flake .#<hostname>` (activates on next reboot)
 #
 # Prerequisites:
-#   - dotfiles cloned to any path (the script locates itself)
 #   - /etc/nixos/hardware-configuration.nix already generated
 #     (if not: sudo nixos-generate-config)
 
@@ -38,6 +42,33 @@ usage() {
   ls "$DOTFILES/nixos/.nixos/hosts" 2>/dev/null | sed 's/^/  /'
   exit 1
 }
+
+# ─── Bootstrap: clone/pull dotfiles when run remotely (curl | bash) ──────────
+# Detect whether we're running from within the real dotfiles repo.
+# When piped via curl, ${BASH_SOURCE[0]} is "/dev/fd/N", "bash", or empty —
+# none of which resolve to a path containing nixos/.nixos/flake.nix.
+_script_src="${BASH_SOURCE[0]:-}"
+_candidate_dir="$(cd "$(dirname "$_script_src")" 2>/dev/null && pwd)" || _candidate_dir=""
+_candidate_dotfiles="$(dirname "$_candidate_dir")"
+
+if [[ ! -f "$_candidate_dotfiles/nixos/.nixos/flake.nix" ]]; then
+  _dotfiles_target="$HOME/dotfiles"
+
+  if [[ -d "$_dotfiles_target/.git" ]]; then
+    info "Updating dotfiles at $_dotfiles_target…"
+    git -C "$_dotfiles_target" pull origin master || \
+      nix-shell -p git --run "git -C '$_dotfiles_target' pull origin master"
+  elif [[ -e "$_dotfiles_target" ]]; then
+    die "$_dotfiles_target exists but is not a git repo. Remove it and retry."
+  else
+    info "Cloning dotfiles to $_dotfiles_target…"
+    git clone https://github.com/vitorf7/dotfiles.git "$_dotfiles_target" || \
+      nix-shell -p git --run "git clone https://github.com/vitorf7/dotfiles.git '$_dotfiles_target'"
+  fi
+
+  # Re-exec from the real file so ${BASH_SOURCE[0]} resolves correctly from here on.
+  exec bash "$_dotfiles_target/scripts/initial_nixos_setup.sh" "$@"
+fi
 
 # ─── Paths (derived from the script's own location) ───────────────────────────
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
