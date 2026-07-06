@@ -9,7 +9,25 @@ Modular flake-parts setup supporting three hosts and a future macOS stub.
 | `nixos-x86-vm` | x86_64-linux | x86 VM (QEMU/SPICE) |
 | `darwin-m1` | aarch64-darwin | Pending nix-darwin integration |
 
-## Deploying
+## Fresh install (one-liner)
+
+Run this on the target machine right after a minimal NixOS install. It clones the
+dotfiles, copies the hardware config, and builds the flake — reboot to activate.
+
+```bash
+bash <(curl -sL https://raw.githubusercontent.com/vitorf7/dotfiles/master/scripts/initial_nixos_setup.sh) <hostname>
+```
+
+Example:
+
+```bash
+bash <(curl -sL https://raw.githubusercontent.com/vitorf7/dotfiles/master/scripts/initial_nixos_setup.sh) thinkpad-t480
+```
+
+> **Prerequisite:** run `sudo nixos-generate-config` first if
+> `/etc/nixos/hardware-configuration.nix` doesn't exist yet.
+
+## Deploying (subsequent rebuilds)
 
 ```bash
 # From inside the VM or machine:
