@@ -4,7 +4,7 @@ hl.config({
         kb_layout = "gb",
         kb_variant = "",
         kb_model = "",
-        kb_options = "",
+        kb_options = "lv3:ralt_alt",
         kb_rules = "",
         follow_mouse = 1,
         sensitivity = 0,
