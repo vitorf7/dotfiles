@@ -3,9 +3,18 @@
 lib.mkIf config.vitorf7.hardware.nvidia.enable {
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.nvidia = {
+    # MX150 is Pascal (GP108) — requires the legacy 535 series driver.
+    # The current open-source default (595.x) dropped support for this GPU and
+    # logs "No NVIDIA GPU found" at boot, leaving the dGPU completely inactive.
+    package = config.boot.kernelPackages.nvidiaPackages.legacy_535;
+
     modesetting.enable = true;
     powerManagement.enable = true;
-    powerManagement.finegrained = true;
+    # Fine-grained power management aggressively powers the NVIDIA GPU off/on.
+    # With an external display on USB-C/Thunderbolt, this can destabilise DRM
+    # connector enumeration on the Intel side. Disabled until 3-monitor setup
+    # is confirmed stable; re-enable for better battery life on single-screen use.
+    powerManagement.finegrained = false;
     open = false;
     prime = {
       offload = {
