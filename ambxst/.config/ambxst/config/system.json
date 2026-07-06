@@ -1,48 +1,48 @@
 {
-    "disks": [
-        "/"
-    ],
-    "idle": {
-        "general": {
-            "after_sleep_cmd": "ambxst screen on",
-            "before_sleep_cmd": "loginctl lock-session",
-            "lock_cmd": "ambxst lock"
-        },
-        "listeners": [
-            {
-                "onResume": "ambxst brightness -r",
-                "onTimeout": "ambxst brightness 10 -s",
-                "timeout": 150
-            },
-            {
-                "onTimeout": "loginctl lock-session",
-                "timeout": 300
-            },
-            {
-                "onResume": "ambxst screen on",
-                "onTimeout": "ambxst screen off",
-                "timeout": 330
-            },
-            {
-                "onTimeout": "ambxst suspend",
-                "timeout": 1800
-            }
-        ]
+  "disks": [
+    "/"
+  ],
+  "updateServiceEnabled": true,
+  "idle": {
+    "general": {
+      "lock_cmd": "ambxst lock",
+      "before_sleep_cmd": "loginctl lock-session",
+      "after_sleep_cmd": "ambxst screen on"
     },
-    "ocr": {
-        "chi_sim": false,
-        "chi_tra": false,
-        "eng": true,
-        "jpn": false,
-        "kor": false,
-        "lat": false,
-        "spa": true
-    },
-    "pomodoro": {
-        "autoStart": false,
-        "restTime": 300,
-        "syncSpotify": false,
-        "workTime": 1500
-    },
-    "updateServiceEnabled": true
+    "listeners": [
+      {
+        "onResume": "ambxst brightness -r",
+        "onTimeout": "ambxst brightness 10 -s",
+        "timeout": 150
+      },
+      {
+        "onTimeout": "loginctl lock-session",
+        "timeout": 300
+      },
+      {
+        "onResume": "ambxst screen on",
+        "onTimeout": "ambxst screen off",
+        "timeout": 330
+      },
+      {
+        "onTimeout": "ambxst suspend",
+        "timeout": 1800
+      }
+    ]
+  },
+  "ocr": {
+    "eng": true,
+    "spa": true,
+    "lat": false,
+    "jpn": false,
+    "chi_sim": false,
+    "chi_tra": false,
+    "kor": false
+  },
+  "pomodoro": {
+    "workTime": 1500,
+    "restTime": 300,
+    "autoStart": false,
+    "syncSpotify": false
+  }
 }
