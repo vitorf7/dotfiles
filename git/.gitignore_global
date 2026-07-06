@@ -33,3 +33,6 @@ coverage.out
 
 # Mise
 mise.toml
+
+# Tokensave
+.tokensave
