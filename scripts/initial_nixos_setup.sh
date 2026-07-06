@@ -98,12 +98,43 @@ if [[ ! -f /etc/nixos/hardware-configuration.nix ]]; then
   die "/etc/nixos/hardware-configuration.nix not found.\n   Run: sudo nixos-generate-config\n   Then re-run this script."
 fi
 
-# ─── T480-specific reminder ───────────────────────────────────────────────────
+# ─── Pre-flight: NVIDIA bus IDs (T480 only) ──────────────────────────────────
 if [[ "$HOSTNAME" == "thinkpad-t480" ]]; then
-  warn "ThinkPad T480 detected."
-  warn "After the build, verify NVIDIA bus IDs in:"
-  warn "  nixos/.nixos/modules/system/nvidia-hybrid.nix"
-  warn "Run: lspci | grep -E 'VGA|3D'"
+  info "Detecting NVIDIA/Intel PCI bus IDs for PRIME offload…"
+
+  # Bootstrap pciutils if lspci is not present on the minimal install
+  if command -v lspci &>/dev/null; then
+    _lspci_out=$(lspci)
+  else
+    info "lspci not in PATH — running via nix-shell…"
+    _lspci_out=$(nix-shell -p pciutils --run lspci)
+  fi
+
+  # Convert lspci BB:DD.F (hex fields) to NixOS PCI:B:D:F (decimal fields)
+  pci_to_nix() {
+    local addr="$1" bus dev fn
+    bus=$(printf '%d' "0x$(echo "$addr" | cut -d: -f1)")
+    dev=$(printf '%d' "0x$(echo "$addr" | cut -d: -f2 | cut -d. -f1)")
+    fn=$(printf  '%d' "0x$(echo "$addr" | cut -d. -f2)")
+    echo "PCI:${bus}:${dev}:${fn}"
+  }
+
+  _intel_raw=$(echo "$_lspci_out"  | grep -i 'VGA' | grep -i intel  | awk '{print $1}' | head -1)
+  _nvidia_raw=$(echo "$_lspci_out" | grep -i '3D'  | grep -i nvidia | awk '{print $1}' | head -1)
+
+  [[ -n "$_intel_raw" ]]  || die "Could not detect Intel VGA device. Run: lspci | grep -i VGA"
+  [[ -n "$_nvidia_raw" ]] || die "Could not detect NVIDIA 3D device. Run: lspci | grep -i 3D"
+
+  INTEL_ID=$(pci_to_nix "$_intel_raw")
+  NVIDIA_ID=$(pci_to_nix "$_nvidia_raw")
+  ok "Intel  $_intel_raw  → $INTEL_ID"
+  ok "NVIDIA $_nvidia_raw → $NVIDIA_ID"
+
+  _NVIDIA_NIX="$DOTFILES/nixos/.nixos/modules/system/nvidia-hybrid.nix"
+  sed -i "s|intelBusId = \".*\";|intelBusId = \"$INTEL_ID\";|"   "$_NVIDIA_NIX"
+  sed -i "s|nvidiaBusId = \".*\";|nvidiaBusId = \"$NVIDIA_ID\";|" "$_NVIDIA_NIX"
+  git -C "$DOTFILES" add "nixos/.nixos/modules/system/nvidia-hybrid.nix"
+  ok "Updated and staged nvidia-hybrid.nix."
   echo
 fi
 
@@ -162,7 +193,6 @@ echo -e "     ${BLU}git -C $DOTFILES commit -m 'feat(nixos): add hardware config
 
 if [[ "$HOSTNAME" == "thinkpad-t480" ]]; then
   echo
-  warn "Don't forget:"
-  warn "  • NVIDIA bus IDs in modules/system/nvidia-hybrid.nix (lspci | grep -E 'VGA|3D')"
-  warn "  • hyprmod placeholder hash in pkgs/hyprmod.nix (see nixos/README.md step 1)"
+  warn "NVIDIA bus IDs were auto-detected and set to Intel=$INTEL_ID / NVIDIA=$NVIDIA_ID"
+  warn "Verify with: lspci | grep -E 'VGA|3D'"
 fi
