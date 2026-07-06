@@ -41,23 +41,7 @@ sudo nixos-rebuild switch --flake .#nixos-arm-vm
 
 ## Manual steps required before first deploy
 
-### 1. Hyprmod hash
-
-The `pkgs/hyprmod.nix` derivation has a placeholder hash. Run this on a Linux machine with Nix to get the real one:
-
-```bash
-nix-prefetch-url --unpack \
-  https://github.com/BlueManCZ/hyprmod/archive/refs/tags/v0.3.0.tar.gz
-```
-
-Paste the `sha256-...` output into the `hash` field in `.nixos/pkgs/hyprmod.nix`.
-
-Once the hash is fixed and the ARM build is verified, remove this line from `hyprmod.nix`:
-```nix
-broken = stdenv.isAarch64;
-```
-
-### 2. Hardware configuration (per machine)
+### 1. Hardware configuration (per machine)
 
 Each host directory has a placeholder `hardware-configuration.nix`. Replace it with the real one generated on the target machine:
 
