@@ -149,7 +149,7 @@ echo
 # flakes enabled in /etc/nix/nix.conf yet.
 sudo nixos-rebuild boot \
   --flake "${FLAKE_DIR}#${HOSTNAME}" \
-  --extra-experimental-features 'nix-command flakes'
+  --option extra-experimental-features 'nix-command flakes'
 
 # ─── Done ─────────────────────────────────────────────────────────────────────
 echo
