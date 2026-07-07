@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, lib, ... }:
 
 lib.mkIf config.vitorf7.hardware.nvidia.enable {
   services.xserver.videoDrivers = [ "nvidia" ];
@@ -27,9 +27,9 @@ lib.mkIf config.vitorf7.hardware.nvidia.enable {
     };
   };
 
-  hardware.graphics = {
-    enable = true;
-    extraPackages = with pkgs; [ intel-media-driver ];
-    extraPackages32 = with pkgs.pkgsi686Linux; [ intel-media-driver ];
-  };
+  # Intel VAAPI (intel-media-driver) is now supplied by nixos-hardware's
+  # common/gpu/intel/kaby-lake module via hardware.intelgpu — see the
+  # lenovo-thinkpad-t480 import in flake.nix. PRIME offload still needs
+  # hardware.graphics enabled.
+  hardware.graphics.enable = true;
 }
