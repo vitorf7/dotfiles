@@ -10,5 +10,6 @@
     desktop.quickshell.enable = lib.mkEnableOption "Quickshell framework + common shell runtime deps";
     desktop.qs_brain_shell.enable = lib.mkEnableOption "Brain_Shell Quickshell config (requires quickshell.enable)";
     desktop.ambxst.enable = lib.mkEnableOption "Ambxst Quickshell shell";
+    desktop.flatpak.enable = lib.mkEnableOption "Flatpak support with declarative package management";
   };
 }

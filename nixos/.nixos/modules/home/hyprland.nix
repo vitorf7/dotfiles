@@ -22,7 +22,6 @@ lib.mkIf osConfig.vitorf7.desktop.hyprland.enable {
     lxqt.lxqt-policykit
 
     self.packages.${pkgs.stdenv.hostPlatform.system}.hyprmod
-    self.packages.${pkgs.stdenv.hostPlatform.system}.mouseless
   ];
 
   xdg.configFile = {

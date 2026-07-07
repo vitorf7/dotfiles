@@ -30,6 +30,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nix-flatpak = {
+      url = "github:gmodena/nix-flatpak";
+    };
+
     # TODO: add nix-darwin for macOS M1 support
     # nix-darwin = {
     #   url = "github:LnL7/nix-darwin/master";
@@ -51,7 +55,6 @@
         in
         {
           packages.hyprmod = pkgs.callPackage ./pkgs/hyprmod.nix { };
-          packages.mouseless = pkgs.callPackage ./pkgs/mouseless.nix { };
         };
 
       flake = {
