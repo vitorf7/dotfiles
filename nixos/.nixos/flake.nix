@@ -65,10 +65,15 @@
               system = "x86_64-linux";
               host = "thinkpad-t480";
               # Upstream hardware quirks: throttled (BD-PROCHOT fix), fstrim,
-              # TrackPoint scroll emulation, Kaby Lake i915 tuning. NVIDIA PRIME
-              # stays hand-rolled in modules/system/nvidia-hybrid.nix (MX150/Pascal
-              # needs the legacy_535 pin; upstream's pascal module forces legacy_580).
-              extraModules = [ inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t480 ];
+              # TrackPoint scroll emulation, Kaby Lake i915 tuning, NVIDIA PRIME
+              # offload + the Pascal driver pin. modules/system/nvidia-hybrid.nix
+              # only keeps the bits these can't know (bus IDs, our own tuning
+              # decisions) and overrides the driver-version default — see there.
+              extraModules = [
+                inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t480
+                inputs.nixos-hardware.nixosModules.common-gpu-nvidia
+                "${inputs.nixos-hardware}/common/gpu/nvidia/pascal"
+              ];
             };
 
             # --- Machine 2: ARM Virtual Machine (aarch64) ---
