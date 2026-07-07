@@ -17,6 +17,7 @@
     ./ambxst.nix
     ./vm.nix
     ./quickshell.nix
+    ./flatpak.nix
   ];
 
   programs.nix-ld.enable = true;
