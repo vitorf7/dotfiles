@@ -13,17 +13,18 @@
 # Derivations for the five Python deps that aren't in nixpkgs yet.
 # Track https://github.com/NixOS/nixpkgs/pull/505419 — once merged, replace
 # this file with a simple `pkgs.hyprmod` reference.
+# Last updated for hyprmod v0.4.0.
 
 let
   hyprland-socket = python3Packages.buildPythonPackage {
     pname = "hyprland-socket";
-    version = "0.12.1";
+    version = "0.12.2";
     pyproject = true;
     src = fetchFromGitHub {
       owner = "BlueManCZ";
       repo = "hyprland-socket";
-      tag = "v0.12.1";
-      hash = "sha256-xZh0re/bfWM0Nwv9bx/EsyE3coJjxhSpRiau/6Bg1Nc=";
+      tag = "v0.12.2";
+      hash = "sha256-XPVhHnIwq4Plkuk3uf/IUcg9L0OsZT76cr60x7EG1lc=";
     };
     build-system = [ python3Packages.hatchling ];
     doCheck = false;
@@ -32,13 +33,13 @@ let
 
   hyprland-config = python3Packages.buildPythonPackage {
     pname = "hyprland-config";
-    version = "0.9.6";
+    version = "0.9.12";
     pyproject = true;
     src = fetchFromGitHub {
       owner = "BlueManCZ";
       repo = "hyprland-config";
-      tag = "v0.9.6";
-      hash = "sha256-c+2eZyDdFTmcqqiESjjo6PPN2G4uGpp66UtGBlDiV2M=";
+      tag = "v0.9.12";
+      hash = "sha256-TTh5UnFdRaGvYNlx/qkSWnDEnj101tmi+jDuXU/jCnI=";
     };
     build-system = [ python3Packages.hatchling ];
     doCheck = false;
@@ -47,13 +48,13 @@ let
 
   hyprland-schema = python3Packages.buildPythonPackage {
     pname = "hyprland-schema";
-    version = "0.6.1";
+    version = "0.6.3";
     pyproject = true;
     src = fetchFromGitHub {
       owner = "BlueManCZ";
       repo = "hyprland-schema";
-      tag = "v0.6.1";
-      hash = "sha256-w0fWQkSziNYZtgtqm1El5fP+fCmFMpMf21uo9cf/vqA=";
+      tag = "v0.6.3";
+      hash = "sha256-yAhzzv08vK19M0ypOH8LvmXUDFE92LoQi3QW134q1Ao=";
     };
     build-system = [ python3Packages.hatchling ];
     doCheck = false;
@@ -62,13 +63,13 @@ let
 
   hyprland-monitors = python3Packages.buildPythonPackage {
     pname = "hyprland-monitors";
-    version = "0.7.0";
+    version = "0.8.0";
     pyproject = true;
     src = fetchFromGitHub {
       owner = "BlueManCZ";
       repo = "hyprland-monitors";
-      tag = "v0.7.0";
-      hash = "sha256-83h9rcavYie9QYjRMmN3akmALS+4orvMldIUt7vf/Qc=";
+      tag = "v0.8.0";
+      hash = "sha256-a7fEDPPN9XYsrpE99C9c9MZGpqg24ZlY6vvHzgvNtzc=";
     };
     build-system = [ python3Packages.hatchling ];
     dependencies = [ hyprland-socket ];
@@ -78,13 +79,13 @@ let
 
   hyprland-state = python3Packages.buildPythonPackage {
     pname = "hyprland-state";
-    version = "0.4.2";
+    version = "0.4.3";
     pyproject = true;
     src = fetchFromGitHub {
       owner = "BlueManCZ";
       repo = "hyprland-state";
-      tag = "v0.4.2";
-      hash = "sha256-HvkVFFPh5mDNcOMRpKjznoCN7Q77DL6LZ9BhPGHs0PI=";
+      tag = "v0.4.3";
+      hash = "sha256-gFmACUjLwkBV0LGdSkoxE8viV1Jr7DDM9obpfPuP+A0=";
     };
     build-system = [ python3Packages.hatchling ];
     dependencies = [ hyprland-config hyprland-monitors hyprland-schema hyprland-socket ];
@@ -95,14 +96,14 @@ in
 
 python3Packages.buildPythonApplication {
   pname = "hyprmod";
-  version = "0.3.0";
+  version = "0.4.0";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "BlueManCZ";
     repo = "hyprmod";
-    tag = "v0.3.0";
-    hash = "sha256-oO7tibfdaM6IgpZQEUItahtpSgFjlIffDyhcTBJiSRQ=";
+    tag = "v0.4.0";
+    hash = "sha256-MYxYraLMc9QecjKsoVxYO3wkeXDTgLJnBH131VVs0hI=";
   };
 
   build-system = [ python3Packages.hatchling ];
