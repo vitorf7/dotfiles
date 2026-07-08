@@ -2,7 +2,7 @@
 { system, host, extraModules ? [] }:
 
 inputs.nixpkgs.lib.nixosSystem {
-  specialArgs = { inherit self; };
+  specialArgs = { inherit inputs self; };
   modules = [
     { nixpkgs.hostPlatform = system; }
     (root + "/hosts/${host}/configuration.nix")
