@@ -25,6 +25,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    hyprmod = {
+      url = "github:vitorf7/hyprmod/nix-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nixos-hardware = {
       url = "github:NixOS/nixos-hardware/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -54,7 +59,7 @@
           };
         in
         {
-          packages.hyprmod = pkgs.callPackage ./pkgs/hyprmod.nix { };
+          packages.hyprmod = inputs.hyprmod.packages.${system}.default;
         };
 
       flake = {
