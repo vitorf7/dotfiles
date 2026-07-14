@@ -59,7 +59,10 @@
           };
         in
         {
-          packages.hyprmod = inputs.hyprmod.packages.${system}.default;
+          packages = {
+            hyprmod = inputs.hyprmod.packages.${system}.default;
+            go-latest = pkgs.callPackage ./pkgs/go-latest.nix {};
+          };
         };
 
       flake = {
