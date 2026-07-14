@@ -123,6 +123,12 @@ end
 set -Ux NPM_CONFIG_PREFIX "$HOME/.npm-global"
 fish_add_path $HOME/.npm-global/bin
 
+# Go SDK managed by go-update (always latest from go.dev)
+if test -L "$HOME/.local/share/go-sdk/current"
+    set -gx GOROOT "$HOME/.local/share/go-sdk/current/share/go"
+    fish_add_path "$HOME/.local/share/go-sdk/current/bin"
+end
+
 # golang - https://golang.google.cn/
 set -Ux GOPATH $HOME/go
 set -Ux GO111MODULE on

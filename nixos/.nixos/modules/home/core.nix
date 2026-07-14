@@ -30,6 +30,7 @@ in
     starship
     neovim
     fx
+    jq
     direnv
     delta
     git
