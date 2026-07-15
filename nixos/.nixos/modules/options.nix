@@ -10,6 +10,8 @@
     desktop.quickshell.enable = lib.mkEnableOption "Quickshell framework + common shell runtime deps";
     desktop.qs_brain_shell.enable = lib.mkEnableOption "Brain_Shell Quickshell config (requires quickshell.enable)";
     desktop.ambxst.enable = lib.mkEnableOption "Ambxst Quickshell shell";
+    desktop.tide_island.enable = lib.mkEnableOption "Tide Island Dynamic Island for Hyprland (Quickshell-based)";
+    desktop.caelestia_shell.enable = lib.mkEnableOption "Caelestia Shell Quickshell Config";
     desktop.flatpak.enable = lib.mkEnableOption "Flatpak support with declarative package management";
   };
 }
