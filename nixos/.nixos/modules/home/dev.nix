@@ -11,6 +11,7 @@ in
     go
     rustup
     opencode
+    rtk
   ];
 
   xdg.configFile = {
