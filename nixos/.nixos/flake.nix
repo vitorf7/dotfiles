@@ -25,6 +25,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    caelestia-shell = {
+      url = "github:caelestia-dots/shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     hyprmod = {
       url = "github:vitorf7/hyprmod/nix-flake";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -60,6 +65,7 @@
         in
         {
           packages.hyprmod = inputs.hyprmod.packages.${system}.default;
+          packages.tide-island = pkgs.callPackage ./pkgs/tide-island.nix { };
         };
 
       flake = {

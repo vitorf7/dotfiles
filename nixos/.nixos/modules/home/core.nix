@@ -39,6 +39,8 @@ in
     tree-sitter
     sesh
     gh
+    matugen
+    awww
   ];
 
   xdg.configFile = {
