@@ -66,11 +66,8 @@
         {
           packages = {
             hyprmod = inputs.hyprmod.packages.${system}.default;
-            go-latest = pkgs.callPackage ./pkgs/go-latest.nix {};
-          };
-          packages.hyprmod = inputs.hyprmod.packages.${system}.default;
-          packages.hyprmod = inputs.hyprmod.packages.${system}.default;
           packages.tide-island = pkgs.callPackage ./pkgs/tide-island.nix { };
+            go-latest = pkgs.callPackage ./pkgs/go-latest.nix {};
         };
 
       flake = {
