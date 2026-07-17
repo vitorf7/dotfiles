@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, self, ... }:
 
 let
   dotfilesPath = "${config.home.homeDirectory}/dotfiles";
@@ -12,6 +12,8 @@ in
     rustup
     opencode
     rtk
+    
+    self.packages.${pkgs.stdenv.hostPlatform.system}.strongbox
   ];
 
   xdg.configFile = {
