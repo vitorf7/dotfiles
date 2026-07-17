@@ -161,31 +161,18 @@ hl.bind("XF86AudioMicMute", hl.dsp.exec_cmd("volumectl -m toggle-mute"), {
 	repeating = true,
 	locked = true,
 })
-hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("lightctl up"), {
-	repeating = true,
-	locked = true,
-})
-hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("lightctl down"), {
-	repeating = true,
-	locked = true,
-})
+-- Brightness — commented out: handled by caelestia:brightnessUp/Down when caelestia is enabled
+-- hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("lightctl up"), { repeating = true, locked = true })
+-- hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("lightctl down"), { repeating = true, locked = true })
 
 -- Hyprpicker - Color picker (already installed)
 hl.bind(mainMod .. " + C", hl.dsp.exec_cmd("hyprpicker -a | wl-copy"))
 
--- Requires playerctl
-hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"), {
-	locked = true,
-})
-hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), {
-	locked = true,
-})
-hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause"), {
-	locked = true,
-})
-hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), {
-	locked = true,
-})
+-- Media — commented out: handled by caelestia:media* when caelestia is enabled
+-- hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"), { locked = true })
+-- hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
+-- hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
+-- hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true })
 
 -- Clamshell mode: toggle internal display on lid open/close
 hl.bind("switch:on:Lid Switch", hl.dsp.exec_cmd(hyprScripts .. "/clamshell.sh"), {

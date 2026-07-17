@@ -30,16 +30,15 @@ require("modules.windowrules")
 -- HyprMod managed settings
 require("hyprland-gui")
 
--- Tide-island
--- hl.bind(mainMod .. " + SHIFT + Print", hl.dsp.exec_cmd("hyprshot -m region -o ~/Pictures/Screenshots"))
-hl.bind("SUPER + O", hl.dsp.exec_cmd("quickshell ipc --any-display -p /usr/share/tide-island call overview toggle"))
-hl.bind("SUPER + L", hl.dsp.exec_cmd("quickshell ipc --any-display -p /usr/share/tide-island call tide showLyrics"))
-hl.bind("SUPER + SHIFT + C", hl.dsp.exec_cmd("quickshell ipc --any-display -p /usr/share/tide-island call tide showCustom"))
-hl.bind("SUPER + down", hl.dsp.exec_cmd("/usr/bin/quickshell ipc --any-display -p /usr/share/tide-island call tide showClock"))
-hl.bind("SUPER + M", hl.dsp.exec_cmd("/usr/bin/quickshell ipc --any-display -p /usr/share/tide-island call tide togglePlayer"))
-hl.bind("SUPER + C", hl.dsp.exec_cmd("/usr/bin/quickshell ipc --any-display -p /usr/share/tide-island call tide toggleControlCenter"))
-hl.bind("SUPER + W", hl.dsp.exec_cmd("/usr/bin/quickshell ipc --any-display -p /usr/share/tide-island call tide toggleWallpaperPicker"))
-hl.bind("SUPER + T", hl.dsp.exec_cmd("/usr/bin/quickshell ipc --any-display -p /usr/share/tide-island call island toggle"))
+-- Tide Island keybinds (only loaded if tide_island.enable = true on this host)
+local tideKeybinds = os.getenv("HOME") .. "/.config/hypr-tide-island/keybinds.lua"
+local f = io.open(tideKeybinds, "r")
+if f then f:close(); loadfile(tideKeybinds)() end
+
+-- Caelestia Shell keybinds (only loaded if caelestia_shell.enable = true on this host)
+local caelestiaKeybinds = os.getenv("HOME") .. "/.config/hypr-caelestia/keybinds.lua"
+local g = io.open(caelestiaKeybinds, "r")
+if g then g:close(); loadfile(caelestiaKeybinds)() end
 
 -- Ambxst
 -- loadfile(os.getenv("HOME") .. "/.local/share/ambxst/hyprland.lua")()

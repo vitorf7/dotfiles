@@ -1,4 +1,4 @@
-{ pkgs, lib, osConfig, self, ... }:
+{ pkgs, lib, osConfig, config, self, ... }:
 
 lib.mkIf osConfig.vitorf7.desktop.tide_island.enable {
   assertions = [
@@ -31,5 +31,11 @@ lib.mkIf osConfig.vitorf7.desktop.tide_island.enable {
     Install = {
       WantedBy = [ "graphical-session.target" ];
     };
+  };
+
+  # Sentinel symlink: hyprland.lua loads this file if it exists (build-time conditional)
+  xdg.configFile."hypr-tide-island/keybinds.lua" = {
+    source = config.lib.file.mkOutOfStoreSymlink
+      "${config.home.homeDirectory}/dotfiles/hyprland/.config/hypr/modules/tide-island-keybinds.lua";
   };
 }
