@@ -33,7 +33,9 @@ lib.mkIf osConfig.vitorf7.desktop.enable {
 
     # Audio: works with Elgato Wave mic and any USB audio device via PipeWire.
     # easyeffects provides noise suppression, EQ, and compressor for the mic.
+    # pavucontrol provides GUI volume control, including boosting above 100%.
     easyeffects
+    pavucontrol
     alsa-utils
   ] ++ lib.optionals pkgs.stdenv.isx86_64 [
     spotify
