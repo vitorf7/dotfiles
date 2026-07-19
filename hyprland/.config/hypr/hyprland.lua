@@ -26,6 +26,7 @@ require("modules.appearance")
 require("modules.animations")
 require("modules.keybindings")
 require("modules.windowrules")
+require("modules.clamshell")
 
 -- HyprMod managed settings
 require("hyprland-gui")
@@ -33,12 +34,18 @@ require("hyprland-gui")
 -- Tide Island keybinds (only loaded if tide_island.enable = true on this host)
 local tideKeybinds = os.getenv("HOME") .. "/.config/hypr-tide-island/keybinds.lua"
 local f = io.open(tideKeybinds, "r")
-if f then f:close(); loadfile(tideKeybinds)() end
+if f then
+	f:close()
+	loadfile(tideKeybinds)()
+end
 
 -- Caelestia Shell keybinds (only loaded if caelestia_shell.enable = true on this host)
 local caelestiaKeybinds = os.getenv("HOME") .. "/.config/hypr-caelestia/keybinds.lua"
 local g = io.open(caelestiaKeybinds, "r")
-if g then g:close(); loadfile(caelestiaKeybinds)() end
+if g then
+	g:close()
+	loadfile(caelestiaKeybinds)()
+end
 
 -- Ambxst
 -- loadfile(os.getenv("HOME") .. "/.local/share/ambxst/hyprland.lua")()

@@ -68,8 +68,10 @@ for _, ws in ipairs({ 5, 6, 7, 8 }) do
 end
 
 -- Internal: workspace 10  (dynamic — see clamshell.sh)
+-- No default=true here: in docked mode ws 10 is still the only workspace bound
+-- to eDP-1 so hyprland displays it there. In laptop-only mode, workspace-init.sh
+-- takes over and dispatches to workspace 1, avoiding a forced ws 10 flash.
 hl.workspace_rule({
     workspace = "10",
     monitor   = "eDP-1",
-    default   = true,
 })
