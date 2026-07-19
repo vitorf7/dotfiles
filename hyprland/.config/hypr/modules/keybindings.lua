@@ -85,29 +85,29 @@ hl.bind(mainMod .. " + SHIFT + l", hl.dsp.window.move({ direction = "right" }))
 hl.bind(mainMod .. " + SHIFT + k", hl.dsp.window.move({ direction = "up" }))
 hl.bind(mainMod .. " + SHIFT + j", hl.dsp.window.move({ direction = "down" }))
 
--- Switch workspaces with mainMod + [0-9]
-hl.bind(mainMod .. " + 1", hl.dsp.focus({ workspace = 1 }))
-hl.bind(mainMod .. " + 2", hl.dsp.focus({ workspace = 2 }))
-hl.bind(mainMod .. " + 3", hl.dsp.focus({ workspace = 3 }))
-hl.bind(mainMod .. " + 4", hl.dsp.focus({ workspace = 4 }))
-hl.bind(mainMod .. " + 5", hl.dsp.focus({ workspace = 5 }))
-hl.bind(mainMod .. " + 6", hl.dsp.focus({ workspace = 6 }))
-hl.bind(mainMod .. " + 7", hl.dsp.focus({ workspace = 7 }))
-hl.bind(mainMod .. " + 8", hl.dsp.focus({ workspace = 8 }))
-hl.bind(mainMod .. " + 9", hl.dsp.focus({ workspace = 9 }))
-hl.bind(mainMod .. " + 0", hl.dsp.focus({ workspace = 10 }))
+-- Switch workspaces with SUPER + [0-9]
+hl.bind("SUPER + 1", hl.dsp.focus({ workspace = 1 }))
+hl.bind("SUPER + 2", hl.dsp.focus({ workspace = 2 }))
+hl.bind("SUPER + 3", hl.dsp.focus({ workspace = 3 }))
+hl.bind("SUPER + 4", hl.dsp.focus({ workspace = 4 }))
+hl.bind("SUPER + 5", hl.dsp.focus({ workspace = 5 }))
+hl.bind("SUPER + 6", hl.dsp.focus({ workspace = 6 }))
+hl.bind("SUPER + 7", hl.dsp.focus({ workspace = 7 }))
+hl.bind("SUPER + 8", hl.dsp.focus({ workspace = 8 }))
+hl.bind("SUPER + 9", hl.dsp.focus({ workspace = 9 }))
+hl.bind("SUPER + 0", hl.dsp.focus({ workspace = 10 }))
 
--- Move active window to a workspace with mainMod + SHIFT + [0-9]
-hl.bind(mainMod .. " + SHIFT + 1", hl.dsp.window.move({ workspace = 1 }))
-hl.bind(mainMod .. " + SHIFT + 2", hl.dsp.window.move({ workspace = 2 }))
-hl.bind(mainMod .. " + SHIFT + 3", hl.dsp.window.move({ workspace = 3 }))
-hl.bind(mainMod .. " + SHIFT + 4", hl.dsp.window.move({ workspace = 4 }))
-hl.bind(mainMod .. " + SHIFT + 5", hl.dsp.window.move({ workspace = 5 }))
-hl.bind(mainMod .. " + SHIFT + 6", hl.dsp.window.move({ workspace = 6 }))
-hl.bind(mainMod .. " + SHIFT + 7", hl.dsp.window.move({ workspace = 7 }))
-hl.bind(mainMod .. " + SHIFT + 8", hl.dsp.window.move({ workspace = 8 }))
-hl.bind(mainMod .. " + SHIFT + 9", hl.dsp.window.move({ workspace = 9 }))
-hl.bind(mainMod .. " + SHIFT + 0", hl.dsp.window.move({ workspace = 10 }))
+-- Move active window to a workspace with SUPER + ALT + [0-9]
+hl.bind("SUPER + ALT + 1", hl.dsp.window.move({ workspace = 1 }))
+hl.bind("SUPER + ALT + 2", hl.dsp.window.move({ workspace = 2 }))
+hl.bind("SUPER + ALT + 3", hl.dsp.window.move({ workspace = 3 }))
+hl.bind("SUPER + ALT + 4", hl.dsp.window.move({ workspace = 4 }))
+hl.bind("SUPER + ALT + 5", hl.dsp.window.move({ workspace = 5 }))
+hl.bind("SUPER + ALT + 6", hl.dsp.window.move({ workspace = 6 }))
+hl.bind("SUPER + ALT + 7", hl.dsp.window.move({ workspace = 7 }))
+hl.bind("SUPER + ALT + 8", hl.dsp.window.move({ workspace = 8 }))
+hl.bind("SUPER + ALT + 9", hl.dsp.window.move({ workspace = 9 }))
+hl.bind("SUPER + ALT + 0", hl.dsp.window.move({ workspace = 10 }))
 
 -- Enable workspace cycling
 hl.config({
@@ -174,10 +174,4 @@ hl.bind(mainMod .. " + C", hl.dsp.exec_cmd("hyprpicker -a | wl-copy"))
 -- hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
 -- hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true })
 
--- Clamshell mode: toggle internal display on lid open/close
-hl.bind("switch:on:Lid Switch", hl.dsp.exec_cmd(hyprScripts .. "/clamshell.sh"), {
-	locked = true,
-})
-hl.bind("switch:off:Lid Switch", hl.dsp.exec_cmd(hyprScripts .. "/clamshell.sh"), {
-	locked = true,
-})
+-- Clamshell mode: handled in modules/clamshell.lua

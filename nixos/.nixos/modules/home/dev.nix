@@ -8,6 +8,8 @@ in
     k9s
     lazygit
     nodejs
+    yarn
+    python3
     go
     rustup
     opencode
