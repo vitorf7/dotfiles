@@ -1,31 +1,22 @@
--- Clamshell mode: handle lid open/close events in pure Lua.
+-- Clamshell mode: disable/enable the internal monitor on lid close/open.
 --
--- The two separate switch:on / switch:off binds already encode the lid state,
--- so there is no need to read /proc/acpi/button/lid/LID0/state as the old
--- shell script did.
---
--- Dynamic monitor enable/disable and runtime workspace rule changes do not yet
--- have a pure Lua API equivalent, so those remain as os.execute("hyprctl ...")
--- calls — but all logic, constants, and control flow live here in Lua.
+-- When the monitor state changes, Hyprland fires monitor.added / monitor.removed,
+-- which triggers assign_workspaces() in monitors.lua automatically.
+-- The hl.timer call below is a safety net in case the monitor event is delayed.
 
-local DELL_MONITOR = "desc:Dell Inc. DELL U2419HC"
-local EDP_MONITOR  = "eDP-1"
+local monitor_manager = require("modules.monitor_manager")
 
-local function on_lid_close()
-    -- Disable internal display
-    os.execute('hyprctl keyword monitor "eDP-1, disable"')
-    -- Reassign workspace 10 to Dell so it is accessible while the lid is shut
-    os.execute('hyprctl keyword workspace "10, monitor:' .. DELL_MONITOR .. '"')
-    os.execute('hyprctl dispatch moveworkspacetomonitor 10 "' .. DELL_MONITOR .. '"')
-end
+-- Must match the hl.monitor() definition in monitors.lua exactly.
+local EDPS_ON = "eDP-1,1920x1080@60,3840x0,1"
 
-local function on_lid_open()
-    -- Restore internal display at its position in the three-monitor layout
-    os.execute('hyprctl keyword monitor "eDP-1, 1920x1080@60, 3840x0, 1"')
-    -- Return workspace 10 to eDP-1
-    os.execute('hyprctl keyword workspace "10, monitor:eDP-1, default:true"')
-    os.execute('hyprctl dispatch moveworkspacetomonitor 10 eDP-1')
-end
+-- Lid close: disable internal display.
+hl.bind("switch:on:Lid Switch", function()
+	hl.exec_cmd("hyprctl keyword monitor eDP-1,disable")
+	hl.timer(monitor_manager.assign_workspaces, { timeout = 600, type = "oneshot" })
+end, { locked = true })
 
-hl.bind("switch:on:Lid Switch",  on_lid_close, { locked = true })
-hl.bind("switch:off:Lid Switch", on_lid_open,  { locked = true })
+-- Lid open: re-enable internal display.
+hl.bind("switch:off:Lid Switch", function()
+	hl.exec_cmd("hyprctl keyword monitor " .. EDPS_ON)
+	hl.timer(monitor_manager.assign_workspaces, { timeout = 600, type = "oneshot" })
+end, { locked = true })
