@@ -10,6 +10,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Do NOT set inputs.nixpkgs.follows here: Hyprland's nixpkgs must be newer
+    # than ours (it requires wayland-protocols >= 1.49 which our nixos-unstable
+    # pin may not yet have). We pin mesa from hyprland's nixpkgs instead (below)
+    # to keep graphics drivers in sync and avoid FPS drops on hybrid GPU setups.
+    hyprland.url = "github:hyprwm/Hyprland";
+
     zen-browser = {
       url = "github:youwen5/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
