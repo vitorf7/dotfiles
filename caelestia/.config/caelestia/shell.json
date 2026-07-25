@@ -1,0 +1,46 @@
+{
+    "appearance": {
+        "transparency": {
+            "enabled": true
+        }
+    },
+    "bar": {
+        "clock": {
+            "background": true,
+            "showDate": true
+        },
+        "status": {
+            "showAudio": true,
+            "showKbLayout": true,
+            "showMicrophone": true
+        },
+        "tray": {
+            "background": true,
+            "compact": false,
+            "recolour": false
+        },
+        "workspaces": {
+            "activeTrail": false,
+            "occupiedBg": false,
+            "shown": 5
+        }
+    },
+    "general": {
+        "apps": {
+            "terminal": [
+                "ghostty",
+                "--gtk-single-instance=true"
+            ]
+        }
+    },
+    "launcher": {
+        "useFuzzy": {
+            "apps": true,
+            "wallpapers": true
+        },
+        "vimKeybinds": true
+    },
+    "services": {
+        "useFahrenheit": false
+    }
+}
