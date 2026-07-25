@@ -50,6 +50,12 @@
       url = "github:gmodena/nix-flatpak";
     };
 
+    # Do NOT set inputs.nixpkgs.follows here: the flake's python-validity package
+    # requires nixpkgs 24.11 build conventions that differ from nixos-unstable.
+    nixos-06cb-009a-fingerprint-sensor = {
+      url = "github:ahbnr/nixos-06cb-009a-fingerprint-sensor?ref=24.11";
+    };
+
     # TODO: add nix-darwin for macOS M1 support
     # nix-darwin = {
     #   url = "github:LnL7/nix-darwin/master";
@@ -97,6 +103,7 @@
                 inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t480
                 inputs.nixos-hardware.nixosModules.common-gpu-nvidia
                 "${inputs.nixos-hardware}/common/gpu/nvidia/pascal"
+                inputs.nixos-06cb-009a-fingerprint-sensor.nixosModules."06cb-009a-fingerprint-sensor"
               ];
             };
 
