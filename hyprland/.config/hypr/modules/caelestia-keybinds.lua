@@ -66,8 +66,8 @@ hl.bind("SUPER + SUPER_L", hl.dsp.global("caelestia:launcher"), { release = true
 -- ── Shell UI toggles ──────────────────────────────────────────────────────────
 
 hl.bind("SUPER + N", hl.dsp.global("caelestia:sidebar"))
+hl.bind("SUPER + ALT + C", hl.dsp.global("caelestia:controlCenter"))
 hl.bind("CTRL + ALT + C", hl.dsp.global("caelestia:clearNotifs"), { locked = true })
-hl.bind("SUPER + K", hl.dsp.global("caelestia:showall"))
 hl.bind("SUPER + L", hl.dsp.global("caelestia:lock"))
 hl.bind("SUPER + ALT + L", function()
 	hl.dispatch(hl.dsp.exec_cmd("caelestia shell -d"))
@@ -108,7 +108,7 @@ hl.bind(
 hl.bind("SUPER + S", hl.dsp.exec_cmd("caelestia toggle specialws"))
 hl.bind("CTRL + SHIFT + Escape", hl.dsp.exec_cmd("caelestia toggle sysmon"))
 hl.bind("SUPER + M", hl.dsp.exec_cmd("caelestia toggle music"))
-hl.bind("SUPER + D", hl.dsp.exec_cmd("caelestia toggle communication"))
+hl.bind("SUPER + D", hl.dsp.global("caelestia:dashboard"))
 hl.bind("SUPER + R", hl.dsp.exec_cmd("caelestia toggle todo"))
 
 -- ── Screenshots ───────────────────────────────────────────────────────────────

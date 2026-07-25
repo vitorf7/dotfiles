@@ -26,5 +26,10 @@
       source = config.lib.file.mkOutOfStoreSymlink
         "${config.home.homeDirectory}/dotfiles/hyprland/.config/hypr/modules/caelestia-keybinds.lua";
     };
+
+    # Caelestia shell config (shell.json) — symlinked from dotfiles so settings
+    # are version-controlled. UI changes (wallpaper, scheme) write back here directly.
+    xdg.configFile."caelestia".source = config.lib.file.mkOutOfStoreSymlink
+      "${config.home.homeDirectory}/dotfiles/caelestia/.config/caelestia";
   };
 }
