@@ -56,6 +56,12 @@
       url = "github:ahbnr/nixos-06cb-009a-fingerprint-sensor?ref=24.11";
     };
 
+    # Do NOT set inputs.nixpkgs.follows here: the flake has specific Rust
+    # toolchain requirements and bundles the proprietary gpgui binary.
+    globalprotect-openconnect = {
+      url = "github:yuezk/GlobalProtect-openconnect";
+    };
+
     # TODO: add nix-darwin for macOS M1 support
     # nix-darwin = {
     #   url = "github:LnL7/nix-darwin/master";
