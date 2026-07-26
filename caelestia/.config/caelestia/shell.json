@@ -5,6 +5,10 @@
         }
     },
     "bar": {
+        "activeWindow": {
+            "compact": false,
+            "inverted": true
+        },
         "clock": {
             "background": true,
             "showDate": true
