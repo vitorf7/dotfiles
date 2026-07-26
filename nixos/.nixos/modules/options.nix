@@ -13,5 +13,7 @@
     desktop.tide_island.enable = lib.mkEnableOption "Tide Island Dynamic Island for Hyprland (Quickshell-based)";
     desktop.caelestia_shell.enable = lib.mkEnableOption "Caelestia Shell Quickshell Config";
     desktop.flatpak.enable = lib.mkEnableOption "Flatpak support with declarative package management";
+    networking.nordvpn.enable = lib.mkEnableOption "NordVPN client (CLI + GUI) with systemd daemon";
+    networking.globalprotect.enable = lib.mkEnableOption "GlobalProtect VPN client (gpclient CLI + gpgui GUI) via GlobalProtect-openconnect flake";
   };
 }

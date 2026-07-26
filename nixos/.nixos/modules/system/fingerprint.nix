@@ -29,4 +29,11 @@ lib.mkIf config.vitorf7.hardware.fingerprint.enable {
     sudo.fprintAuth = true;
     hyprlock.fprintAuth = true;
   };
+
+  # The 06cb:009a sensor loses its USB state on suspend/hibernate.
+  # Restart the driver service after any resume so the lock screen
+  # can authenticate via fingerprint again.
+  powerManagement.resumeCommands = ''
+    systemctl restart 06cb-009a-fingerprint-sensor.service
+  '';
 }

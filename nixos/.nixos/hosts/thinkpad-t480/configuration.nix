@@ -6,6 +6,8 @@
     ../../modules/system/base-system.nix
     ../../modules/system/fingerprint.nix
     ../../modules/system/nvidia-hybrid.nix
+    ../../modules/system/nordvpn.nix
+    ../../modules/system/globalprotect.nix
   ];
 
   networking.hostName = "thinkpad-t480";
@@ -30,6 +32,8 @@
   vitorf7.desktop.tide_island.enable = false;
   vitorf7.desktop.caelestia_shell.enable = true;
   vitorf7.desktop.flatpak.enable = true;
+  vitorf7.networking.nordvpn.enable = true;
+  vitorf7.networking.globalprotect.enable = true;
   vitorf7.hardware.fingerprint.enable = true;
   vitorf7.hardware.nvidia.enable = true;
 
