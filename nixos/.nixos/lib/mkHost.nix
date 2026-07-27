@@ -1,8 +1,8 @@
 { inputs, self, root }:
-{ system, host, extraModules ? [] }:
+{ system, host, extraModules ? [], extraSpecialArgs ? {} }:
 
 inputs.nixpkgs.lib.nixosSystem {
-  specialArgs = { inherit inputs self; };
+  specialArgs = { inherit inputs self; } // extraSpecialArgs;
   modules = [
     { nixpkgs.hostPlatform = system; }
     (root + "/hosts/${host}/configuration.nix")
@@ -17,7 +17,7 @@ inputs.nixpkgs.lib.nixosSystem {
     {
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
-      home-manager.extraSpecialArgs = { inherit inputs self; };
+      home-manager.extraSpecialArgs = { inherit inputs self; } // extraSpecialArgs;
       home-manager.users.vitorf7 = import (root + "/modules/home/default.nix");
     }
   ] ++ extraModules;
