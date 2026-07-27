@@ -8,6 +8,7 @@
     ../../modules/system/nvidia-hybrid.nix
     ../../modules/system/nordvpn.nix
     ../../modules/system/globalprotect.nix
+    ../../modules/system/wiresteward.nix
   ];
 
   networking.hostName = "thinkpad-t480";
@@ -34,6 +35,7 @@
   vitorf7.desktop.flatpak.enable = true;
   vitorf7.networking.nordvpn.enable = true;
   vitorf7.networking.globalprotect.enable = true;
+  vitorf7.networking.wiresteward.enable = true;
   vitorf7.hardware.fingerprint.enable = true;
   vitorf7.hardware.nvidia.enable = true;
 
