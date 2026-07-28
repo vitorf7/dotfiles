@@ -1,13 +1,20 @@
-{ config, lib, pkgs, secretsFile, ... }:
+{ config, lib, pkgs, ... }:
 
 let
   wiresteward = pkgs.callPackage ../../pkgs/wiresteward.nix { };
+  # Encrypted at rest via strongbox (see repo-root .gitattributes). Only
+  # forced when actually read below, inside the mkIf block — Nix's laziness
+  # means hosts with wiresteward disabled never touch this file at all.
+  secretsFile = import ../../secrets/wiresteward-secrets.nix;
 in
 
 lib.mkIf config.vitorf7.networking.wiresteward.enable {
   environment.systemPackages = [ pkgs.wireguard-tools ];
 
   boot.kernelModules = [ "wireguard" ];
+
+  # Real config, encrypted at rest via strongbox — see repo-root .gitattributes.
+  environment.etc."wiresteward/config.json".source = ../../secrets/wiresteward-config.json;
 
   systemd.tmpfiles.rules = [
     "d /var/lib/wiresteward 0700 root root -"

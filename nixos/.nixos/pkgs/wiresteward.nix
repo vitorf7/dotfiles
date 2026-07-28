@@ -12,7 +12,7 @@ buildGoModule rec {
     owner = "utilitywarehouse";
     repo = pname;
     rev = "v${version}";
-    hash = lib.fakeHash;
+    hash = "sha256-9ZqC22HVq4//gdzWnCoXltRaAov5Zzevx1tmKK/UOfE=";
   };
 
   # Tests require kernel WireGuard interfaces and iptables — not available in
