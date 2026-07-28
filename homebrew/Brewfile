@@ -339,6 +339,8 @@ cask "font-symbols-only-nerd-font"
 cask "ghostty"
 # Tools to protect your emails and files
 cask "gpg-suite"
+# Chromium-based web browser
+cask "helium-browser"
 # Keyboard shortcuts for every button on your screen
 cask "homerow"
 # HTTP and GraphQL Client
@@ -404,7 +406,6 @@ mas "Keynote", id: 409183694
 mas "Numbers", id: 409203825
 mas "Okta Verify", id: 490179405
 mas "Pages", id: 409201541
-mas "Xcode", id: 497799835
 vscode "asvetliakov.vscode-neovim"
 vscode "github.vscode-pull-request-github"
 vscode "golang.go"
