@@ -15,9 +15,18 @@
 #      and git-stage it (required — Nix flakes ignore untracked files)
 #   4. Run `nixos-rebuild boot --flake .#<hostname>` (activates on next reboot)
 #
+# Wiresteward secrets (nixos/.nixos/secrets/*) are strongbox-encrypted and
+# tracked in git — they decrypt automatically on checkout as long as this
+# machine's strongbox keyring is in place first. For thinkpad-t480 (the only
+# host with wiresteward enabled), this script wires up the strongbox git
+# filter, builds the strongbox binary from this flake's own package output,
+# and re-checks-out nixos/.nixos/secrets so it's plaintext before the build
+# — but the private keyring itself must already be on this machine.
+#
 # Prerequisites:
 #   - /etc/nixos/hardware-configuration.nix already generated
 #     (if not: sudo nixos-generate-config)
+#   - thinkpad-t480 only: ~/.strongbox_keyring already present on this machine
 
 set -euo pipefail
 
@@ -55,13 +64,13 @@ if [[ ! -f "$_candidate_dotfiles/nixos/.nixos/flake.nix" ]]; then
   _dotfiles_target="$HOME/dotfiles"
 
   if [[ -d "$_dotfiles_target/.git" ]]; then
-    info "Updating dotfiles at $_dotfiles_target…"
+    info "Updating dotfiles at ${_dotfiles_target}…"
     git -C "$_dotfiles_target" pull origin master || \
       nix-shell -p git --run "git -C '$_dotfiles_target' pull origin master"
   elif [[ -e "$_dotfiles_target" ]]; then
     die "$_dotfiles_target exists but is not a git repo. Remove it and retry."
   else
-    info "Cloning dotfiles to $_dotfiles_target…"
+    info "Cloning dotfiles to ${_dotfiles_target}…"
     git clone https://github.com/vitorf7/dotfiles.git "$_dotfiles_target" || \
       nix-shell -p git --run "git clone https://github.com/vitorf7/dotfiles.git '$_dotfiles_target'"
   fi
@@ -96,6 +105,45 @@ fi
 
 if [[ ! -f /etc/nixos/hardware-configuration.nix ]]; then
   die "/etc/nixos/hardware-configuration.nix not found.\n   Run: sudo nixos-generate-config\n   Then re-run this script."
+fi
+
+# ─── Pre-flight: wiresteward secrets (T480 only) ─────────────────────────────
+# The git clone/pull above ran before we knew the hostname, using whatever
+# git config already existed — so if the strongbox filter wasn't configured
+# yet, nixos/.nixos/secrets/* was checked out as raw ciphertext. Fix that here
+# for the one host that actually needs it decrypted.
+if [[ "$HOSTNAME" == "thinkpad-t480" ]]; then
+  info "Ensuring wiresteward secrets are decrypted…"
+
+  if [[ ! -f "$HOME/.strongbox_keyring" ]]; then
+    die "~/.strongbox_keyring not found.\n   This machine needs the strongbox private keyring (already used elsewhere in this repo) to decrypt nixos/.nixos/secrets/*.\n   Copy it onto this machine (e.g. from 1Password), then re-run this script."
+  fi
+
+  # Wire up just the strongbox filter non-interactively — scripts/gitconfig.sh
+  # is interactive and does far more (git identity, profiles, GitHub token).
+  git config --global filter.strongbox.clean "strongbox -clean %f"
+  git config --global filter.strongbox.smudge "strongbox -smudge %f"
+  git config --global filter.strongbox.required true
+  git config --global diff.strongbox.textconv "strongbox -diff"
+
+  # Build just the strongbox binary from this flake's own package output —
+  # doesn't touch nixosConfigurations, so this works even while secrets/*
+  # is still ciphertext on disk.
+  info "Building strongbox…"
+  STRONGBOX_OUT=$(nix build --no-link --print-out-paths \
+    --extra-experimental-features 'nix-command flakes' \
+    "$DOTFILES/nixos/.nixos#strongbox")
+  export PATH="$STRONGBOX_OUT/bin:$PATH"
+
+  # Only force a re-checkout if the working copy still looks like ciphertext
+  # (first line has the strongbox header) — never clobber a file that's
+  # already plaintext or has local edits in progress.
+  if head -1 "$DOTFILES/nixos/.nixos/secrets/wiresteward-secrets.nix" 2>/dev/null | grep -q 'STRONGBOX ENCRYPTED RESOURCE'; then
+    git -C "$DOTFILES" checkout -- nixos/.nixos/secrets
+    ok "Wiresteward secrets decrypted."
+  else
+    ok "Wiresteward secrets already decrypted — leaving as-is."
+  fi
 fi
 
 # ─── Pre-flight: NVIDIA bus IDs (T480 only) ──────────────────────────────────

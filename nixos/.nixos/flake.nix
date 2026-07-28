@@ -62,15 +62,6 @@
       url = "github:yuezk/GlobalProtect-openconnect";
     };
 
-    # Local secrets file — NOT committed to git. Create manually on each machine
-    # that needs it at /home/vitorf7/.secrets.nix with the shape:
-    #   { uwDnsServer = "..."; uwDnsDomains = "..."; }
-    # Values come from documentation/infra/wiresteward/README.md (DNS section).
-    secrets-file = {
-      url = "path:/home/vitorf7/.secrets.nix";
-      flake = false;
-    };
-
     # TODO: add nix-darwin for macOS M1 support
     # nix-darwin = {
     #   url = "github:LnL7/nix-darwin/master";
@@ -120,11 +111,6 @@
                 "${inputs.nixos-hardware}/common/gpu/nvidia/pascal"
                 inputs.nixos-06cb-009a-fingerprint-sensor.nixosModules."06cb-009a-fingerprint-sensor"
               ];
-              # secrets-file is a local path input (never committed to git).
-              # It provides uwDnsServer and uwDnsDomains for the wiresteward DNS module.
-              extraSpecialArgs = {
-                secretsFile = import inputs."secrets-file";
-              };
             };
 
             # --- Machine 2: ARM Virtual Machine (aarch64) ---

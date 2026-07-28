@@ -37,6 +37,21 @@ sudo nixos-rebuild switch --flake .#<hostname>
 sudo nixos-rebuild switch --flake .#nixos-arm-vm
 ```
 
+Wiresteward's secrets (`nixos/.nixos/secrets/wiresteward-secrets.nix` and
+`wiresteward-config.json`) are encrypted at rest with [strongbox](https://github.com/uw-labs/strongbox)
+— the same tool/key already used elsewhere in this dotfiles repo — and
+decrypt automatically on `git clone`/`checkout`/`pull`. Before building a
+host with wiresteward enabled, make sure this machine already has:
+
+1. `strongbox` installed
+2. The private keyring in place (same one used for the rest of this repo)
+3. `scripts/gitconfig.sh` run once, to wire up the git filter
+
+If those aren't in place yet, `nixos/.nixos/secrets/*` will contain
+ciphertext instead of usable config/Nix values.
+
+Then edit the file with the real values before relying on wiresteward DNS.
+
 ---
 
 ## Manual steps required before first deploy
