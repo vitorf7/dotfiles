@@ -62,11 +62,10 @@
       url = "github:yuezk/GlobalProtect-openconnect";
     };
 
-    # TODO: add nix-darwin for macOS M1 support
-    # nix-darwin = {
-    #   url = "github:LnL7/nix-darwin/master";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
+    nix-darwin = {
+      url = "github:LnL7/nix-darwin/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs@{ self, flake-parts, ... }:
@@ -124,11 +123,19 @@
               system = "x86_64-linux";
               host = "nixos-x86-vm";
             };
+          };
 
-            # --- Machine 4: macOS M1 (darwin) ---
-            # Pending nix-darwin integration. aarch64-darwin is already in `systems`
-            # so package builds work. Full darwinConfigurations added once nix-darwin
-            # input is uncommented above.
+        darwinConfigurations =
+          let
+            mkDarwin = import ./lib/mkDarwin.nix { inherit inputs self; root = ./.; };
+          in
+          {
+            # --- Machine 4: macOS M1 Pro (aarch64-darwin) ---
+            uw-mac-m1 = mkDarwin {
+              system = "aarch64-darwin";
+              host = "uw-mac-m1";
+              username = "vitorfaiante";
+            };
           };
       };
 

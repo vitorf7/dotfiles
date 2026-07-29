@@ -1,0 +1,191 @@
+#!/usr/bin/env bash
+# initial_macos_setup.sh — Bootstrap a fresh macOS machine from dotfiles
+#
+# Remote one-liner:
+#   bash <(curl -sL https://raw.githubusercontent.com/vitorf7/dotfiles/master/scripts/initial_macos_setup.sh)
+#
+# Local (dotfiles already cloned):
+#   ./scripts/initial_macos_setup.sh
+#
+# What it does:
+#   1. Check Xcode Command Line Tools (required for Homebrew)
+#   2. Install Homebrew if absent
+#   3. Install Determinate Nix if absent
+#   4. Clone / pull dotfiles to $HOME/dotfiles
+#   5. Wire strongbox git filter + decrypt secrets (requires ~/.strongbox_keyring)
+#   6. Stow the nixos package ($HOME/.nixos symlink — same as Linux, makes nrs work)
+#   7. First nix-darwin activation (darwin-rebuild does not exist until this succeeds)
+#
+# Prerequisites:
+#   - ~/.strongbox_keyring already present (retrieve from 1Password before running)
+#
+# After the script completes:
+#   1. Verify things work, then: chsh -s /run/current-system/sw/bin/fish
+#   2. After a week of use, flip homebrew.onActivation.cleanup to "zap" in homebrew.nix
+
+set -euo pipefail
+
+# ─── Colours ──────────────────────────────────────────────────────────────────
+RED='\033[0;31m'
+YLW='\033[0;33m'
+GRN='\033[0;32m'
+BLU='\033[0;34m'
+BLD='\033[1m'
+RST='\033[0m'
+
+info()  { echo -e "${BLU}::${RST} $*"; }
+ok()    { echo -e "${GRN}✓${RST}  $*"; }
+warn()  { echo -e "${YLW}⚠${RST}  $*"; }
+die()   { echo -e "${RED}✗${RST}  $*" >&2; exit 1; }
+
+# ─── Safety ───────────────────────────────────────────────────────────────────
+[[ $EUID -eq 0 ]] && die "Do not run as root."
+[[ "$(uname)" == "Darwin" ]] || die "This script is macOS-only."
+
+# ─── Bootstrap: clone/pull dotfiles when run remotely (curl | bash) ──────────
+_script_src="${BASH_SOURCE[0]:-}"
+_candidate_dir="$(cd "$(dirname "$_script_src")" 2>/dev/null && pwd)" || _candidate_dir=""
+_candidate_dotfiles="$(dirname "$_candidate_dir")"
+
+DOTFILES_TARGET="$HOME/dotfiles"
+
+if [[ ! -f "$_candidate_dotfiles/nixos/.nixos/flake.nix" ]]; then
+  if [[ -d "$DOTFILES_TARGET/.git" ]]; then
+    info "Updating dotfiles at ${DOTFILES_TARGET}…"
+    git -C "$DOTFILES_TARGET" pull origin master
+  elif [[ -e "$DOTFILES_TARGET" ]]; then
+    die "$DOTFILES_TARGET exists but is not a git repo. Remove it and retry."
+  else
+    info "Cloning dotfiles to ${DOTFILES_TARGET}…"
+    git clone https://github.com/vitorf7/dotfiles.git "$DOTFILES_TARGET"
+  fi
+  exec bash "$DOTFILES_TARGET/scripts/initial_macos_setup.sh" "$@"
+fi
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DOTFILES="$(dirname "$SCRIPT_DIR")"
+
+# ─── Step 1: Xcode Command Line Tools ────────────────────────────────────────
+info "Checking Xcode Command Line Tools…"
+if ! xcode-select -p &>/dev/null; then
+  warn "Xcode CLT not found. Triggering installer…"
+  xcode-select --install
+  echo
+  die "Xcode CLT installation opened. Re-run this script after it completes."
+fi
+ok "Xcode CLT present: $(xcode-select -p)"
+
+# ─── Step 2: Homebrew ─────────────────────────────────────────────────────────
+info "Checking Homebrew…"
+if ! command -v brew &>/dev/null; then
+  info "Installing Homebrew…"
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+  ok "Homebrew installed."
+else
+  ok "Homebrew already present: $(brew --version | head -1)"
+fi
+
+# ─── Step 3: Determinate Nix ─────────────────────────────────────────────────
+info "Checking Nix…"
+if ! command -v nix &>/dev/null && [[ ! -x /nix/var/nix/profiles/default/bin/nix ]]; then
+  info "Installing Determinate Nix…"
+  curl -fsSL https://install.determinate.systems/nix | sh -s -- install --determinate --no-confirm
+  # Source the daemon environment for the rest of this script
+  # shellcheck disable=SC1091
+  if [[ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]]; then
+    . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+  fi
+  ok "Determinate Nix installed."
+else
+  ok "Nix already present: $(nix --version)"
+fi
+
+NIX_OPTS=(--extra-experimental-features 'nix-command flakes')
+
+# ─── Step 4: Dotfiles clone/pull (already done above if remote, skip if local) ─
+if [[ ! -d "$DOTFILES_TARGET" ]]; then
+  info "Cloning dotfiles to ${DOTFILES_TARGET}…"
+  git clone https://github.com/vitorf7/dotfiles.git "$DOTFILES_TARGET"
+  DOTFILES="$DOTFILES_TARGET"
+fi
+ok "Dotfiles present at $DOTFILES"
+
+# ─── Step 5: Strongbox ────────────────────────────────────────────────────────
+# Strongbox is required on macOS: three config files (fish, k9s, sketchybar) pull
+# secret files from dotfiles/secrets/ which are strongbox-encrypted at rest.
+info "Ensuring strongbox secrets are decrypted…"
+
+if [[ ! -f "$HOME/.strongbox_keyring" ]]; then
+  die "~/.strongbox_keyring not found.\n   Retrieve the private keyring from 1Password, save it to ~/.strongbox_keyring, then re-run."
+fi
+
+# Wire the strongbox git filter (non-interactively, same lines as initial_nixos_setup.sh)
+git config --global filter.strongbox.clean "strongbox -clean %f"
+git config --global filter.strongbox.smudge "strongbox -smudge %f"
+git config --global filter.strongbox.required true
+git config --global diff.strongbox.textconv "strongbox -diff"
+
+# Build strongbox from the flake (doesn't need secrets to be decrypted first)
+info "Building strongbox…"
+STRONGBOX_OUT=$(nix build "${NIX_OPTS[@]}" --no-link --print-out-paths \
+  "$DOTFILES/nixos/.nixos#strongbox")
+export PATH="$STRONGBOX_OUT/bin:$PATH"
+ok "strongbox: $(strongbox -version 2>/dev/null || echo 'built')"
+
+# Re-checkout secrets if they are still ciphertext
+if head -1 "$DOTFILES/secrets/.config/fish/private_config.fish" 2>/dev/null \
+    | grep -q 'STRONGBOX ENCRYPTED RESOURCE'; then
+  info "Decrypting secrets…"
+  git -C "$DOTFILES" checkout -- secrets
+  ok "Secrets decrypted."
+else
+  ok "Secrets already decrypted."
+fi
+
+# ─── Step 6: Stow nixos → ~/.nixos ───────────────────────────────────────────
+# This creates ~/.nixos -> dotfiles/nixos/.nixos — same as on Linux —
+# so the nrs fish function works identically on both OSes.
+info "Stowing nixos package to create ~/.nixos…"
+if [[ ! -e "$HOME/.nixos" ]]; then
+  NIX_STOW=$(nix build "${NIX_OPTS[@]}" --no-link --print-out-paths nixpkgs#stow)
+  "$NIX_STOW/bin/stow" -v -d "$DOTFILES" -t "$HOME" --restow nixos
+  ok "Symlink created: $HOME/.nixos → $DOTFILES/nixos/.nixos"
+else
+  ok "~/.nixos already exists — skipping stow."
+fi
+
+# ─── Step 7: First darwin-rebuild switch ──────────────────────────────────────
+echo
+echo -e "${BLD}Activating nix-darwin configuration for uw-mac-m1…${RST}"
+echo -e "(${YLW}darwin-rebuild${RST} does not exist until this first activation)"
+echo
+
+# Move /etc files nix-darwin wants to own, if present and not yet moved.
+for f in /etc/bashrc /etc/zshrc /etc/zprofile /etc/zshenv; do
+  if [[ -f "$f" && ! -f "${f}.before-nix-darwin" ]]; then
+    info "Moving ${f} aside for nix-darwin…"
+    sudo mv "$f" "${f}.before-nix-darwin"
+  fi
+done
+
+sudo nix "${NIX_OPTS[@]}" run nix-darwin -- switch --flake "$HOME/.nixos#uw-mac-m1"
+
+# ─── Done ─────────────────────────────────────────────────────────────────────
+echo
+ok "Activation succeeded!"
+echo
+echo -e "  ${BLD}Next steps:${RST}"
+echo -e "  1. Open a ${BLD}new terminal${RST} and verify Nix tools are on PATH:"
+echo -e "     ${BLU}which git eza fd fzf starship${RST}"
+echo -e "  2. Change login shell to the Nix-managed fish (only after verifying the new terminal works):"
+echo -e "     ${BLU}grep fish /etc/shells${RST}  # confirm /run/current-system/sw/bin/fish is listed"
+echo -e "     ${BLU}chsh -s /run/current-system/sw/bin/fish${RST}"
+echo -e "  3. Verify Homebrew packages: ${BLU}brew bundle check --global${RST}"
+echo -e "  4. Once everything looks good, flip ${BLD}homebrew.onActivation.cleanup${RST} to ${BLU}\"zap\"${RST} in"
+echo -e "     ${BLU}modules/darwin/homebrew.nix${RST} and run ${BLU}nrs uw-mac-m1${RST} again."
+echo -e "  5. Sign into the Mac App Store, then run ${BLU}nrs uw-mac-m1${RST} once more to install mas apps."
+echo
+warn "RTK name-collision check: run the following and verify the homepage is uw-labs, not Rust Type Kit:"
+echo -e "  ${BLU}nix eval --impure --raw --expr '(import <nixpkgs> { system=\"aarch64-darwin\"; }).rtk.meta.homepage'${RST}"
+echo -e "  If correct, move rtk from brew to home.packages in darwin.nix and remove from homebrew.nix."

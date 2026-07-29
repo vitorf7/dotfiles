@@ -16,5 +16,10 @@
     networking.nordvpn.enable = lib.mkEnableOption "NordVPN client (CLI + GUI) with systemd daemon";
     networking.globalprotect.enable = lib.mkEnableOption "GlobalProtect VPN client (gpclient CLI + gpgui GUI) via GlobalProtect-openconnect flake";
     networking.wiresteward.enable = lib.mkEnableOption "Wiresteward WireGuard VPN agent with per-cluster interfaces (dev/prod x AWS/GCP/Merit)";
+
+    darwin.enable = lib.mkEnableOption "macOS (nix-darwin) base configuration";
+    darwin.homebrew.enable = lib.mkEnableOption "Declarative Homebrew (taps, casks, mas apps)";
+    darwin.aerospace.enable = lib.mkEnableOption "Aerospace WM + sketchybar + jankyborders stack";
+    darwin.colima.enable = lib.mkEnableOption "Colima container runtime as a launchd user agent";
   };
 }

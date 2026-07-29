@@ -7,9 +7,12 @@ buildGoModule rec {
     owner = "uw-labs";
     repo = pname;
     rev = "v${version}";
-    sha256 = "sha256-KVaFddlPwmHpwR4gotpKYC/5UC9uQmSB5QfJQvl+/24=";
+    sha256 = "sha256-Pzb35KPoeUCRDPVDC6Lloa9bR366enK5QsA8GEcZUe4=";
   };
-  vendorHash = "sha256-Gu4hPsDE20d5MUmnp2mYrmRxFfWQ5qcQvvd1h9SvJ94=";
+  vendorHash = "sha256-kAQLg6urkUoMYeqPYv+EJ1XCBz7+0lxWlAn2VPtgxLs=";
+
+  # Integration tests require git in the sandbox PATH — skip them.
+  doCheck = false;
 
   meta = with lib; {
     description = "Encryption for git users";

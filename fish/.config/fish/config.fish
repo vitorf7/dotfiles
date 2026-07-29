@@ -11,6 +11,10 @@
 if test -z "$IN_NIX_SHELL"
     if command -s /opt/homebrew/bin/brew > /dev/null
         eval (/opt/homebrew/bin/brew shellenv)
+        # brew shellenv prepends /opt/homebrew/bin — reassert Nix paths after it.
+        # /run/current-system/sw/bin is set by nix-darwin; ~/.nix-profile/bin by home-manager.
+        # fish_add_path is a no-op for paths that don't exist, so this is safe on Linux too.
+        fish_add_path --prepend --global /etc/profiles/per-user/(id -un)/bin /run/current-system/sw/bin $HOME/.nix-profile/bin
     end
 end
 
