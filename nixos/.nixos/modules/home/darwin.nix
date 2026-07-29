@@ -25,6 +25,7 @@ in
     buf
     certbot
     cfssl
+    colima
     docker
     docker-buildx
     docker-compose
