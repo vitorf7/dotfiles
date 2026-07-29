@@ -8,7 +8,7 @@
     nerd-fonts.hack              # replaces cask font-hack-nerd-font
     nerd-fonts.meslo-lg          # replaces cask font-meslo-lg-nerd-font
     nerd-fonts.symbols-only      # replaces cask font-symbols-only-nerd-font
-    monaspace                    # replaces cask font-monaspace
+    nerd-fonts.monaspace         # replaces cask font-monaspace; provides MonaspiceRn Nerd Font Mono/Propo
     commit-mono                  # replaces cask font-commit-mono
     noto-fonts-color-emoji       # replaces cask font-noto-color-emoji
   ];

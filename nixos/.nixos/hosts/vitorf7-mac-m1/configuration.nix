@@ -13,4 +13,39 @@
   vitorf7.darwin.aerospace.enable = true;
   vitorf7.darwin.colima.enable = false; # enable once launchd service is verified
   vitorf7.darwin.work.enable = false; # personal machine — no Okta Verify, gets nordvpn
+
+  # ── Dock ──────────────────────────────────────────────────────────────────
+  # Order in the list = left-to-right order in the Dock.
+  # nrs replaces this list on every activation — items dragged in manually
+  # will be removed on the next rebuild.
+  system.defaults.dock.persistent-apps = [
+    # Finder is always pinned automatically by macOS — omit it here to avoid
+    # a duplicate entry with a ? placeholder.
+    "/System/Applications/Calendar.app"
+    "/Applications/Ghostty.app"
+    "/Applications/kitty.app"
+    "/Applications/Arc.app"
+    "/Applications/Zen.app"
+    "/Applications/Rambox.app"
+    "/Applications/Spotify.app"
+    "/System/Applications/System Settings.app"
+  ];
+
+  # ── Login items ───────────────────────────────────────────────────────────
+  # Registers GUI apps as macOS Login Items via sfltool.
+  # Sketchybar is excluded — it runs as a brew LaunchAgent (brew services).
+  # Aerospace is excluded — its cask registers its own login item.
+  # Guards skip any app not yet installed (e.g. before first Homebrew run).
+  system.activationScripts.loginItems.text = ''
+    for app in \
+      "/Applications/Bartender 5.app" \
+      "/Applications/MeetingBar.app" \
+      "/Applications/1Password.app" \
+      "/Applications/NordVPN.app" \
+      "/Applications/Vicinae.app"; do
+      if [[ -d "$app" ]]; then
+        /usr/bin/sfltool add-item loginitems "$app"
+      fi
+    done
+  '';
 }

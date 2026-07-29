@@ -13,10 +13,24 @@
   # Required for user-scoped system.defaults and sudo PAM.
   system.primaryUser = username;
 
-  # Register Nix-managed fish in /etc/shells so chsh can point at it.
-  # The actual shell change (chsh) is a manual post-step — see README.
+  # Register Nix-managed fish in /etc/shells.
   programs.fish.enable = true;
   environment.shells = [ pkgs.fish pkgs.zsh pkgs.bash ];
+
+  # Set fish as the login shell via dscl.
+  # users.users.${username}.shell is silently ignored unless the user is in
+  # users.knownUsers, which is unsafe for pre-existing macOS accounts.
+  # Using an activation script with dscl is the reliable alternative.
+  # "loginShell" is claimed internally by the nix-darwin fish module — use a
+  # distinct name to avoid the script being silently shadowed.
+  system.activationScripts.setDefaultShell.text = ''
+    fish="/run/current-system/sw/bin/fish"
+    current=$(/usr/bin/dscl . -read /Users/${username} UserShell 2>/dev/null | /usr/bin/awk '{print $2}')
+    if [ "$current" != "$fish" ]; then
+      echo "setting login shell to fish..."
+      /usr/bin/dscl . -create /Users/${username} UserShell "$fish"
+    fi
+  '';
 
   # With home-manager.useUserPackages = true, user packages land in
   # /etc/profiles/per-user/<user>/bin. nix-darwin doesn't add this to the fish
