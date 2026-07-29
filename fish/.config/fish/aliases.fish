@@ -246,10 +246,26 @@ function nrs
     else
         set flake (hostname -s)
     end
-    echo "Rebuilding NixOS flake: $flake"
-    z $HOME/.nixos
-    sudo nixos-rebuild switch --flake ".#$flake"
-    z -
+
+    # ~/.nixos is stowed on both Linux and macOS via initial_*_setup.sh.
+    # Fall back to the repo path when stow hasn't been run yet.
+    set -l flake_dir $HOME/.nixos
+    if not test -d $flake_dir
+        set flake_dir $HOME/dotfiles/nixos/.nixos
+    end
+
+    set -l saved_dir $PWD
+    builtin cd $flake_dir
+
+    if test (uname) = Darwin
+        echo "Rebuilding nix-darwin flake: $flake"
+        sudo darwin-rebuild switch --flake ".#$flake"
+    else
+        echo "Rebuilding NixOS flake: $flake"
+        sudo nixos-rebuild switch --flake ".#$flake"
+    end
+
+    builtin cd $saved_dir
 end
 
 function hm
