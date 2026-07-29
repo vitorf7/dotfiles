@@ -17,17 +17,21 @@
   programs.fish.enable = true;
   environment.shells = [ pkgs.fish pkgs.zsh pkgs.bash ];
 
-  # Set fish as the login shell via dscl.
+  # Set fish as the login shell.
   # users.users.${username}.shell is silently ignored unless the user is in
   # users.knownUsers, which is unsafe for pre-existing macOS accounts.
-  # Using an activation script with dscl is the reliable alternative.
-  # "loginShell" is claimed internally by the nix-darwin fish module — use a
-  # distinct name to avoid the script being silently shadowed.
-  system.activationScripts.setDefaultShell.text = ''
+  #
+  # system.activationScripts.<custom-name> is internal in nix-darwin master and
+  # is silently ignored — only the hardcoded named scripts are executed.
+  # The correct user-facing hook is postActivation, which runs after `etc`
+  # (so /etc/shells already contains the fish path by the time this runs).
+  # types.lines allows multiple modules to append to the same hook without
+  # conflict.
+  system.activationScripts.postActivation.text = ''
     fish="/run/current-system/sw/bin/fish"
     current=$(/usr/bin/dscl . -read /Users/${username} UserShell 2>/dev/null | /usr/bin/awk '{print $2}')
     if [ "$current" != "$fish" ]; then
-      echo "setting login shell to fish..."
+      echo "setting login shell to fish for ${username}..."
       /usr/bin/dscl . -create /Users/${username} UserShell "$fish"
     fi
   '';
