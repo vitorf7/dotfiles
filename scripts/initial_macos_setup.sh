@@ -15,7 +15,8 @@
 #   1. Check Xcode Command Line Tools (required for Homebrew)
 #   2. Install Homebrew if absent
 #   3. Install Determinate Nix if absent
-#   4. Clone / pull dotfiles to $HOME/dotfiles
+#   4. Clone / pull dotfiles to $HOME/dotfiles, and nvim-kick to $HOME/nvim-kick
+#      (core.nix symlinks ~/.config/nvim -> ~/nvim-kick on every host)
 #   5. Wire strongbox git filter + decrypt secrets (requires ~/.strongbox_keyring)
 #   6. Stow the nixos package ($HOME/.nixos symlink — same as Linux, makes nrs work)
 #   7. First nix-darwin activation (darwin-rebuild does not exist until this succeeds)
@@ -137,6 +138,21 @@ if [[ ! -d "$DOTFILES_TARGET" ]]; then
   DOTFILES="$DOTFILES_TARGET"
 fi
 ok "Dotfiles present at $DOTFILES"
+
+# ─── Step 4b: nvim-kick clone/pull (next to dotfiles, same as Linux hosts) ────
+# core.nix symlinks ~/.config/nvim -> ~/nvim-kick unconditionally, so this
+# needs to exist before the first nix-darwin switch links it.
+NVIM_KICK_TARGET="$HOME/nvim-kick"
+if [[ -d "$NVIM_KICK_TARGET/.git" ]]; then
+  info "Updating nvim-kick at ${NVIM_KICK_TARGET}…"
+  git -C "$NVIM_KICK_TARGET" pull origin master
+elif [[ -e "$NVIM_KICK_TARGET" ]]; then
+  die "$NVIM_KICK_TARGET exists but is not a git repo. Remove it and retry."
+else
+  info "Cloning nvim-kick to ${NVIM_KICK_TARGET}…"
+  git clone https://github.com/vitorf7/nvim-kick "$NVIM_KICK_TARGET"
+fi
+ok "nvim-kick present at $NVIM_KICK_TARGET"
 
 # ─── Step 5: Strongbox ────────────────────────────────────────────────────────
 # Strongbox is required on macOS: three config files (fish, k9s, sketchybar) pull
