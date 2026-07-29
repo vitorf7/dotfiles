@@ -15,5 +15,7 @@ brew install --cask font-sf-pro
 
 curl -L https://github.com/kvndrsslr/sketchybar-app-font/releases/download/v2.0.28/sketchybar-app-font.ttf -o $HOME/Library/Fonts/sketchybar-app-font.ttf
 
-# SbarLua
-(git clone https://github.com/FelixKratz/SbarLua.git /tmp/SbarLua && cd /tmp/SbarLua/ && make install && rm -rf /tmp/SbarLua/)
+# SbarLua — Homebrew readline is keg-only (not auto-linked). CPATH supplies
+# the headers; LIBRARY_PATH supplies the lib to gcc at link time (propagates
+# through nested make calls, unlike LDFLAGS which does not).
+(git clone https://github.com/FelixKratz/SbarLua.git /tmp/SbarLua && cd /tmp/SbarLua/ && CPATH=/opt/homebrew/opt/readline/include LIBRARY_PATH=/opt/homebrew/opt/readline/lib make install && rm -rf /tmp/SbarLua/)
