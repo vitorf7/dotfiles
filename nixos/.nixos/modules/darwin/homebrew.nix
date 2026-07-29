@@ -181,9 +181,6 @@ lib.mkIf cfg.homebrew.enable {
     masApps = {
       HP = 1474276998;
       iMovie = 408981434;
-      Keynote = 409183694;
-      Numbers = 409203825;
-      Pages = 409201541;
     } // lib.optionalAttrs cfg.work.enable {
       # Manually reinstalled via `mas install 490179405` after zap removed it twice
       # (it wasn't declared, so cleanup treated the installed app as orphaned).
