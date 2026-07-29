@@ -65,10 +65,9 @@ in
     "fastfetch".source   = link "${dotfilesPath}/fastfetch/.config/fastfetch";
     "lazygit".source     = link "${dotfilesPath}/lazygit/.config/lazygit";
     "gh".source          = link "${dotfilesPath}/gh/.config/gh";
-  } // lib.optionalAttrs isLinux {
-    # nvim: points at ~/nvim-kick which only exists on Linux hosts.
-    # On darwin ~/.config/nvim is hand-managed; left alone in v1.
-    "nvim".source = link "${config.home.homeDirectory}/nvim-kick";
+    # nvim-kick is cloned next to dotfiles (~/nvim-kick) on every host —
+    # same out-of-store symlink on Linux and macOS.
+    "nvim".source        = link "${config.home.homeDirectory}/nvim-kick";
   };
 
   home.file = {
