@@ -50,6 +50,10 @@ lib.mkIf cfg.homebrew.enable {
       { name = "felixkratz/formulae/sketchybar"; args = ["HEAD"]; }
       "fencesandbox/tap/fence"    # sandbox CLI — https://github.com/fencesandbox/fence
 
+      # sketchybar dependency — its SbarLua bindings are built against this specific
+      # Homebrew lua, and sketchybarrc's shebang hardcodes /opt/homebrew/bin/lua
+      "lua"
+
       # Staying on brew — service-managed
       "dnsmasq"
       "httpd"

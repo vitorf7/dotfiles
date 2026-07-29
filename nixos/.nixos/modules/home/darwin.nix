@@ -65,7 +65,9 @@ in
     jless
     jujutsu
     libsixel
-    lua
+    # lua: NOT here — sketchybar's SbarLua bindings are built against Homebrew's
+    # lua specifically, and sketchybarrc hardcodes #!/opt/homebrew/bin/lua.
+    # Kept on Homebrew (see homebrew.nix) to avoid breaking the bar.
     luarocks
     mas             # Mac App Store CLI
     moreutils
