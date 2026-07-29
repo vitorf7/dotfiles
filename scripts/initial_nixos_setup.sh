@@ -10,10 +10,12 @@
 #
 # What it does:
 #   1. Clone/pull dotfiles to $HOME/dotfiles (skipped when running locally)
-#   2. Stow the nixos package  ($HOME/.nixos symlink)
-#   3. Copy /etc/nixos/hardware-configuration.nix into the host directory
+#   2. Clone/pull nvim-kick to $HOME/nvim-kick
+#      (core.nix symlinks ~/.config/nvim -> ~/nvim-kick on every host)
+#   3. Stow the nixos package  ($HOME/.nixos symlink)
+#   4. Copy /etc/nixos/hardware-configuration.nix into the host directory
 #      and git-stage it (required — Nix flakes ignore untracked files)
-#   4. Run `nixos-rebuild boot --flake .#<hostname>` (activates on next reboot)
+#   5. Run `nixos-rebuild boot --flake .#<hostname>` (activates on next reboot)
 #
 # Wiresteward secrets (nixos/.nixos/secrets/*) are strongbox-encrypted and
 # tracked in git — they decrypt automatically on checkout as long as this
@@ -106,6 +108,23 @@ fi
 if [[ ! -f /etc/nixos/hardware-configuration.nix ]]; then
   die "/etc/nixos/hardware-configuration.nix not found.\n   Run: sudo nixos-generate-config\n   Then re-run this script."
 fi
+
+# ─── Pre-flight: nvim-kick clone/pull (next to dotfiles) ─────────────────────
+# core.nix symlinks ~/.config/nvim -> ~/nvim-kick unconditionally, so this
+# needs to exist before the build (mirrors initial_macos_setup.sh).
+NVIM_KICK_TARGET="$HOME/nvim-kick"
+if [[ -d "$NVIM_KICK_TARGET/.git" ]]; then
+  info "Updating nvim-kick at ${NVIM_KICK_TARGET}…"
+  git -C "$NVIM_KICK_TARGET" pull origin master || \
+    nix-shell -p git --run "git -C '$NVIM_KICK_TARGET' pull origin master"
+elif [[ -e "$NVIM_KICK_TARGET" ]]; then
+  die "$NVIM_KICK_TARGET exists but is not a git repo. Remove it and retry."
+else
+  info "Cloning nvim-kick to ${NVIM_KICK_TARGET}…"
+  git clone https://github.com/vitorf7/nvim-kick "$NVIM_KICK_TARGET" || \
+    nix-shell -p git --run "git clone https://github.com/vitorf7/nvim-kick '$NVIM_KICK_TARGET'"
+fi
+ok "nvim-kick present at $NVIM_KICK_TARGET"
 
 # ─── Pre-flight: wiresteward secrets (T480 only) ─────────────────────────────
 # The git clone/pull above ran before we knew the hostname, using whatever
