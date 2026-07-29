@@ -1,13 +1,14 @@
-# NixOS Configuration
+# NixOS / nix-darwin Configuration
 
-Modular flake-parts setup supporting three hosts and a future macOS stub.
+Modular flake-parts setup supporting three NixOS hosts and two nix-darwin (macOS) hosts.
 
 | Host | System | Features |
 |------|--------|----------|
 | `thinkpad-t480` | x86_64-linux | desktop, hyprland, ambxst, flatpak, fingerprint, nvidia |
 | `nixos-arm-vm` | aarch64-linux | desktop, hyprland, qs_brain_shell, vm |
 | `nixos-x86-vm` | x86_64-linux | hyprland, qs_brain_shell, vm |
-| `darwin-m1` | aarch64-darwin | Pending nix-darwin integration |
+| `uw-mac-m1` | aarch64-darwin | UW work MacBook Pro (M1 Pro) — homebrew, aerospace, work.enable |
+| `vitorf7-mac-m1` | aarch64-darwin | Personal MacBook (M1) — homebrew, aerospace, nordvpn (work.enable = false) |
 
 ## Fresh install (one-liner)
 
@@ -54,6 +55,41 @@ Then edit the file with the real values before relying on wiresteward DNS.
 
 ---
 
+## Fresh install (macOS, one-liner)
+
+Run this on a fresh macOS machine. It installs Xcode CLT/Homebrew/Determinate Nix
+if absent, clones dotfiles, decrypts strongbox secrets, stows `~/.nixos`, and does
+the first nix-darwin activation.
+
+```bash
+bash <(curl -sL https://raw.githubusercontent.com/vitorf7/dotfiles/master/scripts/initial_macos_setup.sh) <hostname>
+```
+
+Example:
+
+```bash
+bash <(curl -sL https://raw.githubusercontent.com/vitorf7/dotfiles/master/scripts/initial_macos_setup.sh) uw-mac-m1
+```
+
+> **Prerequisite:** `~/.strongbox_keyring` must already be in place (retrieve from
+> 1Password) — three configs (fish, k9s, sketchybar) pull secrets that need it.
+
+The script records the flake host in `~/.config/nix-darwin-host` as its last step,
+so subsequent `nrs` (no args) works without relying on the system hostname — macOS
+hostname can't be trusted for this on MDM-managed machines (Jamf/Kandji can reassert
+an asset-tag-based ComputerName at any time).
+
+## Deploying (macOS, subsequent rebuilds)
+
+```bash
+sudo darwin-rebuild switch --flake .#<hostname>
+
+# Or, once ~/.config/nix-darwin-host is written, just:
+nrs
+```
+
+---
+
 ## Manual steps required before first deploy
 
 ### 1. Hardware configuration (per machine)
@@ -92,6 +128,11 @@ All feature toggles live under `vitorf7` in `modules/options.nix`.
 | `vitorf7.hardware.nvidia.enable` | false | NVIDIA PRIME offload (MX150/legacy_535) |
 | `vitorf7.hardware.fingerprint.enable` | false | fprintd + PAM hooks (login, sudo, hyprlock) |
 | `vitorf7.hardware.vm.enable` | false | QEMU guest + SPICE agent |
+| `vitorf7.darwin.enable` | false | macOS (nix-darwin) base configuration |
+| `vitorf7.darwin.homebrew.enable` | false | Declarative Homebrew (taps, casks, mas apps) |
+| `vitorf7.darwin.aerospace.enable` | false | Aerospace WM + sketchybar + jankyborders stack |
+| `vitorf7.darwin.colima.enable` | false | Colima container runtime as a launchd user agent |
+| `vitorf7.darwin.work.enable` | false | Work-only items (Okta Verify); `!work.enable` adds nordvpn instead |
 
 ---
 
@@ -107,7 +148,7 @@ All feature toggles live under `vitorf7` in `modules/options.nix`.
 | `ambxst` | Axenide/Ambxst | Ambxst shell |
 | `nixos-hardware` | NixOS/nixos-hardware `master` | T480 hardware quirks |
 | `nix-flatpak` | gmodena/nix-flatpak | Declarative Flatpak management |
-| `nix-darwin` | (commented out) | Future macOS M1 support |
+| `nix-darwin` | LnL7/nix-darwin `master` | macOS system configuration |
 
 ---
 
@@ -117,12 +158,21 @@ All feature toggles live under `vitorf7` in `modules/options.nix`.
 .nixos/
 ├── flake.nix                        Entry point (flake-parts)
 ├── lib/
-│   └── mkHost.nix                   Host builder helper (reduces boilerplate)
+│   ├── mkHost.nix                   NixOS host builder helper (reduces boilerplate)
+│   └── mkDarwin.nix                 nix-darwin host builder helper (mirrors mkHost)
 ├── pkgs/
 │   ├── hyprmod.nix                  Custom derivation — hyprmod v0.4.0 (GTK4 Hyprland settings app)
-│   └── mouseless.nix                Custom derivation — Mouseless v1.0.0-preview.3 (AppImage)
+│   ├── mouseless.nix                Custom derivation — Mouseless v1.0.0-preview.3 (AppImage)
+│   └── strongbox.nix                Custom derivation — strongbox v2.1.0 (used on all hosts, incl. darwin)
 ├── modules/
 │   ├── options.nix                  Custom option declarations (vitorf7.* namespace)
+│   ├── darwin/
+│   │   ├── base-darwin.nix          Umbrella that imports all darwin modules
+│   │   ├── system.nix               nix.enable=false (Determinate Nix owns /etc/nix), fish login shell, Touch ID
+│   │   ├── defaults.nix             system.defaults (dock, finder, key repeat, dark mode)
+│   │   ├── homebrew.nix             Declarative Homebrew — taps/brews/casks/masApps (active when homebrew.enable)
+│   │   ├── fonts.nix                Nerd fonts via fonts.packages
+│   │   └── services.nix             launchd user agent for colima (active when colima.enable)
 │   ├── system/
 │   │   ├── base-system.nix          Umbrella that imports all system modules
 │   │   ├── audio.nix                PipeWire + WirePlumber (active when hyprland.enable)
@@ -144,11 +194,14 @@ All feature toggles live under `vitorf7` in `modules/options.nix`.
 │   │   ├── vm.nix                   QEMU guest + SPICE agent (active when vm.enable)
 │   │   └── webcam.nix               v4l2loopback virtual camera (OBS Cam, always active)
 │   └── home/
-│       ├── default.nix              Home-manager entry point for vitorf7
-│       ├── base-home.nix            Legacy shim → redirects to default.nix
-│       ├── core.nix                 Shell, editor, CLI tools + dotfile symlinks (always active)
+│       ├── default.nix              Home-manager entry point for vitorf7 (NixOS hosts)
+│       ├── darwin.nix               Home-manager entry point for darwin hosts — imports core.nix + dev.nix,
+│       │                            per-host CLI packages, per-file dotfile symlinks, ruby-build plugin activation
+│       ├── base-home.nix            Legacy shim → redirects to default.nix (NixOS only)
+│       ├── core.nix                 Shell, editor, CLI tools + dotfile symlinks — cross-platform,
+│       │                            guarded with pkgs.stdenv.isLinux/isDarwin where needed
 │       ├── desktop.nix              SSH agent, Zen browser, fonts, audio tools (active when desktop.enable)
-│       ├── dev.nix                  k9s, lazygit, Node.js, Go, Rust, opencode (always active)
+│       ├── dev.nix                  k9s, lazygit, Node.js, Go, Rust, opencode, strongbox — cross-platform
 │       ├── hyprland.nix             Hyprland ecosystem packages + config symlinks (active when hyprland.enable)
 │       ├── theming.nix              Rose Pine GTK/Qt/cursor theming (active when desktop.enable)
 │       ├── quickshell.nix           Quickshell + playerctl, cava, brightnessctl (active when quickshell.enable)
@@ -160,11 +213,15 @@ All feature toggles live under `vitorf7` in `modules/options.nix`.
     │   └── hardware-configuration.nix
     ├── nixos-arm-vm/
     │   └── configuration.nix
-    └── nixos-x86-vm/
-        └── configuration.nix
+    ├── nixos-x86-vm/
+    │   └── configuration.nix
+    ├── uw-mac-m1/
+    │   └── configuration.nix        work.enable = true
+    └── vitorf7-mac-m1/
+        └── configuration.nix        work.enable = false (nordvpn instead of Okta Verify)
 ```
 
-## Adding a new host
+## Adding a new host (NixOS)
 
 1. Create `hosts/<name>/configuration.nix` — set the hostname and enable the relevant options
 2. Run `nixos-generate-config` on the machine and place `hardware-configuration.nix` in the same dir
@@ -172,3 +229,15 @@ All feature toggles live under `vitorf7` in `modules/options.nix`.
    ```nix
    <name> = mkHost { system = "<arch>-linux"; host = "<name>"; };
    ```
+
+## Adding a new host (macOS / nix-darwin)
+
+1. Create `hosts/<name>/configuration.nix` — import `../../modules/darwin/base-darwin.nix`, set
+   `networking.hostName`/`computerName`, and the relevant `vitorf7.darwin.*` flags
+   (`work.enable = false` for a personal machine — skips Okta Verify, adds nordvpn)
+2. Add the host to `flake.nix`'s `darwinConfigurations`:
+   ```nix
+   <name> = mkDarwin { system = "aarch64-darwin"; host = "<name>"; username = "<macos-username>"; };
+   ```
+3. Run `./scripts/initial_macos_setup.sh <name>` on the target machine — it records the flake
+   host in `~/.config/nix-darwin-host` as its last step, so subsequent `nrs` works with no args

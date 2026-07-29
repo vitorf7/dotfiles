@@ -130,11 +130,18 @@
             mkDarwin = import ./lib/mkDarwin.nix { inherit inputs self; root = ./.; };
           in
           {
-            # --- Machine 4: macOS M1 Pro (aarch64-darwin) ---
+            # --- Machine 4: macOS M1 Pro, UW work laptop (aarch64-darwin) ---
             uw-mac-m1 = mkDarwin {
               system = "aarch64-darwin";
               host = "uw-mac-m1";
               username = "vitorfaiante";
+            };
+
+            # --- Machine 5: macOS M1, personal laptop (aarch64-darwin) ---
+            vitorf7-mac-m1 = mkDarwin {
+              system = "aarch64-darwin";
+              host = "vitorf7-mac-m1";
+              username = "vitorf7";
             };
           };
       };

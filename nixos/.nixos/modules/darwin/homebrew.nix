@@ -140,6 +140,10 @@ lib.mkIf cfg.homebrew.enable {
       "whatsapp"
       "zoom"
       "rambox"
+    ] ++ lib.optionals (!cfg.work.enable) [
+      # Personal VPN — not used on the work Mac
+      "nordvpn"
+    ] ++ [
 
       # Media
       "spotify"
@@ -180,6 +184,7 @@ lib.mkIf cfg.homebrew.enable {
       Keynote = 409183694;
       Numbers = 409203825;
       Pages = 409201541;
+    } // lib.optionalAttrs cfg.work.enable {
       # Manually reinstalled via `mas install 490179405` after zap removed it twice
       # (it wasn't declared, so cleanup treated the installed app as orphaned).
       # Declaring it now that it's present — brew bundle only downloads if missing,

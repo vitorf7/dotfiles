@@ -11,4 +11,5 @@
   vitorf7.darwin.homebrew.enable = true;
   vitorf7.darwin.aerospace.enable = true;
   vitorf7.darwin.colima.enable = false; # enable once launchd service is verified
+  vitorf7.darwin.work.enable = true;
 }
