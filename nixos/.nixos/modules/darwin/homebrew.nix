@@ -157,22 +157,11 @@ lib.mkIf cfg.homebrew.enable {
       # Meslo variants without a nixpkgs nerd-fonts equivalent
       "font-meslo-for-powerline"
       "font-meslo-lg-dz"
-      # The following nerd font casks are REPLACED by fonts.packages in fonts.nix.
-      # Remove them once `darwin-rebuild switch` confirms fonts.packages is working:
-      # "font-hack-nerd-font"
-      # "font-jetbrains-mono-nerd-font"
-      # "font-meslo-lg-nerd-font"
-      # "font-symbols-only-nerd-font"
-      # "font-commit-mono"
-      # "font-monaspace"
-      # "font-noto-color-emoji"
-      "font-hack-nerd-font"
-      "font-jetbrains-mono-nerd-font"
-      "font-meslo-lg-nerd-font"
-      "font-symbols-only-nerd-font"
-      "font-commit-mono"
-      "font-monaspace"
-      "font-noto-color-emoji"
+      # font-hack-nerd-font, font-jetbrains-mono-nerd-font, font-meslo-lg-nerd-font,
+      # font-symbols-only-nerd-font, font-commit-mono, font-monaspace,
+      # font-noto-color-emoji: removed — confirmed duplicated by fonts.packages
+      # in fonts.nix (both installed side by side in ~/Library/Fonts and
+      # /Library/Fonts/Nix Fonts).
 
       # Java
       "zulu@17"
