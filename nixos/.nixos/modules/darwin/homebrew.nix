@@ -8,11 +8,11 @@ lib.mkIf cfg.homebrew.enable {
     enable = true;
 
     onActivation = {
-      # Keep false until after first successful switch and `brew bundle cleanup --global` review.
-      # Flip to "zap" once the generated bundle is verified correct.
-      cleanup = "none";
-      autoUpdate = false;
-      upgrade = false;
+      # Verified via `brew bundle cleanup --file $HOME/.Brewfile`: nothing extra
+      # installed beyond what's declared here, so zap is safe.
+      cleanup = "zap";
+      autoUpdate = true;
+      upgrade = true;
     };
 
     global.brewfile = true;
@@ -27,6 +27,10 @@ lib.mkIf cfg.homebrew.enable {
       "garrettkrohn/treekanga"    # treekanga
       "jnsahaj/lumen"             # lumen
       "buo/cask-upgrade"          # brew cu - manual upgrade helper
+      "caarlos0/tap"              # tt (cask)
+      "hashicorp/tap"             # terraform, terraform-ls
+      "snyk/tap"                  # snyk
+      "teamookla/speedtest"       # speedtest
 
       # For casks below
       {
@@ -58,7 +62,7 @@ lib.mkIf cfg.homebrew.enable {
 
       # Staying on brew — tap-only utilities
       "media-control"
-      "tt"
+      # tt: actually a cask from caarlos0/tap — moved to extraConfig below (trusted: true)
       "lpeg"
       "nvm"                       # note: prefer mise for version management; remove if not used
       "powerlevel10k"             # zsh-only; irrelevant with fish as login shell — remove when ready
@@ -67,6 +71,13 @@ lib.mkIf cfg.homebrew.enable {
       "ktop"
       "unar"   # nixpkgs unar has a linker crash on aarch64-darwin (cctools BPT trap)
       "minikube"  # bundles its own kubectl binary, conflicts with standalone kubectl in buildEnv
+
+      # Work tools — re-added after zap removed them (not in the original Brewfile dump,
+      # installed manually after the fact, so missed in the initial migration mapping)
+      "hashicorp/tap/terraform"
+      "hashicorp/tap/terraform-ls"
+      "snyk/tap/snyk"
+      "teamookla/speedtest/speedtest"
 
       # awscli v1 — keep only if something requires it; otherwise remove
       "awscli@1"
@@ -175,8 +186,12 @@ lib.mkIf cfg.homebrew.enable {
       iMovie = 408981434;
       Keynote = 409183694;
       Numbers = 409203825;
-      "Okta Verify" = 490179405;
       Pages = 409201541;
+      # Manually reinstalled via `mas install 490179405` after zap removed it twice
+      # (it wasn't declared, so cleanup treated the installed app as orphaned).
+      # Declaring it now that it's present — brew bundle only downloads if missing,
+      # so this should just match the existing install rather than re-attempt it.
+      "Okta Verify" = 490179405;
     };
 
     # Casks from third-party taps require trusted: true — nix-darwin's cask type
@@ -184,6 +199,7 @@ lib.mkIf cfg.homebrew.enable {
     extraConfig = ''
       cask "nikitabobko/tap/aerospace", trusted: true
       cask "chmouel/lazyworktree/lazyworktree", trusted: true
+      cask "caarlos0/tap/tt", trusted: true
     '';
   };
 }

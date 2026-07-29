@@ -16,7 +16,7 @@ in
     gnumake
     unzip
     tmux
-    bob-nvim
+    bob-nvim   # manages neovim installs — bob provides the nvim binary
     stow
     ripgrep
     fd
@@ -25,7 +25,6 @@ in
     bat
     fastfetch
     starship
-    neovim
     fx
     jq
     direnv
