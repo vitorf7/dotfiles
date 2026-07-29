@@ -2,10 +2,14 @@
 # initial_macos_setup.sh — Bootstrap a fresh macOS machine from dotfiles
 #
 # Remote one-liner:
-#   bash <(curl -sL https://raw.githubusercontent.com/vitorf7/dotfiles/master/scripts/initial_macos_setup.sh)
+#   bash <(curl -sL https://raw.githubusercontent.com/vitorf7/dotfiles/master/scripts/initial_macos_setup.sh) <hostname>
+#   # or: curl -sL <URL> | bash -s -- <hostname>
 #
 # Local (dotfiles already cloned):
-#   ./scripts/initial_macos_setup.sh
+#   ./scripts/initial_macos_setup.sh <hostname>
+#
+# Example:
+#   ./scripts/initial_macos_setup.sh uw-mac-m1
 #
 # What it does:
 #   1. Check Xcode Command Line Tools (required for Homebrew)
@@ -15,6 +19,10 @@
 #   5. Wire strongbox git filter + decrypt secrets (requires ~/.strongbox_keyring)
 #   6. Stow the nixos package ($HOME/.nixos symlink — same as Linux, makes nrs work)
 #   7. First nix-darwin activation (darwin-rebuild does not exist until this succeeds)
+#   8. Record the flake host in ~/.config/nix-darwin-host so `nrs` (no args)
+#      works from now on — macOS hostname can't be trusted for this (MDM
+#      like Jamf/Kandji can reassert an asset-tag-based ComputerName that
+#      doesn't match the flake attribute)
 #
 # Prerequisites:
 #   - ~/.strongbox_keyring already present (retrieve from 1Password before running)
@@ -37,6 +45,15 @@ info()  { echo -e "${BLU}::${RST} $*"; }
 ok()    { echo -e "${GRN}✓${RST}  $*"; }
 warn()  { echo -e "${YLW}⚠${RST}  $*"; }
 die()   { echo -e "${RED}✗${RST}  $*" >&2; exit 1; }
+
+# ─── Usage ────────────────────────────────────────────────────────────────────
+usage() {
+  echo -e "${BLD}Usage:${RST} $(basename "$0") <hostname>"
+  echo
+  echo "Available hosts:"
+  ls "${DOTFILES:-$DOTFILES_TARGET}/nixos/.nixos/hosts" 2>/dev/null | sed 's/^/  /'
+  exit 1
+}
 
 # ─── Safety ───────────────────────────────────────────────────────────────────
 [[ $EUID -eq 0 ]] && die "Do not run as root."
@@ -64,6 +81,16 @@ fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DOTFILES="$(dirname "$SCRIPT_DIR")"
+
+# ─── Argument validation ──────────────────────────────────────────────────────
+[[ $# -eq 1 ]] || { echo -e "${RED}error:${RST} hostname argument required" >&2; usage; }
+HOSTNAME_ARG="$1"
+HOST_DIR="$DOTFILES/nixos/.nixos/hosts/$HOSTNAME_ARG"
+
+if [[ ! -d "$HOST_DIR" ]]; then
+  echo -e "${RED}error:${RST} unknown host '${HOSTNAME_ARG}'" >&2
+  usage
+fi
 
 # ─── Step 1: Xcode Command Line Tools ────────────────────────────────────────
 info "Checking Xcode Command Line Tools…"
@@ -157,7 +184,7 @@ fi
 
 # ─── Step 7: First darwin-rebuild switch ──────────────────────────────────────
 echo
-echo -e "${BLD}Activating nix-darwin configuration for uw-mac-m1…${RST}"
+echo -e "${BLD}Activating nix-darwin configuration for ${HOSTNAME_ARG}…${RST}"
 echo -e "(${YLW}darwin-rebuild${RST} does not exist until this first activation)"
 echo
 
@@ -169,7 +196,15 @@ for f in /etc/bashrc /etc/zshrc /etc/zprofile /etc/zshenv; do
   fi
 done
 
-sudo nix "${NIX_OPTS[@]}" run nix-darwin -- switch --flake "$HOME/.nixos#uw-mac-m1"
+sudo nix "${NIX_OPTS[@]}" run nix-darwin -- switch --flake "$HOME/.nixos#${HOSTNAME_ARG}"
+
+# ─── Step 8: Record the flake host for `nrs` ─────────────────────────────────
+# macOS hostname can't be trusted here — MDM (Jamf/Kandji/etc.) can reassert
+# an asset-tag-based ComputerName that doesn't match the flake attribute.
+# This file is what `nrs` (no args) reads on Darwin.
+mkdir -p "$HOME/.config"
+echo "$HOSTNAME_ARG" > "$HOME/.config/nix-darwin-host"
+ok "Recorded flake host '${HOSTNAME_ARG}' → ~/.config/nix-darwin-host"
 
 # ─── Done ─────────────────────────────────────────────────────────────────────
 echo
@@ -183,9 +218,5 @@ echo -e "     ${BLU}grep fish /etc/shells${RST}  # confirm /run/current-system/s
 echo -e "     ${BLU}chsh -s /run/current-system/sw/bin/fish${RST}"
 echo -e "  3. Verify Homebrew packages: ${BLU}brew bundle check --global${RST}"
 echo -e "  4. Once everything looks good, flip ${BLD}homebrew.onActivation.cleanup${RST} to ${BLU}\"zap\"${RST} in"
-echo -e "     ${BLU}modules/darwin/homebrew.nix${RST} and run ${BLU}nrs uw-mac-m1${RST} again."
-echo -e "  5. Sign into the Mac App Store, then run ${BLU}nrs uw-mac-m1${RST} once more to install mas apps."
-echo
-warn "RTK name-collision check: run the following and verify the homepage is uw-labs, not Rust Type Kit:"
-echo -e "  ${BLU}nix eval --impure --raw --expr '(import <nixpkgs> { system=\"aarch64-darwin\"; }).rtk.meta.homepage'${RST}"
-echo -e "  If correct, move rtk from brew to home.packages in darwin.nix and remove from homebrew.nix."
+echo -e "     ${BLU}modules/darwin/homebrew.nix${RST} and run ${BLU}nrs${RST} again (host is now recorded)."
+echo -e "  5. Sign into the Mac App Store, then run ${BLU}nrs${RST} once more to install mas apps."

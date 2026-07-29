@@ -243,6 +243,19 @@ end
 function nrs
     if test (count $argv) -gt 0
         set flake $argv[1]
+    else if test (uname) = Darwin
+        # macOS hostname is unreliable here — MDM (Jamf/Kandji/etc.) can
+        # reassert an asset-tag-based ComputerName that doesn't match the
+        # flake attribute. Each Mac records its own flake host once, in
+        # initial_macos_setup.sh's last step, in a file untouched by MDM.
+        set -l marker $HOME/.config/nix-darwin-host
+        if test -f $marker
+            set flake (string trim < $marker)
+        else
+            echo "No flake host recorded — pass it explicitly, e.g.: nrs uw-mac-m1"
+            echo "(or run: echo uw-mac-m1 > $marker)"
+            return 1
+        end
     else
         set flake (hostname -s)
     end

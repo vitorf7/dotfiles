@@ -26,6 +26,7 @@ in
     certbot
     cfssl
     colima
+    coreutils   # GNU coreutils (shuf, etc.) — macOS/BSD doesn't ship these
     docker
     docker-buildx
     docker-compose
@@ -130,4 +131,15 @@ in
     ".gitignore_global".source = link "${dot}/git/.gitignore_global";
     ".aliases".source          = link "${dot}/zsh/.aliases";
   };
+
+  # nixpkgs' rbenv doesn't bundle ruby-build (unlike Homebrew's, which auto-wires
+  # it via formula-specific hooks). Clone the plugin the standard, packaging-agnostic
+  # way so `rbenv install <version>` works — idempotent, skipped if already present.
+  home.activation.installRubyBuildPlugin = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    RBENV_PLUGIN_DIR="$HOME/.rbenv/plugins/ruby-build"
+    if [ ! -d "$RBENV_PLUGIN_DIR" ]; then
+      $DRY_RUN_CMD ${pkgs.git}/bin/git clone --quiet \
+        https://github.com/rbenv/ruby-build.git "$RBENV_PLUGIN_DIR"
+    fi
+  '';
 }
