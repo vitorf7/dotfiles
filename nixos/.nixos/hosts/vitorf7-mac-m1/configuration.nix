@@ -36,7 +36,12 @@
   # Sketchybar is excluded — it runs as a brew LaunchAgent (brew services).
   # Aerospace is excluded — its cask registers its own login item.
   # Guards skip any app not yet installed (e.g. before first Homebrew run).
-  system.activationScripts.loginItems.text = ''
+  #
+  # Uses postActivation (not a custom script name) — system.activationScripts
+  # is internal in nix-darwin master; only hardcoded names execute.
+  # types.lines merges with other postActivation blocks (e.g. login shell in
+  # system.nix) without conflict.
+  system.activationScripts.postActivation.text = ''
     for app in \
       "/Applications/Bartender 5.app" \
       "/Applications/MeetingBar.app" \
