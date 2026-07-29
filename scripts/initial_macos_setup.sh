@@ -235,6 +235,20 @@ else
   ok "SbarLua installed to ~/.local/share/sketchybar_lua/"
 fi
 
+# ─── Step 8b: sketchybar-app-font ────────────────────────────────────────────
+# Required for aerospace workspace icons in sketchybar. The font is not in any
+# Homebrew formula or Nix package — install it directly from GitHub releases.
+info "Installing sketchybar-app-font…"
+SBAR_FONT="$HOME/Library/Fonts/sketchybar-app-font.ttf"
+if [[ -f "$SBAR_FONT" ]]; then
+  ok "sketchybar-app-font already present — skipping."
+else
+  curl -L \
+    "https://github.com/kvndrsslr/sketchybar-app-font/releases/download/v2.0.28/sketchybar-app-font.ttf" \
+    -o "$SBAR_FONT"
+  ok "sketchybar-app-font installed to ~/Library/Fonts/"
+fi
+
 # ─── Step 9: Set macOS hostname ───────────────────────────────────────────────
 # Best-effort: if the machine is MDM-managed (Jamf/Kandji) the MDM may
 # reassert its own hostname after reboot. The ~/.config/nix-darwin-host file

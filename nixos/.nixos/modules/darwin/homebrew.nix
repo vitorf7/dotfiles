@@ -143,6 +143,9 @@ lib.mkIf cfg.homebrew.enable {
     ] ++ lib.optionals (!cfg.work.enable) [
       # Personal VPN — not used on the work Mac
       "nordvpn"
+      # Gaming — personal machine only
+      "steam"
+      "openemu"   # GB / GBA / SNES / N64 / PS1 and more, all in one place
     ] ++ [
 
       # Media

@@ -18,6 +18,8 @@
       NSAutomaticCapitalizationEnabled = false;
       NSAutomaticQuoteSubstitutionEnabled = false;
       NSAutomaticDashSubstitutionEnabled = false;
+      # Always hide the native menu bar — Sketchybar replaces it.
+      _HIHideMenuBar = true;
     };
 
     dock = {

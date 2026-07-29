@@ -1,17 +1,24 @@
-# Packages
-brew install lua
-brew install switchaudio-osx
-brew install nowplaying-cli
+#!/usr/bin/env bash
+# Thin wrapper — delegates to the canonical sketchybar extras installer.
+#
+# All Homebrew packages (lua, sketchybar, media-control, fonts) are now
+# managed declaratively by nix-darwin (homebrew.nix). This script only
+# needs to handle SbarLua and sketchybar-app-font, both of which live in
+# scripts/sketchybar.sh.
+#
+# Usage:
+#   ./helpers/install.sh          # install / skip if already present
+#   ./helpers/install.sh --force  # force rebuild of SbarLua + re-download font
 
-brew tap FelixKratz/formulae
-brew install sketchybar
+set -euo pipefail
 
-# Fonts
-brew install --cask sf-symbols
-brew install --cask homebrew/cask-fonts/font-sf-mono
-brew install --cask homebrew/cask-fonts/font-sf-pro
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DOTFILES="$(cd "$SCRIPT_DIR/../../../.." && pwd)"
+CANONICAL="$DOTFILES/scripts/sketchybar.sh"
 
-curl -L https://github.com/kvndrsslr/sketchybar-app-font/releases/download/v2.0.5/sketchybar-app-font.ttf -o $HOME/Library/Fonts/sketchybar-app-font.ttf
+if [[ ! -f "$CANONICAL" ]]; then
+  echo "error: canonical script not found at $CANONICAL" >&2
+  exit 1
+fi
 
-# SbarLua
-(git clone https://github.com/FelixKratz/SbarLua.git /tmp/SbarLua && cd /tmp/SbarLua/ && make install && rm -rf /tmp/SbarLua/)
+exec bash "$CANONICAL" "$@"
