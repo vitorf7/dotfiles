@@ -20,7 +20,11 @@
 #   5. Wire strongbox git filter + decrypt secrets (requires ~/.strongbox_keyring)
 #   6. Stow the nixos package ($HOME/.nixos symlink — same as Linux, makes nrs work)
 #   7. First nix-darwin activation (darwin-rebuild does not exist until this succeeds)
-#   8. Record the flake host in ~/.config/nix-darwin-host so `nrs` (no args)
+#   8. Build + install SbarLua (sketchybar Lua bindings) — requires Homebrew lua
+#      and readline (keg-only, so CPATH must be set explicitly during build)
+#   9. Set macOS hostname via scutil (best-effort; MDM may reassert its own name)
+#  10. Set fish as the default login shell (chsh) if not already set
+#  11. Record the flake host in ~/.config/nix-darwin-host so `nrs` (no args)
 #      works from now on — macOS hostname can't be trusted for this (MDM
 #      like Jamf/Kandji can reassert an asset-tag-based ComputerName that
 #      doesn't match the flake attribute)
@@ -29,7 +33,7 @@
 #   - ~/.strongbox_keyring already present (retrieve from 1Password before running)
 #
 # After the script completes:
-#   1. Verify things work, then: chsh -s /run/current-system/sw/bin/fish
+#   1. Open a new terminal and verify Nix tools are on PATH
 #   2. After a week of use, flip homebrew.onActivation.cleanup to "zap" in homebrew.nix
 
 set -euo pipefail
@@ -214,7 +218,47 @@ done
 
 sudo nix "${NIX_OPTS[@]}" run nix-darwin -- switch --flake "$HOME/.nixos#${HOSTNAME_ARG}"
 
-# ─── Step 8: Record the flake host for `nrs` ─────────────────────────────────
+# ─── Step 8: SbarLua — Lua bindings for sketchybar ───────────────────────────
+# Must run after nix-darwin activation so that Homebrew lua and readline are
+# already installed. Homebrew readline is keg-only (not auto-linked). CPATH
+# supplies headers; LIBRARY_PATH supplies the lib to gcc through nested makes.
+info "Building and installing SbarLua…"
+if [[ -f "$HOME/.local/share/sketchybar_lua/sketchybar.so" ]]; then
+  ok "SbarLua already installed at ~/.local/share/sketchybar_lua/sketchybar.so — skipping."
+else
+  (
+    git clone https://github.com/FelixKratz/SbarLua.git /tmp/SbarLua
+    cd /tmp/SbarLua
+    CPATH=/opt/homebrew/opt/readline/include LIBRARY_PATH=/opt/homebrew/opt/readline/lib make install
+    rm -rf /tmp/SbarLua
+  )
+  ok "SbarLua installed to ~/.local/share/sketchybar_lua/"
+fi
+
+# ─── Step 9: Set macOS hostname ───────────────────────────────────────────────
+# Best-effort: if the machine is MDM-managed (Jamf/Kandji) the MDM may
+# reassert its own hostname after reboot. The ~/.config/nix-darwin-host file
+# (Step 11) is the authoritative source for `nrs` regardless.
+info "Setting macOS hostname to '${HOSTNAME_ARG}'…"
+sudo scutil --set ComputerName  "${HOSTNAME_ARG}"
+sudo scutil --set HostName      "${HOSTNAME_ARG}"
+sudo scutil --set LocalHostName "${HOSTNAME_ARG}"
+ok "Hostname set to '${HOSTNAME_ARG}'"
+
+# ─── Step 10: Set fish as the default login shell ─────────────────────────────
+FISH_PATH="/run/current-system/sw/bin/fish"
+if [[ "$SHELL" == "$FISH_PATH" ]]; then
+  ok "fish is already the default shell — skipping chsh."
+elif grep -qF "$FISH_PATH" /etc/shells 2>/dev/null; then
+  info "Setting fish as the default login shell…"
+  chsh -s "$FISH_PATH"
+  ok "Default shell set to $FISH_PATH (takes effect in a new terminal)."
+else
+  warn "$FISH_PATH is not yet in /etc/shells."
+  warn "Open a new terminal and run: chsh -s $FISH_PATH"
+fi
+
+# ─── Step 11: Record the flake host for `nrs` ────────────────────────────────
 # macOS hostname can't be trusted here — MDM (Jamf/Kandji/etc.) can reassert
 # an asset-tag-based ComputerName that doesn't match the flake attribute.
 # This file is what `nrs` (no args) reads on Darwin.
@@ -229,10 +273,7 @@ echo
 echo -e "  ${BLD}Next steps:${RST}"
 echo -e "  1. Open a ${BLD}new terminal${RST} and verify Nix tools are on PATH:"
 echo -e "     ${BLU}which git eza fd fzf starship${RST}"
-echo -e "  2. Change login shell to the Nix-managed fish (only after verifying the new terminal works):"
-echo -e "     ${BLU}grep fish /etc/shells${RST}  # confirm /run/current-system/sw/bin/fish is listed"
-echo -e "     ${BLU}chsh -s /run/current-system/sw/bin/fish${RST}"
-echo -e "  3. Verify Homebrew packages: ${BLU}brew bundle check --global${RST}"
-echo -e "  4. Once everything looks good, flip ${BLD}homebrew.onActivation.cleanup${RST} to ${BLU}\"zap\"${RST} in"
+echo -e "  2. Verify Homebrew packages: ${BLU}brew bundle check --global${RST}"
+echo -e "  3. Once everything looks good, flip ${BLD}homebrew.onActivation.cleanup${RST} to ${BLU}\"zap\"${RST} in"
 echo -e "     ${BLU}modules/darwin/homebrew.nix${RST} and run ${BLU}nrs${RST} again (host is now recorded)."
-echo -e "  5. Sign into the Mac App Store, then run ${BLU}nrs${RST} once more to install mas apps."
+echo -e "  4. Sign into the Mac App Store, then run ${BLU}nrs${RST} once more to install mas apps."
