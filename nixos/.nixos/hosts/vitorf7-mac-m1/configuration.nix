@@ -12,24 +12,7 @@
   vitorf7.darwin.homebrew.enable = true;
   vitorf7.darwin.aerospace.enable = true;
   vitorf7.darwin.colima.enable = false; # enable once launchd service is verified
-  vitorf7.darwin.work.enable = false; # personal machine — no Okta Verify, gets nordvpn
-
-  # ── Dock ──────────────────────────────────────────────────────────────────
-  # Order in the list = left-to-right order in the Dock.
-  # nrs replaces this list on every activation — items dragged in manually
-  # will be removed on the next rebuild.
-  system.defaults.dock.persistent-apps = [
-    # Finder is always pinned automatically by macOS — omit it here to avoid
-    # a duplicate entry with a ? placeholder.
-    "/System/Applications/Calendar.app"
-    "/Applications/Ghostty.app"
-    "/Applications/kitty.app"
-    "/Applications/Arc.app"
-    "/Applications/Zen.app"
-    "/Applications/Rambox.app"
-    "/Applications/Spotify.app"
-    "/System/Applications/System Settings.app"
-  ];
+  vitorf7.darwin.work.enable = false; # personal machine — no Okta Verify, gets nordvpn 
 
   # ── Login items ───────────────────────────────────────────────────────────
   # Registers GUI apps as macOS Login Items via sfltool.

@@ -21,7 +21,6 @@
       # Always hide the native menu bar — Sketchybar replaces it.
       _HIHideMenuBar = true;
     };
-
     dock = {
       autohide = true;
       autohide-delay = 0.0;
@@ -31,6 +30,33 @@
       mru-spaces = false;
       show-process-indicators = true;
       mouse-over-hilite-stack = true;
+
+      # Order in the list = left-to-right order in the Dock.
+      # nrs replaces this list on every activation — items dragged in manually
+      # will be removed on the next rebuild.
+      persistent-apps = [
+        # Finder is always pinned automatically by macOS — omit it here to avoid
+        # a duplicate entry with a ? placeholder.
+        {app = "/System/Applications/Calendar.app";}
+        {app = "/Applications/Ghostty.app";}
+        {app = "/Applications/Rambox.app";}
+        {app = "/Applications/Zen.app";}
+        {app = "/Applications/Postman.app";}
+        {
+          spacer = {
+            small = true;
+          };
+        }
+        {app = "/Applications/Arc.app";}
+        {app = "/Applications/kitty.app";}
+        {
+          spacer = {
+            small = true;
+          };
+        }
+        {app = "/Applications/Spotify.app";}
+        {app = "/System/Applications/System Settings.app";}
+      ];
     };
 
     finder = {
