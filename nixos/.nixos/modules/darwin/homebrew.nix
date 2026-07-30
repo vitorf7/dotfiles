@@ -190,6 +190,9 @@ lib.mkIf cfg.homebrew.enable {
       # Declaring it now that it's present — brew bundle only downloads if missing,
       # so this should just match the existing install rather than re-attempt it.
       "Okta Verify" = 490179405;
+      Keynote = 361285480;
+      Numbers = 361304891;
+      Pages = 361309726;
     };
 
     # Casks from third-party taps require trusted: true — nix-darwin's cask type
