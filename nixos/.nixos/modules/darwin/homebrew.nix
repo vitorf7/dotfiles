@@ -106,7 +106,6 @@ lib.mkIf cfg.homebrew.enable {
       "desktoppr"
       "keepingyouawake"
       "meetingbar"
-      "raycast"
       "tomatobar"
 
       # Browsers
