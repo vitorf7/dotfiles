@@ -111,6 +111,7 @@ in
     "lf".source         = link "${dot}/lf/.config/lf";
     "alacritty".source  = link "${dot}/alacritty/.config/alacritty";
     "bin".source        = link "${dot}/bin/.config/bin";
+    "vicinae".source    = link "${dot}/vicinae/.config/vicinae";
 
     # sketchybar — per-file because weather_vars.lua is a strongbox secret.
     "sketchybar/sketchybarrc".source         = link "${dot}/sketchybar/.config/sketchybar/sketchybarrc";
