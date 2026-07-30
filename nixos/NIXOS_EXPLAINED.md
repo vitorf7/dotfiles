@@ -723,6 +723,14 @@ Result: `~/.config/fish` → `~/dotfiles/fish/.config/fish`
 
 You can edit files in `~/dotfiles/fish/` directly and changes take effect immediately without running `nixos-rebuild`. The dotfiles repo uses `stow`-style directory layout, and Home Manager creates the symlinks pointing into it.
 
+> **Fisher (fish plugin manager).** Fish config is linked *per-file* precisely so `~/.config/fish` stays a real writable directory — this makes it fisher-compatible with zero Nix involvement. Bootstrap once per machine:
+>
+> ```fish
+> curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher
+> ```
+>
+> On a fresh machine this also installs every plugin already listed in `fish_plugins`. Fisher rewrites `fish_plugins` in place (through the symlink), so `fisher install`/`remove` changes land directly in the git-tracked dotfiles file, while plugin sources live as machine-local plain files under `~/.config/fish/{functions,conf.d,completions}`. `curl` is in `core.nix` `home.packages` because fisher shells out to it (macOS has one builtin; NixOS does not).
+
 ---
 
 ## 7. Custom Patterns

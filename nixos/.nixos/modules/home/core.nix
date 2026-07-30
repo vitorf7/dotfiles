@@ -15,6 +15,7 @@ in
     gcc
     gnumake
     unzip
+    curl      # fisher shells out to curl on every install/update (macOS has one builtin; NixOS needs this)
     tmux
     bob-nvim   # manages neovim installs — bob provides the nvim binary
     stow
