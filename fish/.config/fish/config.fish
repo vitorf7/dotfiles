@@ -89,7 +89,15 @@ alias luamake $HOME/Code/lua-language-server/3rd/luamake/luamake
 
 set -gx NVM_DIR "$HOME/.nvm"
 set --universal nvm_default_version latest
-set --global nvm_data $HOME/.nvm
+# nvm_data is a universal variable (set -U nvm_data ~/.nvm) so it is already
+# available when conf.d/nvm.fish runs its auto-activation before this file.
+# The `fish_add_path --prepend` at the top of this file re-asserts the Nix
+# profile paths in front of nvm's bin dir, so move it back to the front to
+# keep nvm's node ahead of the home-manager one.
+if status is-interactive; and set -q nvm_default_version
+    nvm use --silent $nvm_default_version
+    and fish_add_path --prepend --global $nvm_data/$nvm_current_version/bin
+end
 # bass source (brew --prefix nvm)/nvm.sh --no-use ';' nvm use iojs
 # if test -s "$HOMEBREW_PATH/opt/nvm/nvm.sh"
 #     bass source "$HOMEBREW_PATH/opt/nvm/nvm.sh"
