@@ -75,7 +75,6 @@ in
     moreutils
     nowplaying-cli  # macOS media control
     pipenv
-    pipx
     pngpaste        # paste images from clipboard — macOS specific
     poppler
     reattach-to-user-namespace
