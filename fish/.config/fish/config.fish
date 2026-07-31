@@ -94,7 +94,7 @@ set --universal nvm_default_version latest
 # The `fish_add_path --prepend` at the top of this file re-asserts the Nix
 # profile paths in front of nvm's bin dir, so move it back to the front to
 # keep nvm's node ahead of the home-manager one.
-if status is-interactive; and set -q nvm_default_version
+if status is-interactive; and set -q nvm_default_version; and functions -q nvm
     nvm use --silent $nvm_default_version
     and fish_add_path --prepend --global $nvm_data/$nvm_current_version/bin
 end
