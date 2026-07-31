@@ -75,6 +75,7 @@ lib.mkIf cfg.homebrew.enable {
       "ktop"
       "unar"   # nixpkgs unar has a linker crash on aarch64-darwin (cctools BPT trap)
       "minikube"  # bundles its own kubectl binary, conflicts with standalone kubectl in buildEnv
+      "pipx"   # nixpkgs' pipx-1.14.0 fails to build (broken pytest parametrize in test_inject.py)
 
       # Work tools — re-added after zap removed them (not in the original Brewfile dump,
       # installed manually after the fact, so missed in the initial migration mapping)
