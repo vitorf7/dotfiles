@@ -21,6 +21,9 @@ lib.mkIf osConfig.vitorf7.desktop.hyprland.enable {
     nwg-dock-hyprland
     lxqt.lxqt-policykit
 
+    wiremix
+    bluetui
+
     self.packages.${pkgs.stdenv.hostPlatform.system}.hyprmod
   ];
 
