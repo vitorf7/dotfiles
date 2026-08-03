@@ -21,10 +21,5 @@ in
     self.packages.${pkgs.stdenv.hostPlatform.system}.strongbox
   ];
 
-  xdg.configFile = {
-    # k9s — per-file because config.yaml is a strongbox secret dropped alongside.
-    "k9s/aliases.yaml".source = link "${dotfilesPath}/k9s/.config/k9s/aliases.yaml";
-    "k9s/skins".source        = link "${dotfilesPath}/k9s/.config/k9s/skins";
-    "k9s/config.yaml".source  = link "${dotfilesPath}/secrets/.config/k9s/config.yaml";
-  };
+  xdg.configFile."k9s".source = link "${dotfilesPath}/k9s/.config/k9s";
 }
