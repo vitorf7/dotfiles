@@ -11,6 +11,10 @@ in
     "$HOME/.local/share/nvim/mason/bin"
   ];
 
+  # EDITOR/VISUAL are not set here: home.sessionVariables doesn't reach fish
+  # (needs programs.fish.enable, unset in this repo — fish is unmanaged, see
+  # xdg.configFile below). fish/.config/fish/config.fish already sets these
+  # itself via `set -Ux EDITOR nvim`.
 
   programs.gh = {
     enable = true;
@@ -49,8 +53,7 @@ in
     fx
     jq
     direnv
-    delta
-    git
+    sops
     mise
     rbenv
     eza
@@ -70,12 +73,17 @@ in
   xdg.configFile = {
     # Fish — per-file so ~/.config/fish stays a real writable directory
     # (fish writes fish_variables/fish_plugins itself; per-file avoids polluting the repo).
-    # private_config.fish lives in secrets/ and is strongbox-encrypted.
     "fish/config.fish".source         = link "${dotfilesPath}/fish/.config/fish/config.fish";
     "fish/aliases.fish".source        = link "${dotfilesPath}/fish/.config/fish/aliases.fish";
     "fish/fish_plugins".source        = link "${dotfilesPath}/fish/.config/fish/fish_plugins";
     "fish/functions/nvims.fish".source = link "${dotfilesPath}/fish/.config/fish/functions/nvims.fish";
-    "fish/private_config.fish".source = link "${dotfilesPath}/secrets/.config/fish/private_config.fish";
+    # sops.fish helper functions — one function per file (fish autoload requires
+    # filename to match the function name exactly).
+    "fish/functions/__sops_key_file.fish".source = link "${dotfilesPath}/fish/.config/fish/functions/__sops_key_file.fish";
+    "fish/functions/sops-edit.fish".source       = link "${dotfilesPath}/fish/.config/fish/functions/sops-edit.fish";
+    "fish/functions/sops-view.fish".source       = link "${dotfilesPath}/fish/.config/fish/functions/sops-view.fish";
+    "fish/functions/sops-updatekeys.fish".source = link "${dotfilesPath}/fish/.config/fish/functions/sops-updatekeys.fish";
+    # fish/private_config.fish is managed by sops-nix (secrets.nix)
 
     # These are whole-directory links — safe because no secrets live alongside them.
     "ghostty".source     = link "${dotfilesPath}/ghostty/.config/ghostty";

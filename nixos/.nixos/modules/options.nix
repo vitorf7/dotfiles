@@ -22,5 +22,29 @@
     darwin.aerospace.enable = lib.mkEnableOption "Aerospace WM + sketchybar + jankyborders stack";
     darwin.colima.enable = lib.mkEnableOption "Colima container runtime as a launchd user agent";
     darwin.work.enable = lib.mkEnableOption "Work-only items (Okta Verify) — enable on the UW Mac, leave off on personal machines";
+
+    git = {
+      defaultProfile = lib.mkOption {
+        type = lib.types.enum [ "personal" "work" ];
+        default = "personal";
+        description = "Which git profile provides the top-level [user] identity";
+      };
+      personal = {
+        enable = lib.mkEnableOption "Personal git profile";
+        directories = lib.mkOption {
+          type = lib.types.listOf lib.types.str;
+          default = [ "~/configfiles/" ];
+          description = "Directories where the personal includeIf applies";
+        };
+      };
+      work = {
+        enable = lib.mkEnableOption "Work git profile";
+        directories = lib.mkOption {
+          type = lib.types.listOf lib.types.str;
+          default = [];
+          description = "Directories where the work includeIf applies";
+        };
+      };
+    };
   };
 }

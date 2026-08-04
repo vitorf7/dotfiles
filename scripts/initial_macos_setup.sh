@@ -17,9 +17,11 @@
 #   3. Install Determinate Nix if absent
 #   4. Clone / pull dotfiles to $HOME/dotfiles, and nvim-kick to $HOME/nvim-kick
 #      (core.nix symlinks ~/.config/nvim -> ~/nvim-kick on every host)
-#   5. Wire strongbox git filter + decrypt secrets (requires ~/.strongbox_keyring)
+#   5. Wire strongbox git filter (required for nixos/.nixos/secrets/* in the repo)
+#      and verify the sops age key is in place (sops-nix decrypts secrets on activation)
 #   6. Stow the nixos package ($HOME/.nixos symlink — same as Linux, makes nrs work)
 #   7. First nix-darwin activation (darwin-rebuild does not exist until this succeeds)
+#      sops-nix activation decrypts fish/private_config.fish and weather_vars.lua
 #   8. Build + install SbarLua (sketchybar Lua bindings) — requires Homebrew lua
 #      and readline (keg-only, so CPATH must be set explicitly during build)
 #   9. Set macOS hostname via scutil (best-effort; MDM may reassert its own name)
@@ -30,7 +32,10 @@
 #      doesn't match the flake attribute)
 #
 # Prerequisites:
-#   - ~/.strongbox_keyring already present (retrieve from 1Password before running)
+#   - ~/.strongbox_keyring present (retrieve from 1Password — needed for git filter
+#     on nixos/.nixos/secrets/wiresteward-secrets.nix)
+#   - ~/.config/sops/age/keys.txt present (retrieve from 1Password as
+#     "age key — <hostname>" — needed for sops-nix to decrypt secrets on activation)
 #
 # After the script completes:
 #   1. Open a new terminal and verify Nix tools are on PATH
@@ -158,37 +163,40 @@ else
 fi
 ok "nvim-kick present at $NVIM_KICK_TARGET"
 
-# ─── Step 5: Strongbox ────────────────────────────────────────────────────────
-# Strongbox is required on macOS: three config files (fish, k9s, sketchybar) pull
-# secret files from dotfiles/secrets/ which are strongbox-encrypted at rest.
-info "Ensuring strongbox secrets are decrypted…"
-
+# ─── Step 5: Strongbox + sops age key ────────────────────────────────────────
+# Strongbox: still required as a git filter for nixos/.nixos/secrets/* (the
+# wiresteward-secrets.nix file is imported at nix eval time and stays on
+# strongbox). Fish and sketchybar secrets are now managed by sops-nix and
+# decrypted automatically at activation — no manual checkout needed.
+#
+# sops age key: must be in place before darwin-rebuild switch so sops-nix can
+# decrypt secrets during activation.
+info "Checking strongbox keyring…"
 if [[ ! -f "$HOME/.strongbox_keyring" ]]; then
-  die "~/.strongbox_keyring not found.\n   Retrieve the private keyring from 1Password, save it to ~/.strongbox_keyring, then re-run."
+  die "~/.strongbox_keyring not found.\n   Retrieve from 1Password, save to ~/.strongbox_keyring, then re-run."
 fi
 
-# Wire the strongbox git filter (non-interactively, same lines as initial_nixos_setup.sh)
+# Wire the strongbox git filter (needed before any git operations on nixos/.nixos/secrets/*)
 git config --global filter.strongbox.clean "strongbox -clean %f"
 git config --global filter.strongbox.smudge "strongbox -smudge %f"
 git config --global filter.strongbox.required true
 git config --global diff.strongbox.textconv "strongbox -diff"
 
-# Build strongbox from the flake (doesn't need secrets to be decrypted first)
+# Build strongbox from the flake so the git filter binary is available
 info "Building strongbox…"
 STRONGBOX_OUT=$(nix build "${NIX_OPTS[@]}" --no-link --print-out-paths \
   "$DOTFILES/nixos/.nixos#strongbox")
 export PATH="$STRONGBOX_OUT/bin:$PATH"
 ok "strongbox: $(strongbox -version 2>/dev/null || echo 'built')"
 
-# Re-checkout secrets if they are still ciphertext
-if head -1 "$DOTFILES/secrets/.config/fish/private_config.fish" 2>/dev/null \
-    | grep -q 'STRONGBOX ENCRYPTED RESOURCE'; then
-  info "Decrypting secrets…"
-  git -C "$DOTFILES" checkout -- secrets
-  ok "Secrets decrypted."
-else
-  ok "Secrets already decrypted."
+# sops age key — sops-nix decrypts fish/private_config.fish and weather_vars.lua
+# automatically during activation; the key must exist first.
+info "Checking sops age key…"
+SOPS_KEY="$HOME/.config/sops/age/keys.txt"
+if [[ ! -f "$SOPS_KEY" ]]; then
+  die "sops age key not found at $SOPS_KEY.\n   Retrieve from 1Password (\"age key — ${HOSTNAME_ARG}\"), save it there, then re-run.\n   To generate a new key: mkdir -p ~/.config/sops/age && age-keygen -o $SOPS_KEY"
 fi
+ok "sops age key present."
 
 # ─── Step 6: Stow nixos → ~/.nixos ───────────────────────────────────────────
 # This creates ~/.nixos -> dotfiles/nixos/.nixos — same as on Linux —
@@ -287,7 +295,8 @@ echo
 echo -e "  ${BLD}Next steps:${RST}"
 echo -e "  1. Open a ${BLD}new terminal${RST} and verify Nix tools are on PATH:"
 echo -e "     ${BLU}which git eza fd fzf starship${RST}"
-echo -e "  2. Verify Homebrew packages: ${BLU}brew bundle check --global${RST}"
-echo -e "  3. Once everything looks good, flip ${BLD}homebrew.onActivation.cleanup${RST} to ${BLU}\"zap\"${RST} in"
+echo -e "  2. Verify sops secrets decrypted: ${BLU}echo \$GITHUB_TOKEN${RST} (should be non-empty)"
+echo -e "  3. Verify Homebrew packages: ${BLU}brew bundle check --global${RST}"
+echo -e "  4. Once everything looks good, flip ${BLD}homebrew.onActivation.cleanup${RST} to ${BLU}\"zap\"${RST} in"
 echo -e "     ${BLU}modules/darwin/homebrew.nix${RST} and run ${BLU}nrs${RST} again (host is now recorded)."
-echo -e "  4. Sign into the Mac App Store, then run ${BLU}nrs${RST} once more to install mas apps."
+echo -e "  5. Sign into the Mac App Store, then run ${BLU}nrs${RST} once more to install mas apps."

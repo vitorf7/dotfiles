@@ -3,6 +3,8 @@
 {
   imports = [
     ./core.nix
+    ./git.nix
+    ./secrets.nix
     ./desktop.nix
     ./hyprland.nix
     ./theming.nix
