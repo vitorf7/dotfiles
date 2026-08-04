@@ -11,6 +11,26 @@ in
     "$HOME/.local/share/nvim/mason/bin"
   ];
 
+
+  programs.gh = {
+    enable = true;
+    settings = {
+      git_protocol = "ssh";
+      editor = "nvim";
+      prompt = "enabled";
+      pager = "nvimpager";
+      aliases = {
+        co = "pr checkout";
+        pv = "pr view";
+      };
+    };
+    extensions = [
+      pkgs.gh-dash
+      pkgs.gh-pr-review
+      pkgs.gh-stack
+    ];
+  };
+
   home.packages = with pkgs; [
     gcc
     gnumake
@@ -36,7 +56,6 @@ in
     eza
     tree-sitter
     sesh
-    gh
   ] ++ lib.optionals isLinux [
     # Linux-only or installed via brew cask / native on macOS
     killall
@@ -65,7 +84,6 @@ in
     "bat".source         = link "${dotfilesPath}/bat/.config/bat";
     "fastfetch".source   = link "${dotfilesPath}/fastfetch/.config/fastfetch";
     "lazygit".source     = link "${dotfilesPath}/lazygit/.config/lazygit";
-    "gh".source          = link "${dotfilesPath}/gh/.config/gh";
     # nvim-kick is cloned next to dotfiles (~/nvim-kick) on every host —
     # same out-of-store symlink on Linux and macOS.
     "nvim".source        = link "${config.home.homeDirectory}/nvim-kick";
