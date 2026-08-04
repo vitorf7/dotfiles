@@ -13,9 +13,10 @@ gum style \
 set -l NOW (date +"%Y-%m-%d-%H-%M-%S")
 echo -e "$NOW\n" >>/tmp/u-$NOW.txt
 
-gum spin --spinner globe --title "🐙 gh extensions upgrading..." --show-output -- gh extension upgrade --all >>/tmp/u-$NOW.txt
+## Run nrs command that will apply the nix-darwin rebuild switch
+gum spin --spinner globe --title "󱄅 nix applying..." --show-output -- nrs >>/tmp/u-$NOW.txt
 echo "\n" >>/tmp/u-$NOW.txt
-echo "✅ 🐙 gh extensions upgraded"
+echo "✅ 󱄅 nix applied"
 
 gum spin --spinner globe --title "🪟 tpm plugins updating..." --show-output -- ~/.config/tmux/plugins/tpm/bin/update_plugins all >>/tmp/u-$NOW.txt
 echo "\n" >>/tmp/u-$NOW.txt
@@ -25,40 +26,9 @@ gum spin --spinner globe --title "🐠 fisher plugins updating..." --show-output
 echo "\n" >>/tmp/u-$NOW.txt
 echo "✅ 🐠 fisher plugins updated"
 
-gum spin --spinner globe --title "🍻 brew updating" --show-output -- brew update >>/tmp/u-$NOW.txt
-echo "\n" >>/tmp/u-$NOW.txt
-echo "✅ 🍻 brew updated"
-
-set -l OUTDATED (brew outdated)
-echo $OUTDATED >>/tmp/u-$NOW.txt
-
-if test -n "$OUTDATED"
-    gum spin --spinner globe --title "🍻 brew upgrading" --show-output -- brew-up-to-date >>/tmp/u-$NOW.txt
-    echo "\n" >>/tmp/u-$NOW.txt
-    echo "✅ 🍻 brew upgraded"
-
-    gum spin --spinner globe --title "🍻 brew cleaning up" --show-output -- brew cleanup --prune=all >>/tmp/u-$NOW.txt
-    echo "\n" >>/tmp/u-$NOW.txt
-    echo "✅ 🍻 brew cleaned up"
-else
-    echo "No outdated brew packages" >>/tmp/u-$NOW.txt
-end
-
-gum spin --spinner globe --title "🍻 brew upgrading casks" --show-output -- brew-force-update-casks >>/tmp/u-$NOW.txt
-echo "\n" >>/tmp/u-$NOW.txt
-echo "✅ 🍻 brew upgraded casks"
-
 gum spin --spinner globe --title "🍻 brew doctoring" --show-output -- brew doctor >>/tmp/u-$NOW.txt
 echo "\n" >>/tmp/u-$NOW.txt
 echo "✅ 🍻 brew doctored"
-
-gum spin --spinner globe --title "🦀 cargo updating" --show-output -- cargo install-update -a >>/tmp/u-$NOW.txt
-echo "\n" >>/tmp/u-$NOW.txt
-echo "✅ 🦀 cargo updated"
-
-gum spin --spinner globe --title "🌟 nerd fonts updating" --show-output -- getnf -U >>/tmp/u-$NOW.txt
-echo "\n" >>/tmp/u-$NOW.txt
-echo "✅ 🌟 nerd fonts updated"
 
 gum spin --spinner globe --title "🚪 closing all neovim instances" --show-output -- close_neovim_in_tmux >>/tmp/u-$NOW.txt
 echo "\n" >>/tmp/u-$NOW.txt
