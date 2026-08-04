@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 # gitconfig.sh
 #
+# DEPRECATED — superseded by modules/home/git.nix (programs.git in home-manager).
+# Git identity, signing, delta, aliases, credential helpers, and per-directory
+# profile switching are now declared declaratively in nix and applied on
+# `darwin-rebuild switch` / `nixos-rebuild switch`.
+#
+# This script is kept for reference and for bootstrapping non-nix machines only.
+# Do not run it on machines managed by this flake.
+#
 # Cross-platform git config setup for macOS and Linux (including NixOS).
 # Creates a single ~/.gitconfig plus optional ~/.gitconfig.personal and
 # ~/.gitconfig.work profile files.

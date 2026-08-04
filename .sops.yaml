@@ -1,0 +1,48 @@
+# sops-nix secret management
+#
+# Age public keys — fill in after running key generation on each host:
+#   NixOS: nix-shell -p ssh-to-age --run 'cat /etc/ssh/ssh_host_ed25519_key.pub | ssh-to-age'
+#   macOS: age-keygen -o ~/.config/sops/age/keys.txt  (store private key in 1Password)
+keys:
+  - &uw-mac-m1 age14ruj5rtwj0ep5apccv44neqd0yg77jryx2wf22vzz5y9pevdv5wq58j0mp
+  - &vitorf7-mac-m1 age1g9w20lw3swkhjtatx5l2flsq772cwym0ks63h06x3772ms863qgq5552ya
+  - &thinkpad-t480 age17env34jshhufuclfcs9hrc28nvvqzw8keg2d2c8stp9dtympdqfquew8tt
+  # - &nixos-arm-vm age1...
+  # - &nixos-x86-vm age1...
+
+creation_rules:
+  # Shared user secrets — fish private_config (available on all hosts)
+  - path_regex: nixos/\.nixos/sops/shared/.*$
+    key_groups:
+      - age:
+          - *uw-mac-m1
+          - *vitorf7-mac-m1
+          - *thinkpad-t480
+
+  # macOS-only secrets — sketchybar weather API key
+  - path_regex: nixos/\.nixos/sops/darwin/.*$
+    key_groups:
+      - age:
+          - *uw-mac-m1
+          - *vitorf7-mac-m1
+
+  # NixOS-only secrets — wiresteward VPN config
+  - path_regex: nixos/\.nixos/sops/nixos/.*$
+    key_groups:
+      - age:
+          - *thinkpad-t480
+
+  # Git identity — personal profile (all machines)
+  - path_regex: nixos/\.nixos/sops/git/personal\.yaml$
+    key_groups:
+      - age:
+          - *uw-mac-m1
+          - *vitorf7-mac-m1
+          - *thinkpad-t480
+
+  # Git identity — work profile (work machines only)
+  - path_regex: nixos/\.nixos/sops/git/work\.yaml$
+    key_groups:
+      - age:
+          - *uw-mac-m1
+          - *thinkpad-t480

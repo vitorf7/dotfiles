@@ -1,6 +1,4 @@
-# STRONGBOX ENCRYPTED RESOURCE ; See https://github.com/uw-labs/strongbox
-nBFEG04MdgTtHRy7yT22t5pQH3tc1PRPteDRkF62TxtA2lA+1DBFBIOEE5+WJ/FS64EF6Len49be
-lzxyhi9VKGqmbQPoP6WR8JTMjXjlFxs4SZTgfX+mT+7RGLsXrBcNgCC9KQs7RwvSmbTssy4YNY0S
-tMeSWLUOVXtYH4Fx4qA2B+FYpXcY2ERU/56a5hB8ghbM57u/phUCBD5AZlatI1U08tAh3Dw+w4sS
-soZhpJFyUJT3tOxdwCKVaSeiNnlT4NyRPEWTXN0Uysatg1OYjEY1FjHxkHXGDqpp3+elkglaoAhh
-eYpUxFJaeD4L1Jm41fLTyMo1Jh1KWqIaizYKtwuEKbylzsWpMwOol+H8bE5XIm+CnrLxT2i1DQ==
+{
+  uwDnsServer = "10.253.253.253";
+  uwDnsDomains = "~telecomplus.internal ~tp.private";
+}

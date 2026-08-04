@@ -13,10 +13,12 @@ inputs.nixpkgs.lib.nixosSystem {
     # Our system module sets programs.ambxst.enable = true (priority 100) when the
     # vitorf7.desktop.ambxst.enable option is turned on, which beats this (priority 999).
     ({ lib, ... }: { programs.ambxst.enable = lib.mkOverride 999 false; })
+    inputs.sops-nix.nixosModules.sops
     inputs.home-manager.nixosModules.home-manager
     {
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
+      home-manager.sharedModules = [ inputs.sops-nix.homeManagerModules.sops ];
       home-manager.extraSpecialArgs = { inherit inputs self; } // extraSpecialArgs;
       home-manager.users.vitorf7 = import (root + "/modules/home/default.nix");
     }

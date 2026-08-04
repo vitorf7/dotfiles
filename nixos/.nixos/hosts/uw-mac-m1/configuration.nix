@@ -12,4 +12,10 @@
   vitorf7.darwin.aerospace.enable = true;
   vitorf7.darwin.colima.enable = false; # enable once launchd service is verified
   vitorf7.darwin.work.enable = true;
+
+  vitorf7.git.defaultProfile = "work";
+  vitorf7.git.personal.enable = true;
+  vitorf7.git.personal.directories = [ "~/configfiles/" "~/personal/" ];
+  vitorf7.git.work.enable = true;
+  vitorf7.git.work.directories = [ "~/code/uw/" ];
 }

@@ -16,5 +16,8 @@
   vitorf7.hardware.fingerprint.enable = false;
   vitorf7.hardware.nvidia.enable = false;
 
+  vitorf7.git.defaultProfile = "personal";
+  vitorf7.git.personal.enable = true;
+
   system.stateVersion = "26.05";
 }

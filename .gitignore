@@ -26,6 +26,10 @@ fish/.config/fish/conf.d/*
 fish/.config/fish/completions/*
 fish/.config/fish/functions/*
 !fish/.config/fish/functions/nvims.fish
+!fish/.config/fish/functions/__sops_key_file.fish
+!fish/.config/fish/functions/sops-edit.fish
+!fish/.config/fish/functions/sops-view.fish
+!fish/.config/fish/functions/sops-updatekeys.fish
 
 # Matugen generated files
 waybar/.config/waybar/colors/colors.css

@@ -39,5 +39,11 @@
   vitorf7.hardware.fingerprint.enable = true;
   vitorf7.hardware.nvidia.enable = true;
 
+  vitorf7.git.defaultProfile = "personal";
+  vitorf7.git.personal.enable = true;
+  vitorf7.git.personal.directories = [ "~/configfiles/" "~/personal/" ];
+  vitorf7.git.work.enable = true;
+  vitorf7.git.work.directories = [ "~/code/uw/" ];
+
   system.stateVersion = "26.05";
 }

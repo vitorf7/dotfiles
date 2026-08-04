@@ -5,7 +5,7 @@ let
   link = config.lib.file.mkOutOfStoreSymlink;
 in
 {
-  imports = [ ./core.nix ./dev.nix ];
+  imports = [ ./core.nix ./git.nix ./secrets.nix ./dev.nix ];
 
   home = {
     username = username;
@@ -123,13 +123,11 @@ in
     "sketchybar/settings.lua".source         = link "${dot}/sketchybar/.config/sketchybar/settings.lua";
     "sketchybar/items".source                = link "${dot}/sketchybar/.config/sketchybar/items";
     "sketchybar/helpers".source              = link "${dot}/sketchybar/.config/sketchybar/helpers";
-    # Secret — weather API key; strongbox-encrypted in dotfiles/secrets/.
-    "sketchybar/weather_vars.lua".source     = link "${dot}/secrets/.config/sketchybar/weather_vars.lua";
+    # sketchybar/weather_vars.lua is managed by sops-nix (secrets.nix)
   };
 
   home.file = {
-    ".gitignore_global".source = link "${dot}/git/.gitignore_global";
-    ".aliases".source          = link "${dot}/zsh/.aliases";
+    ".aliases".source = link "${dot}/zsh/.aliases";
   };
 
   # nixpkgs' rbenv doesn't bundle ruby-build (unlike Homebrew's, which auto-wires

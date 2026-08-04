@@ -13,8 +13,16 @@ lib.mkIf config.vitorf7.networking.wiresteward.enable {
 
   boot.kernelModules = [ "wireguard" ];
 
-  # Real config, encrypted at rest via strongbox — see repo-root .gitattributes.
-  environment.etc."wiresteward/config.json".source = ../../secrets/wiresteward-config.json;
+  # Config decrypted at activation time by sops-nix (wiresteward-secrets.nix
+  # still uses strongbox since it is imported at nix eval time).
+  sops.secrets."wiresteward-config" = {
+    sopsFile = ../../sops/nixos/wiresteward-config.json;
+    format = "binary";
+    path = "/etc/wiresteward/config.json";
+    owner = "root";
+    group = "root";
+    mode = "0600";
+  };
 
   systemd.tmpfiles.rules = [
     "d /var/lib/wiresteward 0700 root root -"

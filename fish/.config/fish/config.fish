@@ -60,10 +60,18 @@ end
 set -U fish_key_bindings fish_vi_key_bindings
 #
 #set -Ux BAT_THEME Catppuccin-mocha # 'sharkdp/bat' cat clone
+# -g (global, not just -U universal) is required here: fish's scope precedence
+# is local > global > universal, so if EDITOR is ever inherited from the
+# process environment (e.g. a stray `launchctl setenv EDITOR nano`), that
+# inherited global value silently wins over whatever the universal var says.
+# Setting -gx here overwrites that inherited copy on every shell startup.
 set -Ux EDITOR nvim # 'neovim/neovim' text editor
+set -gx EDITOR nvim
 set -Ux PAGER $deltaCLI
 set -Ux VISUAL nvim
+set -gx VISUAL nvim
 set -Ux SUDO_EDITOR $HOME/.local/share/bob/nvim-bin/nvim
+set -gx SUDO_EDITOR $HOME/.local/share/bob/nvim-bin/nvim
 set -Ux JAVA_HOME /Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home
 
 if  test -n $HOMEBREW_PATH

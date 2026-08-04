@@ -17,18 +17,21 @@
 #      and git-stage it (required — Nix flakes ignore untracked files)
 #   5. Run `nixos-rebuild boot --flake .#<hostname>` (activates on next reboot)
 #
-# Wiresteward secrets (nixos/.nixos/secrets/*) are strongbox-encrypted and
-# tracked in git — they decrypt automatically on checkout as long as this
-# machine's strongbox keyring is in place first. For thinkpad-t480 (the only
-# host with wiresteward enabled), this script wires up the strongbox git
-# filter, builds the strongbox binary from this flake's own package output,
-# and re-checks-out nixos/.nixos/secrets so it's plaintext before the build
-# — but the private keyring itself must already be on this machine.
+# Secret management:
+#   - nixos/.nixos/secrets/wiresteward-secrets.nix is imported at nix eval time
+#     and stays strongbox-encrypted. The strongbox keyring must be present before
+#     running this script on thinkpad-t480.
+#   - nixos/.nixos/sops/nixos/wiresteward-config.json is sops-encrypted and
+#     decrypted automatically by sops-nix at activation time using the age key.
+#   - The sops age key (/etc/sops/age/keys.txt) must be in place before the
+#     first nixos-rebuild — retrieve it from 1Password ("age key — <hostname>"),
+#     or generate a new one with: sudo age-keygen -o /etc/sops/age/keys.txt
 #
 # Prerequisites:
 #   - /etc/nixos/hardware-configuration.nix already generated
 #     (if not: sudo nixos-generate-config)
-#   - thinkpad-t480 only: ~/.strongbox_keyring already present on this machine
+#   - thinkpad-t480 only: ~/.strongbox_keyring present (1Password)
+#   - thinkpad-t480 only: /etc/sops/age/keys.txt present (1Password: "age key — thinkpad-t480")
 
 set -euo pipefail
 
@@ -126,43 +129,46 @@ else
 fi
 ok "nvim-kick present at $NVIM_KICK_TARGET"
 
-# ─── Pre-flight: wiresteward secrets (T480 only) ─────────────────────────────
-# The git clone/pull above ran before we knew the hostname, using whatever
-# git config already existed — so if the strongbox filter wasn't configured
-# yet, nixos/.nixos/secrets/* was checked out as raw ciphertext. Fix that here
-# for the one host that actually needs it decrypted.
+# ─── Pre-flight: wiresteward secrets + sops age key (T480 only) ──────────────
+# wiresteward-secrets.nix is imported at nix eval time so it stays strongbox-
+# encrypted — the strongbox keyring must be present and the file must be plaintext
+# on disk before nixos-rebuild runs.
+# wiresteward-config.json is now sops-encrypted and decrypted automatically at
+# activation by sops-nix; no manual checkout needed for it.
+# The sops age key must also be present before the first activation.
 if [[ "$HOSTNAME" == "thinkpad-t480" ]]; then
-  info "Ensuring wiresteward secrets are decrypted…"
-
+  # ── Strongbox (wiresteward-secrets.nix) ──
+  info "Checking strongbox keyring…"
   if [[ ! -f "$HOME/.strongbox_keyring" ]]; then
-    die "~/.strongbox_keyring not found.\n   This machine needs the strongbox private keyring (already used elsewhere in this repo) to decrypt nixos/.nixos/secrets/*.\n   Copy it onto this machine (e.g. from 1Password), then re-run this script."
+    die "~/.strongbox_keyring not found.\n   Retrieve from 1Password, save to ~/.strongbox_keyring, then re-run."
   fi
 
-  # Wire up just the strongbox filter non-interactively — scripts/gitconfig.sh
-  # is interactive and does far more (git identity, profiles, GitHub token).
   git config --global filter.strongbox.clean "strongbox -clean %f"
   git config --global filter.strongbox.smudge "strongbox -smudge %f"
   git config --global filter.strongbox.required true
   git config --global diff.strongbox.textconv "strongbox -diff"
 
-  # Build just the strongbox binary from this flake's own package output —
-  # doesn't touch nixosConfigurations, so this works even while secrets/*
-  # is still ciphertext on disk.
   info "Building strongbox…"
   STRONGBOX_OUT=$(nix build --no-link --print-out-paths \
     --extra-experimental-features 'nix-command flakes' \
     "$DOTFILES/nixos/.nixos#strongbox")
   export PATH="$STRONGBOX_OUT/bin:$PATH"
 
-  # Only force a re-checkout if the working copy still looks like ciphertext
-  # (first line has the strongbox header) — never clobber a file that's
-  # already plaintext or has local edits in progress.
-  if head -1 "$DOTFILES/nixos/.nixos/secrets/wiresteward-secrets.nix" 2>/dev/null | grep -q 'STRONGBOX ENCRYPTED RESOURCE'; then
+  if head -1 "$DOTFILES/nixos/.nixos/secrets/wiresteward-secrets.nix" 2>/dev/null \
+      | grep -q 'STRONGBOX ENCRYPTED RESOURCE'; then
     git -C "$DOTFILES" checkout -- nixos/.nixos/secrets
     ok "Wiresteward secrets decrypted."
   else
     ok "Wiresteward secrets already decrypted — leaving as-is."
   fi
+
+  # ── sops age key (wiresteward-config.json + fish private_config) ──
+  info "Checking sops age key…"
+  SOPS_KEY="/etc/sops/age/keys.txt"
+  if [[ ! -f "$SOPS_KEY" ]]; then
+    die "sops age key not found at $SOPS_KEY.\n   Retrieve from 1Password (\"age key — thinkpad-t480\"), then:\n     sudo mkdir -p /etc/sops/age\n     sudo cp <key-file> $SOPS_KEY\n     sudo chmod 600 $SOPS_KEY\n   To generate a new key instead: sudo age-keygen -o $SOPS_KEY\n   Then add the public key to .sops.yaml and re-encrypt."
+  fi
+  ok "sops age key present."
 fi
 
 # ─── Pre-flight: NVIDIA bus IDs (T480 only) ──────────────────────────────────
@@ -255,7 +261,8 @@ ok "Build succeeded!"
 echo
 echo -e "  Next steps:"
 echo -e "  1. ${BLD}Reboot${RST} to activate the new configuration."
-echo -e "  2. Commit the staged hardware config once you're happy:"
+echo -e "  2. Verify sops secrets decrypted (thinkpad): ${BLU}sudo cat /etc/wiresteward/config.json${RST}"
+echo -e "  3. Commit the staged hardware config once you're happy:"
 echo -e "     ${BLU}git -C $DOTFILES commit -m 'feat(nixos): add hardware config for $HOSTNAME'${RST}"
 
 if [[ "$HOSTNAME" == "thinkpad-t480" ]]; then

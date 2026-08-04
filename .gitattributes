@@ -1,4 +1,4 @@
-secrets/* filter=strongbox diff=strongbox
-secrets/**/* filter=strongbox diff=strongbox
+# nixos/.nixos/secrets/ — wiresteward-secrets.nix stays on strongbox because it
+# is imported at nix eval time (sops-nix cannot provide values at eval time).
 nixos/.nixos/secrets/* filter=strongbox diff=strongbox
 nixos/.nixos/secrets/**/* filter=strongbox diff=strongbox

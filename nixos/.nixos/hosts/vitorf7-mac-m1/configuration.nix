@@ -12,7 +12,11 @@
   vitorf7.darwin.homebrew.enable = true;
   vitorf7.darwin.aerospace.enable = true;
   vitorf7.darwin.colima.enable = false; # enable once launchd service is verified
-  vitorf7.darwin.work.enable = false; # personal machine — no Okta Verify, gets nordvpn 
+  vitorf7.darwin.work.enable = false; # personal machine — no Okta Verify, gets nordvpn
+
+  vitorf7.git.defaultProfile = "personal";
+  vitorf7.git.personal.enable = true;
+  vitorf7.git.personal.directories = [ "~/configfiles/" "~/personal/" ]; 
 
   # ── Login items ───────────────────────────────────────────────────────────
   # Registers GUI apps as macOS Login Items via sfltool.
