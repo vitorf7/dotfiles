@@ -3,7 +3,6 @@
 lib.mkIf osConfig.vitorf7.desktop.enable {
   home.packages = with pkgs; [
     papirus-icon-theme
-    rose-pine-gtk-theme
     rose-pine-hyprcursor
   ];
 
@@ -20,7 +19,6 @@ lib.mkIf osConfig.vitorf7.desktop.enable {
   dconf.settings = {
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
-      gtk-theme = "Rose-Pine";
       icon-theme = "Papirus-Dark";
       cursor-theme = "rose-pine-hyprcursor";
       cursor-size = 24;

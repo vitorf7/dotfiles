@@ -14,6 +14,7 @@ inputs.nixpkgs.lib.nixosSystem {
     # vitorf7.desktop.ambxst.enable option is turned on, which beats this (priority 999).
     ({ lib, ... }: { programs.ambxst.enable = lib.mkOverride 999 false; })
     inputs.sops-nix.nixosModules.sops
+    (root + "/modules/system/secrets.nix")
     inputs.home-manager.nixosModules.home-manager
     {
       home-manager.useGlobalPkgs = true;

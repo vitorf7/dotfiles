@@ -6,9 +6,7 @@ let
   gitCfg = osConfig.vitorf7.git;
 in
 {
-  sops.age.keyFile = if isDarwin
-    then "${config.home.homeDirectory}/.config/sops/age/keys.txt"
-    else "/etc/sops/age/keys.txt";
+  sops.age.keyFile = "${config.home.homeDirectory}/.config/sops/age/keys.txt";
 
   # ── Shell / sketchybar secrets ──────────────────────────────────────────────
   sops.secrets."private_config.fish" = {
