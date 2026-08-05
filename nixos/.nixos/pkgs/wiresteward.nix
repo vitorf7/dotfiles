@@ -19,7 +19,7 @@ buildGoModule rec {
   # the Nix sandbox.
   doCheck = false;
 
-  vendorHash = lib.fakeHash;
+  vendorHash = "sha256-QhC1xy2NVGwaHMO2OFIZhoNAuWB5PIX+vrr1KPwbbCI=";
 
   meta = {
     description = "WireGuard peer manager with OAuth2 authentication";
