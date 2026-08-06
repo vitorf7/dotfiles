@@ -62,6 +62,10 @@ in
 
     includes = defaultInclude ++ personalIncludes ++ workIncludes;
 
+    maintenance = {
+      enable = true;
+    };
+
     settings = {
       core.editor = "nvim";
       init.defaultBranch = "master";
@@ -72,6 +76,7 @@ in
       alias = {
         leaderboard = "shortlog --summary --numbered --all --no-merges";
         sbr = "!rm \${GIT_PREFIX}$1 && git checkout -- \${GIT_PREFIX}$1 #";
+        who = "blame -w -M -C -C -C";
       };
 
       # Strongbox stays as long as wiresteward-secrets.nix uses it
@@ -91,7 +96,7 @@ in
         "!${pkgs.gh}/bin/gh auth git-credential"
       ];
 
-      "url \"git@github.com:\"".insteadOf = "https://github.com/";
+      url."git@github.com:".insteadOf = "https://github.com/";
     };
   };
 

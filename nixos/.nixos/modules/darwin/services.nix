@@ -13,8 +13,8 @@ let cfg = config.vitorf7.darwin; in
         ProgramArguments = [ "${pkgs.colima}/bin/colima" "daemon" ];
         RunAtLoad = true;
         KeepAlive = true;
-        StandardOutPath = "/tmp/colima.out.log";
-        StandardErrorPath = "/tmp/colima.err.log";
+        StandardOutPath = "/Users/${config.system.primaryUser}/Library/Logs/colima.out.log";
+        StandardErrorPath = "/Users/${config.system.primaryUser}/Library/Logs/colima.err.log";
         EnvironmentVariables = {
           HOME = "/Users/${config.system.primaryUser}";
         };

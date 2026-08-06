@@ -14,7 +14,7 @@ inputs.nix-darwin.lib.darwinSystem {
       home-manager.backupFileExtension = "hm-bak";
       home-manager.sharedModules = [ inputs.sops-nix.homeManagerModules.sops ];
       home-manager.extraSpecialArgs = { inherit inputs self username; } // extraSpecialArgs;
-      home-manager.users.${username} = import (root + "/modules/home/darwin.nix");
+      home-manager.users.${username} = import (root + "/modules/home/darwin");
     }
   ] ++ extraModules;
 }
