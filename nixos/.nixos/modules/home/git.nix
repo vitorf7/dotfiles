@@ -90,6 +90,8 @@ in
         ""
         "!${pkgs.gh}/bin/gh auth git-credential"
       ];
+
+      "url \"git@github.com:\"".insteadOf = "https://github.com/";
     };
   };
 
