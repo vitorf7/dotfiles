@@ -98,6 +98,7 @@
             thinkpad-t480 = mkHost {
               system = "x86_64-linux";
               host = "thinkpad-t480";
+              username = "vitorf7";
               # Upstream hardware quirks: throttled (BD-PROCHOT fix), fstrim,
               # TrackPoint scroll emulation, Kaby Lake i915 tuning, NVIDIA PRIME
               # offload + the Pascal driver pin. modules/system/nvidia-hybrid.nix
@@ -115,12 +116,14 @@
             nixos-arm-vm = mkHost {
               system = "aarch64-linux";
               host = "nixos-arm-vm";
+              username = "vitorf7";
             };
 
             # --- Machine 3: x86_64 Virtual Machine ---
             nixos-x86-vm = mkHost {
               system = "x86_64-linux";
               host = "nixos-x86-vm";
+              username = "vitorf7";
             };
           };
 

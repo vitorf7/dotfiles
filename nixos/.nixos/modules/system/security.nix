@@ -1,10 +1,10 @@
-{ config, lib, ... }:
+{ config, lib, username, ... }:
 
 lib.mkIf config.vitorf7.desktop.enable {
   programs._1password.enable = true;
   programs._1password-gui = {
     enable = true;
-    polkitPolicyOwners = [ "vitorf7" ];
+    polkitPolicyOwners = [ username ];
   };
 
   environment.etc."1password/custom_allowed_browsers" = {

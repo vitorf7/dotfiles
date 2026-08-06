@@ -15,8 +15,6 @@
     ./hyprland.nix
     ./qs_brain_shell.nix
     ./ambxst.nix
-    ./tide_island.nix
-    ./caelestia_shell.nix
     ./vm.nix
     ./quickshell.nix
     ./flatpak.nix

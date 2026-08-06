@@ -41,7 +41,7 @@
 
   vitorf7.git.defaultProfile = "personal";
   vitorf7.git.personal.enable = true;
-  vitorf7.git.personal.directories = [ "~/configfiles/" "~/personal/" ];
+  vitorf7.git.personal.directories = [ "~/dotfiles/" "~/code/personal/" "~/code/nvim-kick" "~/.config/nvim" ];
   vitorf7.git.work.enable = true;
   vitorf7.git.work.directories = [ "~/code/uw/" ];
 

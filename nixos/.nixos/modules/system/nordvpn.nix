@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, username, ... }:
 
 lib.mkIf config.vitorf7.networking.nordvpn.enable {
   services.nordvpn.enable = true;
@@ -9,5 +9,5 @@ lib.mkIf config.vitorf7.networking.nordvpn.enable {
 
   # Add the main user to the nordvpn group so they can talk to nordvpnd
   # without requiring root. Log out and back in after first rebuild.
-  users.users.vitorf7.extraGroups = [ "nordvpn" ];
+  users.users.${username}.extraGroups = [ "nordvpn" ];
 }

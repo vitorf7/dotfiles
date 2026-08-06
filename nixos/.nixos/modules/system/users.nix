@@ -1,9 +1,9 @@
-{ pkgs, ... }:
+{ pkgs, username, ... }:
 
 {
   programs.fish.enable = true;
 
-  users.users.vitorf7 = {
+  users.users.${username} = {
     isNormalUser = true;
     extraGroups = [ "networkmanager" "wheel" "video" "audio" "input" ];
     shell = pkgs.fish;
