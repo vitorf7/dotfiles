@@ -43,6 +43,9 @@ in
       self.modules.nixos.ambxst
       self.modules.nixos.secrets
       self.modules.nixos.flatpak
+      self.modules.nixos.docker
+      self.modules.nixos.gaming
+      self.modules.nixos.winboat
       self.modules.nixos.fonts
       self.modules.nixos.onepassword
       inputs.brain-shell.nixosModules.default
@@ -57,6 +60,7 @@ in
         home-manager.users.${username} = { ... }: {
           imports = with self.modules.homeManager; [
             core shell editor git secrets dev desktop onepassword
+            browsers media communication ai gaming
             ghostty kitty alacritty
             hyprland theming quickshell qs-brain-shell ambxst
             tide-island caelestia-shell

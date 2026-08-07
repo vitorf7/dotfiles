@@ -6,12 +6,7 @@
       link = config.lib.file.mkOutOfStoreSymlink;
     in
     {
-      xdg.configFile = {
-        "superfile".source = link "${dot}/superfile/.config/superfile";
-        "karabiner".source = link "${dot}/karabiner/.config/karabiner";
-        "lf".source        = link "${dot}/lf/.config/lf";
-        "bin".source       = link "${dot}/bin/.config/bin";
-      };
+      xdg.configFile."bin".source = link "${dot}/bin/.config/bin";
 
       home.file.".aliases".source = link "${dot}/zsh/.aliases";
 

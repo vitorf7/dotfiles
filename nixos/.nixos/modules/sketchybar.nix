@@ -4,7 +4,8 @@
     homebrew.taps  = [ "felixkratz/formulae" ];
     homebrew.brews = [
       { name = "felixkratz/formulae/sketchybar"; args = [ "HEAD" ]; }
-      "lua"  # SbarLua bindings are built against this; sketchybarrc shebang hardcodes /opt/homebrew/bin/lua
+      "lua"
+      "lpeg"
     ];
   };
 

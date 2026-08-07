@@ -90,6 +90,10 @@
         lazygit
         gitmux
         tig
+        jujutsu
+        diff-so-fancy
+        difftastic
+        ydiff
       ];
 
       xdg.configFile = {

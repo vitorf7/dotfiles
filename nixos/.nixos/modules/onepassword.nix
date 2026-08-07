@@ -12,7 +12,15 @@
     };
   };
 
-  flake.modules.homeManager.onepassword = { config, lib, osConfig, ... }: lib.mkIf osConfig.vitorf7.desktop.enable {
+  flake.modules.darwin.onepassword = { ... }: {
+    homebrew.casks = [
+      "1password"
+      "1password-cli"
+    ];
+  };
+
+  flake.modules.homeManager.onepassword = { config, lib, osConfig, ... }:
+    lib.mkIf (osConfig.vitorf7.desktop.enable or (osConfig.vitorf7.darwin.enable or false)) {
     programs.ssh = {
       enable = true;
       enableDefaultConfig = false;

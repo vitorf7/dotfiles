@@ -18,6 +18,8 @@ let
       desktop.tide_island.enable = lib.mkEnableOption "Tide Island Dynamic Island for Hyprland (Quickshell-based)";
       desktop.caelestia_shell.enable = lib.mkEnableOption "Caelestia Shell Quickshell Config";
       desktop.flatpak.enable = lib.mkEnableOption "Flatpak support with declarative package management";
+      desktop.gaming.enable = lib.mkEnableOption "Gaming (Steam, Lutris, emulators)";
+      desktop.winboat.enable = lib.mkEnableOption "WinBoat — run Windows applications on Linux via Docker + KVM + RemoteApp";
       networking.nordvpn.enable = lib.mkEnableOption "NordVPN client (CLI + GUI) with systemd daemon";
       networking.globalprotect.enable = lib.mkEnableOption "GlobalProtect VPN client (gpclient CLI + gpgui GUI) via GlobalProtect-openconnect flake";
       networking.wiresteward.enable = lib.mkEnableOption "Wiresteward WireGuard VPN agent with per-cluster interfaces (dev/prod x AWS/GCP/Merit)";

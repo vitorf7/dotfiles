@@ -25,11 +25,16 @@
         matugen
         awww
       ] ++ lib.optionals isDarwin [
-        # Required by tmux copy-mode on macOS
         reattach-to-user-namespace
+        btop chafa entr figlet findutils glow gnugrep gnused gum jless
+        libsixel moreutils pngpaste superfile television terminal-notifier
+        tlrc tree wget xh yazi
       ];
 
-      xdg.configFile = {
+      xdg.configFile = lib.optionalAttrs isDarwin {
+        "superfile".source = link "${dot}/superfile/.config/superfile";
+        "lf".source        = link "${dot}/lf/.config/lf";
+      } // {
         "fish/config.fish".source          = link "${dot}/fish/.config/fish/config.fish";
         "fish/aliases.fish".source         = link "${dot}/fish/.config/fish/aliases.fish";
         "fish/fish_plugins".source         = link "${dot}/fish/.config/fish/fish_plugins";

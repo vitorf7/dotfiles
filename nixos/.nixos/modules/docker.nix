@@ -1,5 +1,10 @@
 { ... }:
 {
+  flake.modules.nixos.docker = { config, ... }: {
+    virtualisation.docker.enable = true;
+    users.users.${config.vitorf7.username}.extraGroups = [ "docker" ];
+  };
+
   flake.modules.homeManager.docker = { pkgs, lib, ... }: {
     home.packages = with pkgs; [
       docker
