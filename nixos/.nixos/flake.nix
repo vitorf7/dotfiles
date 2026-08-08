@@ -4,6 +4,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
+    import-tree.url = "github:vic/import-tree";
 
     home-manager = {
       url = "github:nix-community/home-manager/master";
@@ -67,86 +68,7 @@
     };
   };
 
-  outputs = inputs@{ self, flake-parts, ... }:
-    flake-parts.lib.mkFlake { inherit inputs; } {
-
-      systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ];
-
-      perSystem = { system, ... }:
-        let
-          pkgs = import inputs.nixpkgs {
-            inherit system;
-            config.allowUnfree = true;
-          };
-        in
-        {
-          packages = {
-            hyprmod = inputs.hyprmod.packages.${system}.default;
-            tide-island = pkgs.callPackage ./pkgs/tide-island.nix { };
-            go-latest = pkgs.callPackage ./pkgs/go-latest.nix {};
-	    strongbox = pkgs.callPackage ./pkgs/strongbox.nix {};
-          };
-        };
-
-      flake = {
-        nixosConfigurations =
-          let
-            mkHost = import ./lib/mkHost.nix { inherit inputs self; root = ./.; };
-          in
-          {
-            # --- Machine 1: ThinkPad T480 (x86_64) ---
-            thinkpad-t480 = mkHost {
-              system = "x86_64-linux";
-              host = "thinkpad-t480";
-              username = "vitorf7";
-              # Upstream hardware quirks: throttled (BD-PROCHOT fix), fstrim,
-              # TrackPoint scroll emulation, Kaby Lake i915 tuning, NVIDIA PRIME
-              # offload + the Pascal driver pin. modules/system/nvidia-hybrid.nix
-              # only keeps the bits these can't know (bus IDs, our own tuning
-              # decisions) and overrides the driver-version default — see there.
-              extraModules = [
-                inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t480
-                inputs.nixos-hardware.nixosModules.common-gpu-nvidia
-                "${inputs.nixos-hardware}/common/gpu/nvidia/pascal"
-                inputs.nixos-06cb-009a-fingerprint-sensor.nixosModules."06cb-009a-fingerprint-sensor"
-              ];
-            };
-
-            # --- Machine 2: ARM Virtual Machine (aarch64) ---
-            nixos-arm-vm = mkHost {
-              system = "aarch64-linux";
-              host = "nixos-arm-vm";
-              username = "vitorf7";
-            };
-
-            # --- Machine 3: x86_64 Virtual Machine ---
-            nixos-x86-vm = mkHost {
-              system = "x86_64-linux";
-              host = "nixos-x86-vm";
-              username = "vitorf7";
-            };
-          };
-
-        darwinConfigurations =
-          let
-            mkDarwin = import ./lib/mkDarwin.nix { inherit inputs self; root = ./.; };
-          in
-          {
-            # --- Machine 4: macOS M1 Pro, UW work laptop (aarch64-darwin) ---
-            uw-mac-m1 = mkDarwin {
-              system = "aarch64-darwin";
-              host = "uw-mac-m1";
-              username = "vitorfaiante";
-            };
-
-            # --- Machine 5: macOS M1, personal laptop (aarch64-darwin) ---
-            vitorf7-mac-m1 = mkDarwin {
-              system = "aarch64-darwin";
-              host = "vitorf7-mac-m1";
-              username = "vitorf7";
-            };
-          };
-      };
-
-    };
+  outputs = inputs@{ flake-parts, import-tree, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; }
+      (import-tree ./modules);
 }
