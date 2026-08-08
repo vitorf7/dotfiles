@@ -5,7 +5,7 @@
 #   macOS: age-keygen -o ~/.config/sops/age/keys.txt  (store private key in 1Password)
 keys:
   - &uw-mac-m1 age14ruj5rtwj0ep5apccv44neqd0yg77jryx2wf22vzz5y9pevdv5wq58j0mp
-  - &vitorf7-mac-m1 age1g9w20lw3swkhjtatx5l2flsq772cwym0ks63h06x3772ms863qgq5552ya
+  - &vitorf7-mac-m1 age1ad7c9y293660cwda9ssqzqyxna04nfw085lwpz6w52xssthjdctswmllls
   - &thinkpad-t480 age17env34jshhufuclfcs9hrc28nvvqzw8keg2d2c8stp9dtympdqfquew8tt
   # - &nixos-arm-vm age1...
   # - &nixos-x86-vm age1...
