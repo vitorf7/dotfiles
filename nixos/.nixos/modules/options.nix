@@ -1,50 +1,62 @@
 { lib, ... }:
-
-{
-  options.vitorf7 = {
-    desktop.enable = lib.mkEnableOption "General desktop environment (browser, fonts, themes, audio)";
-    desktop.hyprland.enable = lib.mkEnableOption "Hyprland Wayland Desktop Ecosystem";
-    hardware.nvidia.enable = lib.mkEnableOption "Nvidia PRIME Hybrid Graphics";
-    hardware.fingerprint.enable = lib.mkEnableOption "Fingerprint Reader Support";
-    hardware.vm.enable = lib.mkEnableOption "VM guest optimizations (QEMU/SPICE)";
-    desktop.quickshell.enable = lib.mkEnableOption "Quickshell framework + common shell runtime deps";
-    desktop.qs_brain_shell.enable = lib.mkEnableOption "Brain_Shell Quickshell config (requires quickshell.enable)";
-    desktop.ambxst.enable = lib.mkEnableOption "Ambxst Quickshell shell";
-    desktop.tide_island.enable = lib.mkEnableOption "Tide Island Dynamic Island for Hyprland (Quickshell-based)";
-    desktop.caelestia_shell.enable = lib.mkEnableOption "Caelestia Shell Quickshell Config";
-    desktop.flatpak.enable = lib.mkEnableOption "Flatpak support with declarative package management";
-    networking.nordvpn.enable = lib.mkEnableOption "NordVPN client (CLI + GUI) with systemd daemon";
-    networking.globalprotect.enable = lib.mkEnableOption "GlobalProtect VPN client (gpclient CLI + gpgui GUI) via GlobalProtect-openconnect flake";
-    networking.wiresteward.enable = lib.mkEnableOption "Wiresteward WireGuard VPN agent with per-cluster interfaces (dev/prod x AWS/GCP/Merit)";
-
-    darwin.enable = lib.mkEnableOption "macOS (nix-darwin) base configuration";
-    darwin.homebrew.enable = lib.mkEnableOption "Declarative Homebrew (taps, casks, mas apps)";
-    darwin.aerospace.enable = lib.mkEnableOption "Aerospace WM + sketchybar + jankyborders stack";
-    darwin.colima.enable = lib.mkEnableOption "Colima container runtime as a launchd user agent";
-    darwin.work.enable = lib.mkEnableOption "Work-only items (Okta Verify) — enable on the UW Mac, leave off on personal machines";
-
-    git = {
-      defaultProfile = lib.mkOption {
-        type = lib.types.enum [ "personal" "work" ];
-        default = "personal";
-        description = "Which git profile provides the top-level [user] identity";
+let
+  vitorf7Options = { lib, ... }: {
+    options.vitorf7 = {
+      username = lib.mkOption {
+        type = lib.types.str;
+        description = "Primary user account name for this host";
       };
-      personal = {
-        enable = lib.mkEnableOption "Personal git profile";
-        directories = lib.mkOption {
-          type = lib.types.listOf lib.types.str;
-          default = [ "~/configfiles/" ];
-          description = "Directories where the personal includeIf applies";
+
+      desktop.enable = lib.mkEnableOption "General desktop environment (browser, fonts, themes, audio)";
+      desktop.hyprland.enable = lib.mkEnableOption "Hyprland Wayland Desktop Ecosystem";
+      hardware.nvidia.enable = lib.mkEnableOption "Nvidia PRIME Hybrid Graphics";
+      hardware.fingerprint.enable = lib.mkEnableOption "Fingerprint Reader Support";
+      hardware.vm.enable = lib.mkEnableOption "VM guest optimizations (QEMU/SPICE)";
+      desktop.quickshell.enable = lib.mkEnableOption "Quickshell framework + common shell runtime deps";
+      desktop.qs_brain_shell.enable = lib.mkEnableOption "Brain_Shell Quickshell config (requires quickshell.enable)";
+      desktop.ambxst.enable = lib.mkEnableOption "Ambxst Quickshell shell";
+      desktop.tide_island.enable = lib.mkEnableOption "Tide Island Dynamic Island for Hyprland (Quickshell-based)";
+      desktop.caelestia_shell.enable = lib.mkEnableOption "Caelestia Shell Quickshell Config";
+      desktop.flatpak.enable = lib.mkEnableOption "Flatpak support with declarative package management";
+      desktop.gaming.enable = lib.mkEnableOption "Gaming (Steam, Lutris, emulators)";
+      desktop.winboat.enable = lib.mkEnableOption "WinBoat — run Windows applications on Linux via Docker + KVM + RemoteApp";
+      networking.nordvpn.enable = lib.mkEnableOption "NordVPN client (CLI + GUI) with systemd daemon";
+      networking.globalprotect.enable = lib.mkEnableOption "GlobalProtect VPN client (gpclient CLI + gpgui GUI) via GlobalProtect-openconnect flake";
+      networking.wiresteward.enable = lib.mkEnableOption "Wiresteward WireGuard VPN agent with per-cluster interfaces (dev/prod x AWS/GCP/Merit)";
+
+      darwin.enable = lib.mkEnableOption "macOS (nix-darwin) base configuration";
+      darwin.homebrew.enable = lib.mkEnableOption "Declarative Homebrew (taps, casks, mas apps)";
+      darwin.aerospace.enable = lib.mkEnableOption "Aerospace WM + sketchybar + jankyborders stack";
+      darwin.colima.enable = lib.mkEnableOption "Colima container runtime as a launchd user agent";
+      darwin.work.enable = lib.mkEnableOption "Work-only items (Okta Verify) — enable on the UW Mac, leave off on personal machines";
+
+      git = {
+        defaultProfile = lib.mkOption {
+          type = lib.types.enum [ "personal" "work" ];
+          default = "personal";
+          description = "Which git profile provides the top-level [user] identity";
         };
-      };
-      work = {
-        enable = lib.mkEnableOption "Work git profile";
-        directories = lib.mkOption {
-          type = lib.types.listOf lib.types.str;
-          default = [];
-          description = "Directories where the work includeIf applies";
+        personal = {
+          enable = lib.mkEnableOption "Personal git profile";
+          directories = lib.mkOption {
+            type = lib.types.listOf lib.types.str;
+            default = [ "~/configfiles/" ];
+            description = "Directories where the personal includeIf applies";
+          };
+        };
+        work = {
+          enable = lib.mkEnableOption "Work git profile";
+          directories = lib.mkOption {
+            type = lib.types.listOf lib.types.str;
+            default = [];
+            description = "Directories where the work includeIf applies";
+          };
         };
       };
     };
   };
+in
+{
+  flake.modules.nixos.options   = vitorf7Options;
+  flake.modules.darwin.options  = vitorf7Options;
 }
