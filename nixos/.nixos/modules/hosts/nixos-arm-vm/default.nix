@@ -59,7 +59,7 @@ in
           imports = with self.modules.homeManager; [
             core shell editor git secrets dev desktop onepassword
             browsers media communication ai gaming
-            ghostty kitty alacritty
+            ghostty kitty alacritty vicinae
             hyprland theming quickshell qs-brain-shell ambxst
             tide-island caelestia-shell
             kubernetes docker

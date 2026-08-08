@@ -7,11 +7,11 @@
     };
 
     xdg.portal = {
+      enable = true;
       extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
       config = {
-        common.default = [ "hyprland" "gtk" ];
+        common.default   = [ "hyprland" "gtk" ];
         hyprland.default = [ "hyprland" "gtk" ];
-        gnome.default = [ "gnome" "gtk" ];
       };
     };
   };
@@ -27,7 +27,6 @@
       waybar
       swaynotificationcenter
       networkmanagerapplet
-      vicinae
       swayosd
       nwg-look
       avizo
