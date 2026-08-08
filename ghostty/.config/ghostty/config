@@ -2,7 +2,7 @@ term = xterm-256color
 
 # UI config
 # theme = "dark:catppuccin-mocha,light:catppuccin-latte"
-theme = "dark:Rose Pine,light:Rose Pine Dawn"
+theme = Rose Pine
 background-opacity-cells = true
 background-opacity = 0.75
 background-blur-radius = 15
