@@ -169,9 +169,9 @@ if [[ "$HOSTNAME" == "thinkpad-t480" ]]; then
   # sops age key — sops-nix decrypts fish/private_config.fish and weather_vars.lua
   # automatically during activation; the key must exist first.
   info "Checking sops age key…"
-  SOPS_KEY="$HOME/.config/sops/age/keys.txt"
+  SOPS_KEY="/etc/sops/age/keys.txt"
   if [[ ! -f "$SOPS_KEY" ]]; then
-    die "sops age key not found at $SOPS_KEY.\n   Retrieve from 1Password (\"age key — ${HOSTNAME_ARG}\"), save it there, then re-run.\n   To generate a new key: mkdir -p ~/.config/sops/age && age-keygen -o $SOPS_KEY"
+    die "sops age key not found at $SOPS_KEY.\n   Retrieve from 1Password (\"age key — ${HOSTNAME}\"), save it there, then re-run.\n   To generate a new key: mkdir -p ~/.config/sops/age && age-keygen -o $SOPS_KEY"
   fi
   ok "sops age key present."
 fi
