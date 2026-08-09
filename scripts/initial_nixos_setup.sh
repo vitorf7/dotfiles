@@ -156,7 +156,8 @@ if [[ "$HOSTNAME" == "thinkpad-t480" ]]; then
   export PATH="$STRONGBOX_OUT/bin:$PATH"
 
   if head -1 "$DOTFILES/nixos/.nixos/secrets/wiresteward-secrets.nix" 2>/dev/null \
-      | grep -q 'STRONGBOX ENCRYPTED RESOURCE'; then
+      | grep -qE 'STRONGBOX ENCRYPTED RESOURCE|BEGIN AGE ENCRYPTED FILE'; then
+      
     git -C "$DOTFILES" checkout -- nixos/.nixos/secrets
     ok "Wiresteward secrets decrypted."
   else
