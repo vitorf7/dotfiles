@@ -77,10 +77,9 @@ usable Nix values. Edit the file with real values before relying on wiresteward 
 **sops-nix** — covers everything else: git identities (`sops/git/{personal,work}.yaml`),
 sketchybar weather vars (`sops/darwin/weather_vars.lua`), the shared fish private config
 (`sops/shared/private_config.fish`), and the wiresteward runtime config
-(`sops/nixos/wiresteward-config.json`). Decryption needs an age key present at
-`/etc/sops/age/keys.txt` (system-level secrets, e.g. wiresteward) or
-`~/.config/sops/age/keys.txt` (home-manager secrets, e.g. git identity) — provision that key
-out of band before the first build that enables secrets.nix's consumers.
+(`sops/nixos/wiresteward-config.json`). Decryption needs an age key present at `~/.config/sops/age/keys.txt` — provision that key
+out of band before the first build that enables secrets.nix's consumers. Both system-level
+secrets (e.g. wiresteward) and home-manager secrets (e.g. git identity) use this same path.
 
 ---
 

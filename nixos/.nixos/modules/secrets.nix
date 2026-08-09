@@ -1,7 +1,7 @@
 { ... }:
 {
-  flake.modules.nixos.secrets = { ... }: {
-    sops.age.keyFile = "/etc/sops/age/keys.txt";
+  flake.modules.nixos.secrets = { config, ... }: {
+    sops.age.keyFile = "/home/${config.vitorf7.username}/.config/sops/age/keys.txt";
   };
 
   flake.modules.homeManager.secrets = { config, pkgs, lib, osConfig, ... }:

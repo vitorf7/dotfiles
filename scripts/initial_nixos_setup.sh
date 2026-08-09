@@ -23,16 +23,17 @@
 #     running this script on thinkpad-t480.
 #   - nixos/.nixos/sops/nixos/wiresteward-config.json is sops-encrypted and
 #     decrypted automatically by sops-nix at activation time using the age key.
-#   - The sops age key (/etc/sops/age/keys.txt) must be in place before the
+#   - The sops age key (~/.config/sops/age/keys.txt) must be in place before the
 #     first nixos-rebuild — retrieve it from 1Password ("age key — <hostname>"),
-#     or generate a new one with: sudo age-keygen -o /etc/sops/age/keys.txt
+#     or generate a new one with: mkdir -p ~/.config/sops/age && age-keygen -o ~/.config/sops/age/keys.txt
 #
 # Prerequisites:
 #   - /etc/nixos/hardware-configuration.nix already generated
 #   - ~/.strongbox_identity present (retrieve from 1Password — needed for git filter
 #     on nixos/.nixos/secrets/wiresteward-secrets.nix)
 #   - ~/.config/sops/age/keys.txt present (retrieve from 1Password as
-#     "age key — <hostname>" — needed for sops-nix to decrypt secrets on activation)
+#     "age key — <hostname>" — needed for sops-nix to decrypt secrets on activation
+#     for both system-level and home-manager secrets)
 
 set -euo pipefail
 
@@ -144,10 +145,18 @@ if [[ "$HOSTNAME" == "thinkpad-t480" ]]; then
     die "~/.strongbox_identity not found.\n   Retrieve from 1Password, save to ~/.strongbox_identity, then re-run."
   fi
 
-  git config --global filter.strongbox.clean "strongbox -clean %f"
-  git config --global filter.strongbox.smudge "strongbox -smudge %f"
-  git config --global filter.strongbox.required true
-  git config --global diff.strongbox.textconv "strongbox -diff"
+  # Ensure git is available — may not be present on a minimal NixOS install.
+  if command -v git &>/dev/null; then
+    _git() { git "$@"; }
+  else
+    info "git not in PATH — routing git calls through nix-shell…"
+    _git() { nix-shell -p git --run "git $*"; }
+  fi
+
+  _git config --global filter.strongbox.clean "strongbox -clean %f"
+  _git config --global filter.strongbox.smudge "strongbox -smudge %f"
+  _git config --global filter.strongbox.required true
+  _git config --global diff.strongbox.textconv "strongbox -diff"
 
   info "Building strongbox…"
   STRONGBOX_OUT=$(nix build --no-link --print-out-paths \
@@ -157,9 +166,9 @@ if [[ "$HOSTNAME" == "thinkpad-t480" ]]; then
 
   if head -1 "$DOTFILES/nixos/.nixos/secrets/wiresteward-secrets.nix" 2>/dev/null \
       | grep -qE 'STRONGBOX ENCRYPTED RESOURCE|BEGIN AGE ENCRYPTED FILE'; then
-      
+    # Delete only after we know git + strongbox are ready; restore in one step.
     rm -f "$DOTFILES/nixos/.nixos/secrets/"*.nix
-    git -C "$DOTFILES" checkout -- nixos/.nixos/secrets
+    _git -C "$DOTFILES" checkout -- nixos/.nixos/secrets
     ok "Wiresteward secrets decrypted."
   else
     ok "Wiresteward secrets already decrypted — leaving as-is."
@@ -169,11 +178,11 @@ if [[ "$HOSTNAME" == "thinkpad-t480" ]]; then
   # sops age key — sops-nix decrypts fish/private_config.fish and weather_vars.lua
   # automatically during activation; the key must exist first.
   info "Checking sops age key…"
-  SOPS_KEY="/etc/sops/age/keys.txt"
+  SOPS_KEY="$HOME/.config/sops/age/keys.txt"
   if [[ ! -f "$SOPS_KEY" ]]; then
-    die "sops age key not found at $SOPS_KEY.\n   Retrieve from 1Password (\"age key — ${HOSTNAME}\"), save it there, then re-run.\n   To generate a new key: mkdir -p ~/.config/sops/age && age-keygen -o $SOPS_KEY"
+    die "sops age key not found at $SOPS_KEY.\n   Retrieve from 1Password (\"age key — ${HOSTNAME}\"), save it there, then re-run.\n   To generate a new key: mkdir -p $HOME/.config/sops/age && age-keygen -o $SOPS_KEY"
   fi
-  ok "sops age key present."
+  ok "sops age key present at $SOPS_KEY."
 fi
 
 # ─── Pre-flight: NVIDIA bus IDs (T480 only) ──────────────────────────────────
@@ -211,7 +220,11 @@ if [[ "$HOSTNAME" == "thinkpad-t480" ]]; then
   _NVIDIA_NIX="$DOTFILES/nixos/.nixos/modules/nvidia.nix"
   sed -i "s|prime\.intelBusId = \".*\";|prime.intelBusId = \"$INTEL_ID\";|"   "$_NVIDIA_NIX"
   sed -i "s|prime\.nvidiaBusId = \".*\";|prime.nvidiaBusId = \"$NVIDIA_ID\";|" "$_NVIDIA_NIX"
-  git -C "$DOTFILES" add "nixos/.nixos/modules/nvidia.nix"
+  if command -v git &>/dev/null; then
+    git -C "$DOTFILES" add "nixos/.nixos/modules/nvidia.nix"
+  else
+    nix-shell -p git --run "git -C '$DOTFILES' add 'nixos/.nixos/modules/nvidia.nix'"
+  fi
   ok "Updated and staged nvidia.nix."
   echo
 fi

@@ -832,8 +832,8 @@ Everything else in `modules/` (all ~54 remaining files) follows the registry pat
 Alongside the strongbox-based secret (`secrets/wiresteward-secrets.nix`, unchanged from before the migration — see the root `README.md`'s Secrets section for the strongbox prerequisites), most secrets now go through **sops-nix**. `modules/secrets.nix` is the clearest example, again a dual-class file:
 
 ```nix
-flake.modules.nixos.secrets = { ... }: {
-  sops.age.keyFile = "/etc/sops/age/keys.txt";
+flake.modules.nixos.secrets = { config, ... }: {
+  sops.age.keyFile = "/home/${config.vitorf7.username}/.config/sops/age/keys.txt";
 };
 
 flake.modules.homeManager.secrets = { config, pkgs, lib, osConfig, ... }:
@@ -858,7 +858,7 @@ flake.modules.homeManager.secrets = { config, pkgs, lib, osConfig, ... }:
 ```
 
 Two things worth noticing:
-- **Per-class key files**: system-level secrets (like the wiresteward runtime config in `modules/wiresteward.nix`) decrypt using the root-owned `/etc/sops/age/keys.txt`; home-manager secrets (git identity, sketchybar weather vars) decrypt using a per-user key at `~/.config/sops/age/keys.txt`.
+- **Single key file**: both system-level secrets (like the wiresteward runtime config in `modules/wiresteward.nix`) and home-manager secrets (git identity, sketchybar weather vars) decrypt using the same per-user key at `~/.config/sops/age/keys.txt`. On Linux, root can read this file during system activation. This avoids the need for a separate `sudo`-owned `/etc/sops/age/keys.txt` on new installs.
 - **`sops.templates`**: rather than reading secret values directly into Nix config (which would leak them into the world-readable store), `git.nix`'s home-manager half reads `config.sops.templates."git-identity-personal".path` — a path to a file sops-nix assembles *at activation time* by substituting `config.sops.placeholder.*` references into the template content above. The actual secret values never pass through the Nix store.
 - Everything here is gated the normal way, via `lib.mkIf gitCfg.work.enable` reading `osConfig.vitorf7.git.work.enable` — the sops-nix modules aren't a special case with respect to the `vitorf7.*` flag system.
 
