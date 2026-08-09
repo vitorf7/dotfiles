@@ -13,8 +13,8 @@
 #   2. Clone/pull nvim-kick to $HOME/nvim-kick
 #      (core.nix symlinks ~/.config/nvim -> ~/nvim-kick on every host)
 #   3. Stow the nixos package  ($HOME/.nixos symlink)
-#   4. Copy /etc/nixos/hardware-configuration.nix into the host directory
-#      and git-stage it (required — Nix flakes ignore untracked files)
+#   4. Copy /etc/nixos/hardware-configuration.nix into the host directory as
+#      _hardware-configuration.nix and git-stage it (required — Nix flakes ignore untracked files)
 #   5. Run `nixos-rebuild boot --flake .#<hostname>` (activates on next reboot)
 #
 # Secret management:
@@ -53,7 +53,7 @@ usage() {
   echo -e "${BLD}Usage:${RST} $(basename "$0") <hostname>"
   echo
   echo "Available hosts:"
-  ls "$DOTFILES/nixos/.nixos/hosts" 2>/dev/null | sed 's/^/  /'
+  ls "$DOTFILES/nixos/.nixos/modules/hosts" 2>/dev/null | sed 's/^/  /'
   exit 1
 }
 
@@ -91,7 +91,7 @@ DOTFILES="$(dirname "$SCRIPT_DIR")"
 # ─── Argument validation ──────────────────────────────────────────────────────
 [[ $# -eq 1 ]] || { echo -e "${RED}error:${RST} hostname argument required" >&2; usage; }
 HOSTNAME="$1"
-HOST_DIR="$DOTFILES/nixos/.nixos/hosts/$HOSTNAME"
+HOST_DIR="$DOTFILES/nixos/.nixos/modules/hosts/$HOSTNAME"
 FLAKE_DIR="$HOME/.nixos"
 
 # ─── Safety checks ────────────────────────────────────────────────────────────
@@ -203,11 +203,11 @@ if [[ "$HOSTNAME" == "thinkpad-t480" ]]; then
   ok "Intel  $_intel_raw  → $INTEL_ID"
   ok "NVIDIA $_nvidia_raw → $NVIDIA_ID"
 
-  _NVIDIA_NIX="$DOTFILES/nixos/.nixos/modules/system/nvidia-hybrid.nix"
-  sed -i "s|intelBusId = \".*\";|intelBusId = \"$INTEL_ID\";|"   "$_NVIDIA_NIX"
-  sed -i "s|nvidiaBusId = \".*\";|nvidiaBusId = \"$NVIDIA_ID\";|" "$_NVIDIA_NIX"
-  git -C "$DOTFILES" add "nixos/.nixos/modules/system/nvidia-hybrid.nix"
-  ok "Updated and staged nvidia-hybrid.nix."
+  _NVIDIA_NIX="$DOTFILES/nixos/.nixos/modules/nvidia.nix"
+  sed -i "s|prime\.intelBusId = \".*\";|prime.intelBusId = \"$INTEL_ID\";|"   "$_NVIDIA_NIX"
+  sed -i "s|prime\.nvidiaBusId = \".*\";|prime.nvidiaBusId = \"$NVIDIA_ID\";|" "$_NVIDIA_NIX"
+  git -C "$DOTFILES" add "nixos/.nixos/modules/nvidia.nix"
+  ok "Updated and staged nvidia.nix."
   echo
 fi
 
@@ -228,8 +228,8 @@ ok "Symlink created: $HOME/.nixos → $DOTFILES/nixos/.nixos"
 
 # ─── Step 2: Copy + stage hardware-configuration.nix ─────────────────────────
 HARDWARE_SRC=/etc/nixos/hardware-configuration.nix
-HARDWARE_DST="$HOST_DIR/hardware-configuration.nix"
-HARDWARE_REL="nixos/.nixos/hosts/$HOSTNAME/hardware-configuration.nix"
+HARDWARE_DST="$HOST_DIR/_hardware-configuration.nix"
+HARDWARE_REL="nixos/.nixos/modules/hosts/$HOSTNAME/_hardware-configuration.nix"
 
 info "Copying hardware config for host '${HOSTNAME}'…"
 cp "$HARDWARE_SRC" "$HARDWARE_DST"
