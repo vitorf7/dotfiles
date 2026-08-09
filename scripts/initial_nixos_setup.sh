@@ -158,6 +158,7 @@ if [[ "$HOSTNAME" == "thinkpad-t480" ]]; then
   if head -1 "$DOTFILES/nixos/.nixos/secrets/wiresteward-secrets.nix" 2>/dev/null \
       | grep -qE 'STRONGBOX ENCRYPTED RESOURCE|BEGIN AGE ENCRYPTED FILE'; then
       
+    rm -f "$DOTFILES/nixos/.nixos/secrets/"*.nix
     git -C "$DOTFILES" checkout -- nixos/.nixos/secrets
     ok "Wiresteward secrets decrypted."
   else
