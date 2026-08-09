@@ -29,9 +29,10 @@
 #
 # Prerequisites:
 #   - /etc/nixos/hardware-configuration.nix already generated
-#     (if not: sudo nixos-generate-config)
-#   - thinkpad-t480 only: ~/.strongbox_keyring present (1Password)
-#   - thinkpad-t480 only: /etc/sops/age/keys.txt present (1Password: "age key — thinkpad-t480")
+#   - ~/.strongbox_identity present (retrieve from 1Password — needed for git filter
+#     on nixos/.nixos/secrets/wiresteward-secrets.nix)
+#   - ~/.config/sops/age/keys.txt present (retrieve from 1Password as
+#     "age key — <hostname>" — needed for sops-nix to decrypt secrets on activation)
 
 set -euo pipefail
 
@@ -139,8 +140,8 @@ ok "nvim-kick present at $NVIM_KICK_TARGET"
 if [[ "$HOSTNAME" == "thinkpad-t480" ]]; then
   # ── Strongbox (wiresteward-secrets.nix) ──
   info "Checking strongbox keyring…"
-  if [[ ! -f "$HOME/.strongbox_keyring" ]]; then
-    die "~/.strongbox_keyring not found.\n   Retrieve from 1Password, save to ~/.strongbox_keyring, then re-run."
+  if [[ ! -f "$HOME/.strongbox_identity" ]]; then
+    die "~/.strongbox_identity not found.\n   Retrieve from 1Password, save to ~/.strongbox_identity, then re-run."
   fi
 
   git config --global filter.strongbox.clean "strongbox -clean %f"
@@ -163,10 +164,12 @@ if [[ "$HOSTNAME" == "thinkpad-t480" ]]; then
   fi
 
   # ── sops age key (wiresteward-config.json + fish private_config) ──
+  # sops age key — sops-nix decrypts fish/private_config.fish and weather_vars.lua
+  # automatically during activation; the key must exist first.
   info "Checking sops age key…"
-  SOPS_KEY="/etc/sops/age/keys.txt"
+  SOPS_KEY="$HOME/.config/sops/age/keys.txt"
   if [[ ! -f "$SOPS_KEY" ]]; then
-    die "sops age key not found at $SOPS_KEY.\n   Retrieve from 1Password (\"age key — thinkpad-t480\"), then:\n     sudo mkdir -p /etc/sops/age\n     sudo cp <key-file> $SOPS_KEY\n     sudo chmod 600 $SOPS_KEY\n   To generate a new key instead: sudo age-keygen -o $SOPS_KEY\n   Then add the public key to .sops.yaml and re-encrypt."
+    die "sops age key not found at $SOPS_KEY.\n   Retrieve from 1Password (\"age key — ${HOSTNAME_ARG}\"), save it there, then re-run.\n   To generate a new key: mkdir -p ~/.config/sops/age && age-keygen -o $SOPS_KEY"
   fi
   ok "sops age key present."
 fi

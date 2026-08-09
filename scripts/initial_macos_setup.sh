@@ -32,7 +32,7 @@
 #      doesn't match the flake attribute)
 #
 # Prerequisites:
-#   - ~/.strongbox_keyring present (retrieve from 1Password — needed for git filter
+#   - ~/.strongbox_identity present (retrieve from 1Password — needed for git filter
 #     on nixos/.nixos/secrets/wiresteward-secrets.nix)
 #   - ~/.config/sops/age/keys.txt present (retrieve from 1Password as
 #     "age key — <hostname>" — needed for sops-nix to decrypt secrets on activation)
@@ -172,8 +172,8 @@ ok "nvim-kick present at $NVIM_KICK_TARGET"
 # sops age key: must be in place before darwin-rebuild switch so sops-nix can
 # decrypt secrets during activation.
 info "Checking strongbox keyring…"
-if [[ ! -f "$HOME/.strongbox_keyring" ]]; then
-  die "~/.strongbox_keyring not found.\n   Retrieve from 1Password, save to ~/.strongbox_keyring, then re-run."
+if [[ ! -f "$HOME/.strongbox_identity" ]]; then
+  die "~/.strongbox_identity not found.\n   Retrieve from 1Password, save to ~/.strongbox_identity, then re-run."
 fi
 
 # Wire the strongbox git filter (needed before any git operations on nixos/.nixos/secrets/*)
