@@ -79,12 +79,21 @@ DOTFILES_TARGET="$HOME/dotfiles"
 if [[ ! -f "$_candidate_dotfiles/nixos/.nixos/flake.nix" ]]; then
   if [[ -d "$DOTFILES_TARGET/.git" ]]; then
     info "Updating dotfiles at ${DOTFILES_TARGET}…"
-    git -C "$DOTFILES_TARGET" pull origin master
+    git -C "$DOTFILES_TARGET" pull origin master || {
+      warn "git pull failed (git may not be installed yet) — re-downloading tarball…"
+      curl -fsSL https://github.com/vitorf7/dotfiles/archive/refs/heads/master.tar.gz \
+        | tar xz -C "$DOTFILES_TARGET" --strip-components=1
+    }
   elif [[ -e "$DOTFILES_TARGET" ]]; then
     die "$DOTFILES_TARGET exists but is not a git repo. Remove it and retry."
   else
     info "Cloning dotfiles to ${DOTFILES_TARGET}…"
-    git clone https://github.com/vitorf7/dotfiles.git "$DOTFILES_TARGET"
+    git clone https://github.com/vitorf7/dotfiles.git "$DOTFILES_TARGET" 2>/dev/null || {
+      info "git not available — downloading tarball instead (Xcode CLT will be installed in Step 1)…"
+      mkdir -p "$DOTFILES_TARGET"
+      curl -fsSL https://github.com/vitorf7/dotfiles/archive/refs/heads/master.tar.gz \
+        | tar xz -C "$DOTFILES_TARGET" --strip-components=1
+    }
   fi
   exec bash "$DOTFILES_TARGET/scripts/initial_macos_setup.sh" "$@"
 fi
@@ -125,28 +134,110 @@ fi
 
 # ─── Step 3: Determinate Nix ─────────────────────────────────────────────────
 info "Checking Nix…"
-if ! command -v nix &>/dev/null && [[ ! -x /nix/var/nix/profiles/default/bin/nix ]]; then
-  info "Installing Determinate Nix…"
-  curl -fsSL https://install.determinate.systems/nix | sh -s -- install --determinate --no-confirm
-  # Source the daemon environment for the rest of this script
+
+_nix_is_working() {
+  command -v nix &>/dev/null && nix --version &>/dev/null && return 0
+  [[ -x /nix/var/nix/profiles/default/bin/nix ]] && \
+    /nix/var/nix/profiles/default/bin/nix --version &>/dev/null && return 0
+  return 1
+}
+
+_nix_artifacts_exist() {
+  [[ -d /nix ]] && return 0
+  [[ -f /etc/synthetic.conf ]] && grep -q '^nix$' /etc/synthetic.conf 2>/dev/null && return 0
+  [[ -f /etc/fstab ]] && grep -q 'nix' /etc/fstab 2>/dev/null && return 0
+  [[ -f /Library/LaunchDaemons/systems.determinate.nix-store.plist ]] && return 0
+  return 1
+}
+
+_nix_install() {
+  curl -fsSL https://install.determinate.systems/nix \
+    | sh -s -- install --determinate --no-confirm "$@"
+}
+
+_nix_source_env() {
   # shellcheck disable=SC1091
   if [[ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]]; then
     . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
   fi
-  ok "Determinate Nix installed."
-else
+}
+
+if _nix_is_working; then
   ok "Nix already present: $(nix --version)"
+elif _nix_artifacts_exist; then
+  warn "Partial/failed Nix installation detected."
+
+  if [[ -x /nix/nix-installer && -f /nix/receipt.json ]]; then
+    info "Found /nix/nix-installer and receipt.json — automated cleanup is available."
+    echo -e "  This will run: ${BLU}sudo /nix/nix-installer uninstall --no-confirm${RST}"
+    echo -e "  Then reinstall Determinate Nix from scratch."
+    echo
+    read -r -p "Proceed with cleanup and reinstall? [y/N] " _reply
+    [[ "$_reply" =~ ^[Yy]$ ]] || die "Aborted. Run this script again when ready."
+    sudo /nix/nix-installer uninstall --no-confirm
+    info "Cleanup complete. Re-installing Determinate Nix…"
+    _nix_install
+    _nix_source_env
+    ok "Determinate Nix installed (after cleanup)."
+
+  elif [[ -x /nix/nix-installer ]]; then
+    warn "No /nix/receipt.json found — will attempt install with --force."
+    echo -e "  This will run: ${BLU}curl … | sh -s -- install --determinate --no-confirm --force${RST}"
+    echo
+    read -r -p "Proceed with --force install? [y/N] " _reply
+    [[ "$_reply" =~ ^[Yy]$ ]] || die "Aborted. Run this script again when ready."
+    _nix_install --force
+    _nix_source_env
+    ok "Determinate Nix installed (with --force)."
+
+  else
+    echo
+    die "Partial Nix install detected but /nix/nix-installer is missing.\n\
+   Manual cleanup required before retrying:\n\n\
+   1. Remove the Nix Store APFS volume:\n\
+      ${BLU}sudo diskutil apfs deleteVolume /nix${RST}\n\
+   2. Remove the /etc/fstab entry for Nix:\n\
+      ${BLU}sudo vifs   # delete the line containing 'nix'${RST}\n\
+   3. Remove the synthetic.conf entry:\n\
+      ${BLU}sudo sed -i '' '/^nix\$/d' /etc/synthetic.conf${RST}\n\
+   4. Remove LaunchDaemons:\n\
+      ${BLU}sudo rm -f /Library/LaunchDaemons/systems.determinate.nix-*${RST}\n\
+   5. Remove the mount point:\n\
+      ${BLU}sudo rm -rf /nix${RST}\n\
+   6. Reboot, then re-run this script.\n"
+  fi
+else
+  info "Installing Determinate Nix…"
+  _nix_install
+  _nix_source_env
+  ok "Determinate Nix installed."
 fi
 
 NIX_OPTS=(--extra-experimental-features 'nix-command flakes')
 
-# ─── Step 4: Dotfiles clone/pull (already done above if remote, skip if local) ─
-if [[ ! -d "$DOTFILES_TARGET" ]]; then
-  info "Cloning dotfiles to ${DOTFILES_TARGET}…"
-  git clone https://github.com/vitorf7/dotfiles.git "$DOTFILES_TARGET"
-  DOTFILES="$DOTFILES_TARGET"
+# ─── Helper: git with nix-shell fallback (available now that Nix is installed) ─
+if command -v git &>/dev/null; then
+  _git() { git "$@"; }
+else
+  info "git not in PATH — routing git calls through nix-shell…"
+  _git() { nix-shell -p git --run "git $*"; }
 fi
-ok "Dotfiles present at $DOTFILES"
+
+# ─── Step 4: Dotfiles clone/pull (already done above if remote, skip if local) ─
+if [[ -d "$DOTFILES_TARGET/.git" ]]; then
+  ok "Dotfiles present at $DOTFILES (git repo)."
+elif [[ -d "$DOTFILES_TARGET" ]]; then
+  info "Converting tarball-extracted dotfiles to git repo…"
+  rm -rf "$DOTFILES_TARGET"
+  _git clone https://github.com/vitorf7/dotfiles.git "$DOTFILES_TARGET"
+  DOTFILES="$DOTFILES_TARGET"
+  ok "Dotfiles cloned (replaced tarball) at $DOTFILES"
+else
+  info "Cloning dotfiles to ${DOTFILES_TARGET}…"
+  _git clone https://github.com/vitorf7/dotfiles.git "$DOTFILES_TARGET"
+  DOTFILES="$DOTFILES_TARGET"
+  ok "Dotfiles cloned at $DOTFILES"
+fi
 
 # ─── Step 4b: nvim-kick clone/pull (next to dotfiles, same as Linux hosts) ────
 # core.nix symlinks ~/.config/nvim -> ~/nvim-kick unconditionally, so this
@@ -154,12 +245,14 @@ ok "Dotfiles present at $DOTFILES"
 NVIM_KICK_TARGET="$HOME/nvim-kick"
 if [[ -d "$NVIM_KICK_TARGET/.git" ]]; then
   info "Updating nvim-kick at ${NVIM_KICK_TARGET}…"
-  git -C "$NVIM_KICK_TARGET" pull origin master
+  git -C "$NVIM_KICK_TARGET" pull origin master || \
+    nix-shell -p git --run "git -C '$NVIM_KICK_TARGET' pull origin master"
 elif [[ -e "$NVIM_KICK_TARGET" ]]; then
   die "$NVIM_KICK_TARGET exists but is not a git repo. Remove it and retry."
 else
   info "Cloning nvim-kick to ${NVIM_KICK_TARGET}…"
-  git clone https://github.com/vitorf7/nvim-kick "$NVIM_KICK_TARGET"
+  git clone https://github.com/vitorf7/nvim-kick "$NVIM_KICK_TARGET" || \
+    nix-shell -p git --run "git clone https://github.com/vitorf7/nvim-kick '$NVIM_KICK_TARGET'"
 fi
 ok "nvim-kick present at $NVIM_KICK_TARGET"
 
@@ -177,10 +270,10 @@ if [[ ! -f "$HOME/.strongbox_identity" ]]; then
 fi
 
 # Wire the strongbox git filter (needed before any git operations on nixos/.nixos/secrets/*)
-git config --global filter.strongbox.clean "strongbox -clean %f"
-git config --global filter.strongbox.smudge "strongbox -smudge %f"
-git config --global filter.strongbox.required true
-git config --global diff.strongbox.textconv "strongbox -diff"
+_git config --global filter.strongbox.clean "strongbox -clean %f"
+_git config --global filter.strongbox.smudge "strongbox -smudge %f"
+_git config --global filter.strongbox.required true
+_git config --global diff.strongbox.textconv "strongbox -diff"
 
 # Build strongbox from the flake so the git filter binary is available
 info "Building strongbox…"
@@ -203,8 +296,13 @@ ok "sops age key present."
 # so the nrs fish function works identically on both OSes.
 info "Stowing nixos package to create ~/.nixos…"
 if [[ ! -e "$HOME/.nixos" ]]; then
-  NIX_STOW=$(nix build "${NIX_OPTS[@]}" --no-link --print-out-paths nixpkgs#stow)
-  "$NIX_STOW/bin/stow" -v -d "$DOTFILES" -t "$HOME" --restow nixos
+  if command -v stow &>/dev/null && command -v git &>/dev/null; then
+    stow -v -d "$DOTFILES" -t "$HOME" --restow nixos
+  else
+    info "stow/git not in PATH — running via nix-shell…"
+    nix-shell -p stow git --run \
+      "stow -v -d '$DOTFILES' -t '$HOME' --restow nixos"
+  fi
   ok "Symlink created: $HOME/.nixos → $DOTFILES/nixos/.nixos"
 else
   ok "~/.nixos already exists — skipping stow."
@@ -235,10 +333,12 @@ if [[ -f "$HOME/.local/share/sketchybar_lua/sketchybar.so" ]]; then
   ok "SbarLua already installed at ~/.local/share/sketchybar_lua/sketchybar.so — skipping."
 else
   (
-    git clone https://github.com/FelixKratz/SbarLua.git /tmp/SbarLua
-    cd /tmp/SbarLua
+    SBARLUA_TMP=$(mktemp -d)
+    git clone https://github.com/FelixKratz/SbarLua.git "$SBARLUA_TMP" || \
+      nix-shell -p git --run "git clone https://github.com/FelixKratz/SbarLua.git '$SBARLUA_TMP'"
+    cd "$SBARLUA_TMP"
     CPATH=/opt/homebrew/opt/readline/include LIBRARY_PATH=/opt/homebrew/opt/readline/lib make install
-    rm -rf /tmp/SbarLua
+    rm -rf "$SBARLUA_TMP"
   )
   ok "SbarLua installed to ~/.local/share/sketchybar_lua/"
 fi
