@@ -334,8 +334,8 @@ if [[ -f "$HOME/.local/share/sketchybar_lua/sketchybar.so" ]]; then
 else
   (
     SBARLUA_TMP=$(mktemp -d)
-    git clone https://github.com/FelixKratz/SbarLua.git "$SBARLUA_TMP" || \
-      nix-shell -p git --run "git clone https://github.com/FelixKratz/SbarLua.git '$SBARLUA_TMP'"
+    GIT_CONFIG_GLOBAL=/dev/null git clone https://github.com/FelixKratz/SbarLua.git "$SBARLUA_TMP" || \
+      nix-shell -p git --run "GIT_CONFIG_GLOBAL=/dev/null git clone https://github.com/FelixKratz/SbarLua.git '$SBARLUA_TMP'"
     cd "$SBARLUA_TMP"
     CPATH=/opt/homebrew/opt/readline/include LIBRARY_PATH=/opt/homebrew/opt/readline/lib make install
     rm -rf "$SBARLUA_TMP"
@@ -387,6 +387,21 @@ fi
 mkdir -p "$HOME/.config"
 echo "$HOSTNAME_ARG" > "$HOME/.config/nix-darwin-host"
 ok "Recorded flake host '${HOSTNAME_ARG}' → ~/.config/nix-darwin-host"
+
+# ─── Step 12: Remove bootstrap ~/.gitconfig ───────────────────────────────────
+# The strongbox git filter wiring (Step 5) wrote entries into ~/.gitconfig.
+# nix-darwin activation (Step 7) has since deployed the full, home-manager-
+# managed git config via symlink or generation. Remove the bootstrap file so
+# the nix-managed config is the sole source of truth.
+info "Removing bootstrap ~/.gitconfig (nix-managed config is now active)…"
+if [[ -f "$HOME/.gitconfig" && ! -L "$HOME/.gitconfig" ]]; then
+  rm "$HOME/.gitconfig"
+  ok "Removed bootstrap ~/.gitconfig"
+elif [[ -L "$HOME/.gitconfig" ]]; then
+  ok "~/.gitconfig is already a symlink (nix-managed) — skipping removal."
+else
+  ok "~/.gitconfig not present — nothing to remove."
+fi
 
 # ─── Done ─────────────────────────────────────────────────────────────────────
 echo

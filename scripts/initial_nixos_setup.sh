@@ -273,6 +273,23 @@ sudo nixos-rebuild boot \
   --flake "${FLAKE_DIR}#${HOSTNAME}" \
   --option extra-experimental-features 'nix-command flakes'
 
+# ─── Step 4: Remove bootstrap ~/.gitconfig ────────────────────────────────────
+# The strongbox git filter wiring (thinkpad-t480 only) wrote entries into
+# ~/.gitconfig via `git config --global`. After reboot, home-manager will deploy
+# the full nix-managed git config. Remove the bootstrap file now so it does not
+# conflict with or shadow the nix-managed one on first login.
+if [[ "$HOSTNAME" == "thinkpad-t480" ]]; then
+  info "Removing bootstrap ~/.gitconfig (nix-managed config will be active after reboot)…"
+  if [[ -f "$HOME/.gitconfig" && ! -L "$HOME/.gitconfig" ]]; then
+    rm "$HOME/.gitconfig"
+    ok "Removed bootstrap ~/.gitconfig"
+  elif [[ -L "$HOME/.gitconfig" ]]; then
+    ok "~/.gitconfig is already a symlink (nix-managed) — skipping removal."
+  else
+    ok "~/.gitconfig not present — nothing to remove."
+  fi
+fi
+
 # ─── Done ─────────────────────────────────────────────────────────────────────
 echo
 ok "Build succeeded!"

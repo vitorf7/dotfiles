@@ -13,7 +13,7 @@
       home.activation.installRubyBuildPlugin = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         RBENV_PLUGIN_DIR="$HOME/.rbenv/plugins/ruby-build"
         if [ ! -d "$RBENV_PLUGIN_DIR" ]; then
-          $DRY_RUN_CMD ${pkgs.git}/bin/git clone --quiet \
+          $DRY_RUN_CMD env GIT_CONFIG_GLOBAL=/dev/null ${pkgs.git}/bin/git clone --quiet \
             https://github.com/rbenv/ruby-build.git "$RBENV_PLUGIN_DIR"
         fi
       '';
