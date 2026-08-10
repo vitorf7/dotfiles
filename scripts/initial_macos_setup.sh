@@ -61,7 +61,7 @@ usage() {
   echo -e "${BLD}Usage:${RST} $(basename "$0") <hostname>"
   echo
   echo "Available hosts:"
-  ls "${DOTFILES:-$DOTFILES_TARGET}/nixos/.nixos/hosts" 2>/dev/null | sed 's/^/  /'
+  ls "${DOTFILES:-$DOTFILES_TARGET}/nixos/.nixos/modules/hosts" 2>/dev/null | sed 's/^/  /'
   exit 1
 }
 
@@ -104,7 +104,7 @@ DOTFILES="$(dirname "$SCRIPT_DIR")"
 # ─── Argument validation ──────────────────────────────────────────────────────
 [[ $# -eq 1 ]] || { echo -e "${RED}error:${RST} hostname argument required" >&2; usage; }
 HOSTNAME_ARG="$1"
-HOST_DIR="$DOTFILES/nixos/.nixos/hosts/$HOSTNAME_ARG"
+HOST_DIR="$DOTFILES/nixos/.nixos/modules/hosts/$HOSTNAME_ARG"
 
 if [[ ! -d "$HOST_DIR" ]]; then
   echo -e "${RED}error:${RST} unknown host '${HOSTNAME_ARG}'" >&2
