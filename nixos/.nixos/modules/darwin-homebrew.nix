@@ -21,6 +21,7 @@
           "dnsmasq"
           "httpd"
           "unar"
+          "coreutils"
         ];
 
         extraConfig = ''
