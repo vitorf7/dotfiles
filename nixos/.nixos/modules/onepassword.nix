@@ -19,13 +19,18 @@
     ];
   };
 
-  flake.modules.homeManager.onepassword = { config, lib, osConfig, ... }:
-    lib.mkIf (osConfig.vitorf7.desktop.enable or (osConfig.vitorf7.darwin.enable or false)) {
+  flake.modules.homeManager.onepassword = { config, lib, pkgs, osConfig, ... }:
+    lib.mkIf (osConfig.vitorf7.desktop.enable || osConfig.vitorf7.darwin.enable) {
     programs.ssh = {
       enable = true;
       enableDefaultConfig = false;
       settings = {
-        "*".IdentityAgent = "${config.home.homeDirectory}/.1password/agent.sock";
+        # macOS path contains a space ("Group Containers") so must be quoted;
+        # embed the quotes in the value so home-manager renders them verbatim.
+        "*".IdentityAgent =
+          if pkgs.stdenv.isDarwin
+          then ''"${config.home.homeDirectory}/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"''
+          else "${config.home.homeDirectory}/.1password/agent.sock";
         "github.com" = {
           HostName = "github.com";
           User = "git";
