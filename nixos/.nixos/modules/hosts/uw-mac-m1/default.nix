@@ -14,7 +14,7 @@ in
         vitorf7.darwin.enable = true;
         vitorf7.darwin.homebrew.enable = true;
         vitorf7.darwin.aerospace.enable = true;
-        vitorf7.darwin.colima.enable = false;
+        vitorf7.darwin.colima.enable = true;
         vitorf7.darwin.work.enable = true;
         vitorf7.git.defaultProfile = "work";
         vitorf7.git.personal.enable = true;

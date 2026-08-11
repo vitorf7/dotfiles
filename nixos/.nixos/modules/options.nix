@@ -27,7 +27,7 @@ let
       darwin.enable = lib.mkEnableOption "macOS (nix-darwin) base configuration";
       darwin.homebrew.enable = lib.mkEnableOption "Declarative Homebrew (taps, casks, mas apps)";
       darwin.aerospace.enable = lib.mkEnableOption "Aerospace WM + sketchybar + jankyborders stack";
-      darwin.colima.enable = lib.mkEnableOption "Colima container runtime as a launchd user agent";
+      darwin.colima.enable = lib.mkEnableOption "Colima — includes colima SSH config in ~/.ssh/config";
       darwin.work.enable = lib.mkEnableOption "Work-only items (Okta Verify) — enable on the UW Mac, leave off on personal machines";
 
       git = {

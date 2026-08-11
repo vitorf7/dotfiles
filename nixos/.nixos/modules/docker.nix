@@ -5,6 +5,8 @@
     users.users.${config.vitorf7.username}.extraGroups = [ "docker" ];
   };
 
+  flake.modules.darwin.docker = { ... }: {};
+
   flake.modules.homeManager.docker = { pkgs, lib, ... }: {
     home.packages = with pkgs; [
       docker
@@ -16,21 +18,4 @@
     ];
   };
 
-  flake.modules.darwin.docker = { config, pkgs, lib, ... }:
-    let cfg = config.vitorf7.darwin; in
-    {
-      launchd.user.agents = lib.mkIf cfg.colima.enable {
-        colima = {
-          serviceConfig = {
-            Label = "com.github.abiosoft.colima";
-            ProgramArguments = [ "${pkgs.colima}/bin/colima" "daemon" ];
-            RunAtLoad = true;
-            KeepAlive = true;
-            StandardOutPath = "/Users/${config.system.primaryUser}/Library/Logs/colima.out.log";
-            StandardErrorPath = "/Users/${config.system.primaryUser}/Library/Logs/colima.err.log";
-            EnvironmentVariables.HOME = "/Users/${config.system.primaryUser}";
-          };
-        };
-      };
-    };
 }
