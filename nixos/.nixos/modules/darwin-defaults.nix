@@ -25,7 +25,6 @@
         persistent-apps = [
           { app = "/System/Applications/Calendar.app"; }
           { app = "/Applications/Ghostty.app"; }
-          { app = "/Applications/Rambox.app"; }
           { app = "/Applications/Ferdium.app"; }
           { app = "/Applications/Zen.app"; }
           { app = "/Applications/Postman.app"; }
