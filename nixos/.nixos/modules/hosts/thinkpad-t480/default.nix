@@ -101,4 +101,31 @@ in
       }
     ];
   };
+
+  flake.homeConfigurations.thinkpad-t480 =
+    inputs.home-manager.lib.homeManagerConfiguration {
+      pkgs = import inputs.nixpkgs {
+        system = "x86_64-linux";
+        config.allowUnfree = true;
+      };
+      extraSpecialArgs = {
+        osConfig = self.nixosConfigurations.thinkpad-t480.config;
+      };
+      modules = (with self.modules.homeManager; [
+        core shell editor git secrets dev desktop onepassword
+        browsers media communication ai gaming
+        ghostty kitty alacritty vicinae
+        hyprland theming quickshell qs-brain-shell ambxst
+        tide-island caelestia-shell
+        kubernetes docker
+      ]) ++ [
+        inputs.sops-nix.homeManagerModules.sops
+        {
+          home.username = username;
+          home.homeDirectory = "/home/${username}";
+          home.stateVersion = "26.05";
+          programs.home-manager.enable = true;
+        }
+      ];
+    };
 }

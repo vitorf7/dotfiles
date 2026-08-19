@@ -273,6 +273,22 @@ sudo nixos-rebuild boot \
   --flake "${FLAKE_DIR}#${HOSTNAME}" \
   --option extra-experimental-features 'nix-command flakes'
 
+# ─── Step 3b: Bootstrap standalone home-manager (for the `hm` command) ──────
+# `programs.home-manager.enable` inside the nixos-integrated
+# home-manager.users.<user> block never installs the standalone `home-manager`
+# CLI — home-manager's own module gates that on `!submoduleSupport.enable`,
+# which the nixos integration always sets true. So nixos-rebuild alone will
+# never provide it, no matter how many times it's run. Bootstrap it once here
+# via the flake's own homeConfigurations.<host> output (installs into
+# ~/.nix-profile/bin, already on PATH) so `hm`/`home-manager` work afterward.
+# Safe to run before reboot: this only needs the flake to evaluate, not the
+# new system generation to be active yet.
+info "Bootstrapping standalone home-manager (for the 'hm' command)…"
+nix run --extra-experimental-features 'nix-command flakes' \
+  github:nix-community/home-manager/master -- \
+  switch -b hm-bak --flake "${FLAKE_DIR}#${HOSTNAME}"
+ok "Standalone home-manager activated — 'hm'/'home-manager' now on PATH."
+
 # ─── Step 4: Remove bootstrap ~/.gitconfig ────────────────────────────────────
 # The strongbox git filter wiring (thinkpad-t480 only) wrote entries into
 # ~/.gitconfig via `git config --global`. After reboot, home-manager will deploy

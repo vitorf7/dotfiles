@@ -70,4 +70,30 @@ in
       }
     ];
   };
+
+  flake.homeConfigurations.uw-mac-m1 =
+    inputs.home-manager.lib.homeManagerConfiguration {
+      pkgs = import inputs.nixpkgs {
+        system = "aarch64-darwin";
+        config.allowUnfree = true;
+      };
+      extraSpecialArgs = {
+        osConfig = self.darwinConfigurations.uw-mac-m1.config;
+      };
+      modules = (with self.modules.homeManager; [
+        core shell editor git secrets dev
+        ghostty kitty alacritty vicinae
+        darwin-packages darwin-symlinks
+        kubernetes docker aerospace sketchybar
+        browsers media communication input onepassword ai
+      ]) ++ [
+        inputs.sops-nix.homeManagerModules.sops
+        {
+          home.username = username;
+          home.homeDirectory = "/Users/${username}";
+          home.stateVersion = "26.05";
+          programs.home-manager.enable = true;
+        }
+      ];
+    };
 }

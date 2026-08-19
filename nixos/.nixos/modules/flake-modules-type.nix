@@ -10,5 +10,9 @@
       type = lib.types.attrsOf lib.types.unspecified;
       default = {};
     };
+    homeConfigurations = lib.mkOption {
+      type = lib.types.attrsOf lib.types.unspecified;
+      default = {};
+    };
   };
 }

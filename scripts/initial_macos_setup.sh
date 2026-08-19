@@ -324,6 +324,19 @@ done
 
 sudo nix "${NIX_OPTS[@]}" run nix-darwin -- switch --flake "$HOME/.nixos#${HOSTNAME_ARG}"
 
+# ─── Step 7b: Bootstrap standalone home-manager (for the `hm` command) ──────
+# `programs.home-manager.enable` inside the darwin-integrated
+# home-manager.users.<user> block never installs the standalone `home-manager`
+# CLI — home-manager's own module gates that on `!submoduleSupport.enable`,
+# which the darwin integration always sets true. So darwin-rebuild alone will
+# never provide it, no matter how many times it's run. Bootstrap it once here
+# via the flake's own homeConfigurations.<host> output (installs into
+# ~/.nix-profile/bin, already on PATH) so `hm`/`home-manager` work afterward.
+info "Bootstrapping standalone home-manager (for the 'hm' command)…"
+nix "${NIX_OPTS[@]}" run github:nix-community/home-manager/master -- \
+  switch -b hm-bak --flake "$HOME/.nixos#${HOSTNAME_ARG}"
+ok "Standalone home-manager activated — 'hm'/'home-manager' now on PATH."
+
 # ─── Step 8: SbarLua — Lua bindings for sketchybar ───────────────────────────
 # Must run after nix-darwin activation so that Homebrew lua and readline are
 # already installed. Homebrew readline is keg-only (not auto-linked). CPATH

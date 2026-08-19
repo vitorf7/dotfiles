@@ -284,11 +284,35 @@ end
 function hm
     if test (count $argv) -gt 0
         set flake $argv[1]
+    else if test (uname) = Darwin
+        # macOS hostname is unreliable here — MDM (Jamf/Kandji/etc.) can
+        # reassert an asset-tag-based ComputerName that doesn't match the
+        # flake attribute. Each Mac records its own flake host once, in
+        # initial_macos_setup.sh's last step, in a file untouched by MDM.
+        set -l marker $HOME/.config/nix-darwin-host
+        if test -f $marker
+            set flake (string trim < $marker)
+        else
+            echo "No flake host recorded — pass it explicitly, e.g.: hm uw-mac-m1"
+            echo "(or run: echo uw-mac-m1 > $marker)"
+            return 1
+        end
     else
         set flake (hostname -s)
     end
+
+    # ~/.nixos is stowed on both Linux and macOS via initial_*_setup.sh.
+    # Fall back to the repo path when stow hasn't been run yet.
+    set -l flake_dir $HOME/.nixos
+    if not test -d $flake_dir
+        set flake_dir $HOME/dotfiles/nixos/.nixos
+    end
+
+    set -l saved_dir $PWD
+    builtin cd $flake_dir
+
     echo "Switching home-manager flake: $flake"
-    z $HOME/.nixos
     home-manager switch --flake ".#$flake"
-    z -
+
+    builtin cd $saved_dir
 end
