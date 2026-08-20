@@ -169,9 +169,13 @@ run = 'move-node-to-workspace 2'
 if.app-id = 'app.zen-browser.zen'
 run = 'move-node-to-workspace 2'
 
-# workspace 3 - Rambox
+# workspace 3 - Rambox and Ferdium
 [[on-window-detected]]
 if.app-id = 'com.rambox'
+run = 'move-node-to-workspace 3'
+
+[[on-window-detected]]
+if.app-id = 'org.ferdium.ferdium-app'
 run = 'move-node-to-workspace 3'
 
 # workspace 4 - Obsidian
