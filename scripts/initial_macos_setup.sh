@@ -14,7 +14,7 @@
 # What it does:
 #   1. Check Xcode Command Line Tools (required for Homebrew)
 #   2. Install Homebrew if absent
-#   3. Install Determinate Nix if absent
+#   3. Install Nix (NixOS/nix-installer) if absent
 #   4. Clone / pull dotfiles to $HOME/dotfiles, and nvim-kick to $HOME/nvim-kick
 #      (core.nix symlinks ~/.config/nvim -> ~/nvim-kick on every host)
 #   5. Wire strongbox git filter (required for nixos/.nixos/secrets/* in the repo)
@@ -132,7 +132,7 @@ else
   ok "Homebrew already present: $(brew --version | head -1)"
 fi
 
-# ─── Step 3: Determinate Nix ─────────────────────────────────────────────────
+# ─── Step 3: Nix (NixOS/nix-installer) ───────────────────────────────────────
 info "Checking Nix…"
 
 _nix_is_working() {
@@ -147,12 +147,13 @@ _nix_artifacts_exist() {
   [[ -f /etc/synthetic.conf ]] && grep -q '^nix$' /etc/synthetic.conf 2>/dev/null && return 0
   [[ -f /etc/fstab ]] && grep -q 'nix' /etc/fstab 2>/dev/null && return 0
   [[ -f /Library/LaunchDaemons/systems.determinate.nix-store.plist ]] && return 0
+  [[ -f /Library/LaunchDaemons/org.nixos.nix-daemon.plist ]] && return 0
   return 1
 }
 
 _nix_install() {
-  curl -fsSL https://install.determinate.systems/nix \
-    | sh -s -- install --determinate --no-confirm "$@"
+  curl -fsSL https://artifacts.nixos.org/nix-installer \
+    | sh -s -- install --no-confirm "$@"
 }
 
 _nix_source_env() {
@@ -170,25 +171,25 @@ elif _nix_artifacts_exist; then
   if [[ -x /nix/nix-installer && -f /nix/receipt.json ]]; then
     info "Found /nix/nix-installer and receipt.json — automated cleanup is available."
     echo -e "  This will run: ${BLU}sudo /nix/nix-installer uninstall --no-confirm${RST}"
-    echo -e "  Then reinstall Determinate Nix from scratch."
+    echo -e "  Then reinstall Nix from scratch."
     echo
     read -r -p "Proceed with cleanup and reinstall? [y/N] " _reply
     [[ "$_reply" =~ ^[Yy]$ ]] || die "Aborted. Run this script again when ready."
     sudo /nix/nix-installer uninstall --no-confirm
-    info "Cleanup complete. Re-installing Determinate Nix…"
+    info "Cleanup complete. Re-installing Nix…"
     _nix_install
     _nix_source_env
-    ok "Determinate Nix installed (after cleanup)."
+    ok "Nix installed (after cleanup)."
 
   elif [[ -x /nix/nix-installer ]]; then
     warn "No /nix/receipt.json found — will attempt install with --force."
-    echo -e "  This will run: ${BLU}curl … | sh -s -- install --determinate --no-confirm --force${RST}"
+    echo -e "  This will run: ${BLU}curl … | sh -s -- install --no-confirm --force${RST}"
     echo
     read -r -p "Proceed with --force install? [y/N] " _reply
     [[ "$_reply" =~ ^[Yy]$ ]] || die "Aborted. Run this script again when ready."
     _nix_install --force
     _nix_source_env
-    ok "Determinate Nix installed (with --force)."
+    ok "Nix installed (with --force)."
 
   else
     echo
@@ -201,16 +202,16 @@ elif _nix_artifacts_exist; then
    3. Remove the synthetic.conf entry:\n\
       ${BLU}sudo sed -i '' '/^nix\$/d' /etc/synthetic.conf${RST}\n\
    4. Remove LaunchDaemons:\n\
-      ${BLU}sudo rm -f /Library/LaunchDaemons/systems.determinate.nix-*${RST}\n\
+      ${BLU}sudo rm -f /Library/LaunchDaemons/systems.determinate.nix-* /Library/LaunchDaemons/org.nixos.nix-daemon.plist${RST}\n\
    5. Remove the mount point:\n\
       ${BLU}sudo rm -rf /nix${RST}\n\
    6. Reboot, then re-run this script.\n"
   fi
 else
-  info "Installing Determinate Nix…"
+  info "Installing Nix…"
   _nix_install
   _nix_source_env
-  ok "Determinate Nix installed."
+  ok "Nix installed."
 fi
 
 NIX_OPTS=(--extra-experimental-features 'nix-command flakes')

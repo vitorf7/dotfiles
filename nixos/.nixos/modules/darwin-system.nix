@@ -3,7 +3,9 @@
   flake.modules.darwin.system = { config, pkgs, lib, ... }:
     let username = config.vitorf7.username; in
     {
-    nix.enable = false;
+    # nix-darwin manages /etc/nix/nix.conf and the nix-daemon launchd job directly
+    # (nix.enable defaults to true) — safe because we install plain Nix via
+    # NixOS/nix-installer, not Determinate Nix, so nothing else owns nix.conf.
 
     nixpkgs.config.allowUnfree = true;
 

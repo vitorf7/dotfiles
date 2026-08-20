@@ -85,7 +85,7 @@ secrets (e.g. wiresteward) and home-manager secrets (e.g. git identity) use this
 
 ## Fresh install (macOS, one-liner)
 
-Run this on a fresh macOS machine. It installs Xcode CLT/Homebrew/Determinate Nix
+Run this on a fresh macOS machine. It installs Xcode CLT/Homebrew/Nix
 if absent, clones dotfiles, decrypts strongbox secrets, stows `~/.nixos`, and does
 the first nix-darwin activation.
 
