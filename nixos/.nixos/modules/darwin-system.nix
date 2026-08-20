@@ -6,6 +6,13 @@
     # nix-darwin manages /etc/nix/nix.conf and the nix-daemon launchd job directly
     # (nix.enable defaults to true) — safe because we install plain Nix via
     # NixOS/nix-installer, not Determinate Nix, so nothing else owns nix.conf.
+    #
+    # experimental-features must be set here (not just passed via CLI flags) because
+    # it needs to be in the system-wide daemon baseline: an unprivileged, non-trusted
+    # user's --extra-experimental-features override is silently ignored by the
+    # nix-daemon, so without this only root/sudo invocations would have nix-command
+    # and flakes available.
+    nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
     nixpkgs.config.allowUnfree = true;
 

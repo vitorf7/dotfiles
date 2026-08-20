@@ -316,7 +316,11 @@ echo -e "(${YLW}darwin-rebuild${RST} does not exist until this first activation)
 echo
 
 # Move /etc files nix-darwin wants to own, if present and not yet moved.
-for f in /etc/bashrc /etc/zshrc /etc/zprofile /etc/zshenv; do
+# /etc/nix/nix.conf: Nix itself (Step 3) writes this as a plain file before
+# nix-darwin ever runs — with nix.enable defaulting to true, this clashes on
+# every fresh install. /etc/shells: macOS ships one by default; environment.shells
+# above needs to replace it.
+for f in /etc/bashrc /etc/zshrc /etc/zprofile /etc/zshenv /etc/nix/nix.conf /etc/shells; do
   if [[ -f "$f" && ! -f "${f}.before-nix-darwin" ]]; then
     info "Moving ${f} aside for nix-darwin…"
     sudo mv "$f" "${f}.before-nix-darwin"
