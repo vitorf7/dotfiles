@@ -10,14 +10,14 @@
 
 {
   "$schema": "https://vicinae.com/schemas/config.json",
+  "global_shortcuts": {
+    "toggle": "alt+SPACE"
+  },
   "font": {
     "normal": {
       "family": "MonaspiceNe Nerd Font Propo",
       "size": 14
     }
-  },
-  "global_shortcuts": {
-    "toggle": "alt+SPACE"
   },
   "theme": {
     "dark": {
@@ -74,14 +74,6 @@
         "sort-by-memory": true
       }
     },
-    "Matis_Olives/wallpaper": {
-      "preferences": {
-        "directory": "/home/vitorf7/Pictures/backgrounds",
-        "command": "/home/vitorf7/.config/hypr/scripts/matugenMagick.sh %img% --dark",
-        "recursive": false,
-        "columns": "3"
-      }
-    },
     "@thomaslombart/store.raycast.github": {
       "preferences": {
         "defaultSearchTerms": "author:@me",
@@ -111,6 +103,14 @@
         }
       }
     },
+    "Matis_Olives/wallpaper": {
+      "preferences": {
+        "directory": "/home/vitorf7/Pictures/backgrounds",
+        "command": "/home/vitorf7/.config/hypr/scripts/matugenMagick.sh %img% --dark",
+        "recursive": false,
+        "columns": "3"
+      }
+    },
     "applications": {
       "entrypoints": {
         "app.zen-browser.zen": {
@@ -119,16 +119,17 @@
         "com.mitchellh.ghostty": {
           "shortcut": "control+alt+shift+T"
         },
-        "com.rambox": {
-          "shortcut": "control+alt+shift+S"
-        },
         "com.spotify.client": {
           "shortcut": "control+alt+shift+M"
         },
         "md.obsidian": {
           "shortcut": "control+alt+shift+N"
+        },
+        "org.ferdium.ferdium-app": {
+          "shortcut": "control+alt+shift+S"
         }
       }
     }
   }
 }
+
