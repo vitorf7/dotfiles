@@ -33,6 +33,25 @@ $fxCLI --comp fish | source # https://fx.wtf/
 set -g direnv_fish_mode eval_on_arrow # trigger direnv at prompt, and on every arrow-based directory change (default)
 eval "$($miseCLI activate fish)"   # or bash/fish
 
+# mise's activation installs its own fish_command_not_found hook that
+# hardcodes an absolute mise path. If that path becomes momentarily
+# unresolvable (e.g. ~/.nix-profile getting relinked mid-session by a
+# nix-darwin/home-manager switch), its own recursion guard doesn't catch
+# a full-path re-invocation of itself and it spins until fish's call-stack
+# limit trips. Wrap whatever got installed with a depth guard so that fails
+# once instead.
+if functions -q fish_command_not_found
+    functions -c fish_command_not_found __fcnf_inner
+    function fish_command_not_found
+        if set -q __fcnf_depth
+            return 127
+        end
+        set -g __fcnf_depth 1
+        __fcnf_inner $argv
+        set -e __fcnf_depth
+    end
+end
+
 # override the default greeting
 function fish_greeting
     # Select the image directory, preferring Wallpapers, then backgrounds

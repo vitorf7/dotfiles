@@ -311,8 +311,18 @@ function hm
     set -l saved_dir $PWD
     builtin cd $flake_dir
 
-    echo "Switching home-manager flake: $flake"
-    home-manager switch --flake ".#$flake"
+    # homeConfigurations.<flake> shares its home-manager module config with
+    # the darwin/nixos-integrated one nrs drives (see hosts/<flake>/default.nix),
+    # and both write to the same ~/.local/state/nix/profiles/home-manager
+    # generation lineage — so this never competes with nrs, it just gives a
+    # fast home-manager-only apply without a full system rebuild.
+    if not command -q home-manager
+        echo "home-manager CLI not found — bootstrapping via nix run…"
+        nix run github:nix-community/home-manager/master -- switch -b hm-bak --flake ".#$flake"
+    else
+        echo "Switching home-manager flake: $flake"
+        home-manager switch -b hm-bak --flake ".#$flake"
+    end
 
     builtin cd $saved_dir
 end
