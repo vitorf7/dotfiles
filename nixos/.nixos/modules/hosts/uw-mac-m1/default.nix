@@ -1,5 +1,24 @@
 { inputs, self, ... }:
-let username = "vitorfaiante";
+let
+  username = "vitorfaiante";
+  # Single source of truth for the user's home-manager config, referenced by
+  # both the darwin-integrated activation (nrs) and the standalone
+  # homeConfigurations output (hm / home-manager CLI) below — so the two
+  # entry points can never drift apart while sharing the same generation
+  # profile.
+  homeManagerUserConfig = { lib, ... }: {
+    imports = with self.modules.homeManager; [
+      core shell editor git secrets dev
+      ghostty kitty alacritty vicinae
+      darwin-packages darwin-symlinks
+      kubernetes docker aerospace sketchybar
+      browsers media communication input onepassword ai
+    ];
+    home.username = username;
+    home.homeDirectory = lib.mkForce "/Users/${username}";
+    home.stateVersion = "26.05";
+    programs.home-manager.enable = true;
+  };
 in
 {
   flake.darwinConfigurations.uw-mac-m1 = inputs.nix-darwin.lib.darwinSystem {
@@ -54,19 +73,7 @@ in
         home-manager.useUserPackages = true;
         home-manager.backupFileExtension = "hm-bak";
         home-manager.sharedModules = [ inputs.sops-nix.homeManagerModules.sops ];
-        home-manager.users.${username} = { lib, ... }: {
-          imports = with self.modules.homeManager; [
-            core shell editor git secrets dev
-            ghostty kitty alacritty vicinae
-            darwin-packages darwin-symlinks
-            kubernetes docker aerospace sketchybar
-            browsers media communication input onepassword ai
-          ];
-          home.username = username;
-          home.homeDirectory = lib.mkForce "/Users/${username}";
-          home.stateVersion = "26.05";
-          programs.home-manager.enable = true;
-        };
+        home-manager.users.${username} = homeManagerUserConfig;
       }
     ];
   };
@@ -80,20 +87,9 @@ in
       extraSpecialArgs = {
         osConfig = self.darwinConfigurations.uw-mac-m1.config;
       };
-      modules = (with self.modules.homeManager; [
-        core shell editor git secrets dev
-        ghostty kitty alacritty vicinae
-        darwin-packages darwin-symlinks
-        kubernetes docker aerospace sketchybar
-        browsers media communication input onepassword ai
-      ]) ++ [
+      modules = [
         inputs.sops-nix.homeManagerModules.sops
-        {
-          home.username = username;
-          home.homeDirectory = "/Users/${username}";
-          home.stateVersion = "26.05";
-          programs.home-manager.enable = true;
-        }
+        homeManagerUserConfig
       ];
     };
 }

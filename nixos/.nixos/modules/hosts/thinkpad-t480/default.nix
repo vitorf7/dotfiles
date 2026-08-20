@@ -1,5 +1,25 @@
 { inputs, self, ... }:
-let username = "vitorf7";
+let
+  username = "vitorf7";
+  # Single source of truth for the user's home-manager config, referenced by
+  # both the nixos-integrated activation (nrs) and the standalone
+  # homeConfigurations output (hm / home-manager CLI) below — so the two
+  # entry points can never drift apart while sharing the same generation
+  # profile.
+  homeManagerUserConfig = {
+    imports = with self.modules.homeManager; [
+      core shell editor git secrets dev desktop onepassword
+      browsers media communication ai gaming
+      ghostty kitty alacritty vicinae
+      hyprland theming quickshell qs-brain-shell ambxst
+      tide-island caelestia-shell
+      kubernetes docker
+    ];
+    home.username = username;
+    home.homeDirectory = "/home/${username}";
+    home.stateVersion = "26.05";
+    programs.home-manager.enable = true;
+  };
 in
 {
   flake.nixosConfigurations.thinkpad-t480 = inputs.nixpkgs.lib.nixosSystem {
@@ -84,20 +104,7 @@ in
         home-manager.useGlobalPkgs = true;
         home-manager.useUserPackages = true;
         home-manager.sharedModules = [ inputs.sops-nix.homeManagerModules.sops ];
-        home-manager.users.${username} = { ... }: {
-          imports = with self.modules.homeManager; [
-            core shell editor git secrets dev desktop onepassword
-            browsers media communication ai gaming
-            ghostty kitty alacritty vicinae
-            hyprland theming quickshell qs-brain-shell ambxst
-            tide-island caelestia-shell
-            kubernetes docker
-          ];
-          home.username = username;
-          home.homeDirectory = "/home/${username}";
-          home.stateVersion = "26.05";
-          programs.home-manager.enable = true;
-        };
+        home-manager.users.${username} = homeManagerUserConfig;
       }
     ];
   };
@@ -111,21 +118,9 @@ in
       extraSpecialArgs = {
         osConfig = self.nixosConfigurations.thinkpad-t480.config;
       };
-      modules = (with self.modules.homeManager; [
-        core shell editor git secrets dev desktop onepassword
-        browsers media communication ai gaming
-        ghostty kitty alacritty vicinae
-        hyprland theming quickshell qs-brain-shell ambxst
-        tide-island caelestia-shell
-        kubernetes docker
-      ]) ++ [
+      modules = [
         inputs.sops-nix.homeManagerModules.sops
-        {
-          home.username = username;
-          home.homeDirectory = "/home/${username}";
-          home.stateVersion = "26.05";
-          programs.home-manager.enable = true;
-        }
+        homeManagerUserConfig
       ];
     };
 }

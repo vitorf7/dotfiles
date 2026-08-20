@@ -326,12 +326,17 @@ sudo nix "${NIX_OPTS[@]}" run nix-darwin -- switch --flake "$HOME/.nixos#${HOSTN
 
 # ─── Step 7b: Bootstrap standalone home-manager (for the `hm` command) ──────
 # `programs.home-manager.enable` inside the darwin-integrated
-# home-manager.users.<user> block never installs the standalone `home-manager`
-# CLI — home-manager's own module gates that on `!submoduleSupport.enable`,
-# which the darwin integration always sets true. So darwin-rebuild alone will
-# never provide it, no matter how many times it's run. Bootstrap it once here
-# via the flake's own homeConfigurations.<host> output (installs into
-# ~/.nix-profile/bin, already on PATH) so `hm`/`home-manager` work afterward.
+# home-manager.users.<user> block never self-installs the standalone
+# `home-manager` CLI — home-manager's own module gates that on
+# `!submoduleSupport.enable`, which the darwin integration always sets true.
+# So darwin-rebuild alone will never provide the CLI, no matter how many
+# times it's run. Bootstrap it once here via the flake's own
+# homeConfigurations.<host> output, which shares its home-manager module
+# config with the darwin-integrated one (see hosts/<host>/default.nix) so
+# this can never drift into a competing generation — both write to the same
+# ~/.local/state/nix/profiles/home-manager lineage. This self-installs the
+# `home-manager` package going forward, so `hm`/`home-manager news`/
+# `home-manager generations` etc. work afterward without further bootstrap.
 info "Bootstrapping standalone home-manager (for the 'hm' command)…"
 nix "${NIX_OPTS[@]}" run github:nix-community/home-manager/master -- \
   switch -b hm-bak --flake "$HOME/.nixos#${HOSTNAME_ARG}"
