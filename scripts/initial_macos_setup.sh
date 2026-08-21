@@ -223,7 +223,7 @@ if command -v git &>/dev/null; then
   _git() { git "$@"; }
 else
   info "git not in PATH — routing git calls through nix-shell…"
-  _git() { nix-shell -p git --run "git $*"; }
+  _git() { nix shell "${NIX_OPTS[@]}" nixpkgs#git --command git "$@"; }
 fi
 
 # ─── Step 4: Dotfiles clone/pull (already done above if remote, skip if local) ─
@@ -249,13 +249,13 @@ NVIM_KICK_TARGET="$HOME/nvim-kick"
 if [[ -d "$NVIM_KICK_TARGET/.git" ]]; then
   info "Updating nvim-kick at ${NVIM_KICK_TARGET}…"
   git -C "$NVIM_KICK_TARGET" pull origin master || \
-    nix-shell -p git --run "git -C '$NVIM_KICK_TARGET' pull origin master"
+    nix shell "${NIX_OPTS[@]}" nixpkgs#git --command git -C "$NVIM_KICK_TARGET" pull origin master
 elif [[ -e "$NVIM_KICK_TARGET" ]]; then
   die "$NVIM_KICK_TARGET exists but is not a git repo. Remove it and retry."
 else
   info "Cloning nvim-kick to ${NVIM_KICK_TARGET}…"
   git clone https://github.com/vitorf7/nvim-kick "$NVIM_KICK_TARGET" || \
-    nix-shell -p git --run "git clone https://github.com/vitorf7/nvim-kick '$NVIM_KICK_TARGET'"
+    nix shell "${NIX_OPTS[@]}" nixpkgs#git --command git clone https://github.com/vitorf7/nvim-kick "$NVIM_KICK_TARGET"
 fi
 ok "nvim-kick present at $NVIM_KICK_TARGET"
 
@@ -302,9 +302,9 @@ if [[ ! -e "$HOME/.nixos" ]]; then
   if command -v stow &>/dev/null && command -v git &>/dev/null; then
     stow -v -d "$DOTFILES" -t "$HOME" --restow nixos
   else
-    info "stow/git not in PATH — running via nix-shell…"
-    nix-shell -p stow git --run \
-      "stow -v -d '$DOTFILES' -t '$HOME' --restow nixos"
+    info "stow/git not in PATH — running via nix shell…"
+    nix shell "${NIX_OPTS[@]}" nixpkgs#stow nixpkgs#git --command \
+      stow -v -d "$DOTFILES" -t "$HOME" --restow nixos
   fi
   ok "Symlink created: $HOME/.nixos → $DOTFILES/nixos/.nixos"
 else
@@ -360,7 +360,7 @@ else
   (
     SBARLUA_TMP=$(mktemp -d)
     GIT_CONFIG_GLOBAL=/dev/null git clone https://github.com/FelixKratz/SbarLua.git "$SBARLUA_TMP" || \
-      nix-shell -p git --run "GIT_CONFIG_GLOBAL=/dev/null git clone https://github.com/FelixKratz/SbarLua.git '$SBARLUA_TMP'"
+      nix shell "${NIX_OPTS[@]}" nixpkgs#git --command env GIT_CONFIG_GLOBAL=/dev/null git clone https://github.com/FelixKratz/SbarLua.git "$SBARLUA_TMP"
     cd "$SBARLUA_TMP"
     CPATH=/opt/homebrew/opt/readline/include LIBRARY_PATH=/opt/homebrew/opt/readline/lib make install
     rm -rf "$SBARLUA_TMP"
