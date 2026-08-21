@@ -195,8 +195,10 @@ elif _nix_artifacts_exist; then
     echo
     die "Partial Nix install detected but /nix/nix-installer is missing.\n\
    Manual cleanup required before retrying:\n\n\
-   1. Remove the Nix Store APFS volume:\n\
-      ${BLU}sudo diskutil apfs deleteVolume /nix${RST}\n\
+   1. Find and remove the orphaned Nix Store APFS volume — 'deleteVolume /nix'\n\
+      won't work here since /nix likely never mounted successfully:\n\
+      ${BLU}diskutil apfs list | grep -i 'nix store'   # note its diskXsY identifier${RST}\n\
+      ${BLU}sudo diskutil apfs deleteVolume <diskXsY>${RST}\n\
    2. Remove the /etc/fstab entry for Nix:\n\
       ${BLU}sudo vifs   # delete the line containing 'nix'${RST}\n\
    3. Remove the synthetic.conf entry:\n\
