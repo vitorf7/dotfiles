@@ -99,6 +99,9 @@ alias rest="timer 30m && terminal-notifier -message 'Pomodoro'\
 # cat
 alias cat="bat"
 
+# Nix
+alias nix-search="nh search"
+
 # Ngrok
 alias ngrok="ngrok --authtoken=$NGROK_AUTHTOKEN"
 
@@ -272,10 +275,18 @@ function nrs
 
     if test (uname) = Darwin
         echo "Rebuilding nix-darwin flake: $flake"
-        sudo darwin-rebuild switch --flake ".#$flake"
+        if command -q nh
+            nh darwin switch . -H $flake
+        else
+            sudo darwin-rebuild switch --flake ".#$flake"
+        end
     else
         echo "Rebuilding NixOS flake: $flake"
-        sudo nixos-rebuild switch --flake ".#$flake"
+        if command -q nh
+            nh os switch . -H $flake
+        else
+            sudo nixos-rebuild switch --flake ".#$flake"
+        end
     end
 
     builtin cd $saved_dir
@@ -316,7 +327,10 @@ function hm
     # and both write to the same ~/.local/state/nix/profiles/home-manager
     # generation lineage — so this never competes with nrs, it just gives a
     # fast home-manager-only apply without a full system rebuild.
-    if not command -q home-manager
+    if command -q nh
+        echo "Switching home-manager flake: $flake"
+        nh home switch . -c $flake
+    else if not command -q home-manager
         echo "home-manager CLI not found — bootstrapping via nix run…"
         nix run github:nix-community/home-manager/master -- switch -b hm-bak --flake ".#$flake"
     else

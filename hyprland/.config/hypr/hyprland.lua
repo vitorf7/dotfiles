@@ -30,6 +30,19 @@ if g then
 	loadfile(caelestiaKeybinds)()
 end
 
+-- DankMaterialShell config (only loaded if dank_material_shell.enable = true on this host)
+local dmsConfig = os.getenv("HOME") .. "/.config/hypr-dank-material-shell/keybinds.lua"
+local h = io.open(dmsConfig, "r")
+if h then
+	h:close()
+	-- DMS-managed Hyprland colors, layout, and outputs
+	require("dms.colors")
+	require("dms.layout")
+	require("dms.outputs")
+	-- DMS keybinds and rules
+	loadfile(dmsConfig)()
+end
+
 -- Ambxst
 -- loadfile(os.getenv("HOME") .. "/.local/share/ambxst/hyprland.lua")()
 

@@ -17,6 +17,7 @@ let
       desktop.ambxst.enable = lib.mkEnableOption "Ambxst Quickshell shell";
       desktop.tide_island.enable = lib.mkEnableOption "Tide Island Dynamic Island for Hyprland (Quickshell-based)";
       desktop.caelestia_shell.enable = lib.mkEnableOption "Caelestia Shell Quickshell Config";
+      desktop.dank_material_shell.enable = lib.mkEnableOption "DankMaterialShell (DMS)";
       desktop.flatpak.enable = lib.mkEnableOption "Flatpak support with declarative package management";
       desktop.gaming.enable = lib.mkEnableOption "Gaming (Steam, Lutris, emulators)";
       desktop.winboat.enable = lib.mkEnableOption "WinBoat — run Windows applications on Linux via Docker + KVM + RemoteApp";

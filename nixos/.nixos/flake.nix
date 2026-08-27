@@ -31,6 +31,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    dank-material-shell = {
+      url = "github:AvengeMedia/DankMaterialShell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     hyprmod = {
       url = "github:vitorf7/hyprmod/nix-flake";
       inputs.nixpkgs.follows = "nixpkgs";

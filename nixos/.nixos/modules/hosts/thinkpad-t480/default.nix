@@ -12,7 +12,7 @@ let
       browsers media communication ai gaming
       ghostty kitty alacritty vicinae
       hyprland theming quickshell qs-brain-shell ambxst
-      tide-island caelestia-shell
+      tide-island caelestia-shell dank-material-shell
       kubernetes docker
     ];
     home.username = username;
@@ -45,7 +45,8 @@ in
         vitorf7.desktop.qs_brain_shell.enable = false;
         vitorf7.desktop.ambxst.enable = false;
         vitorf7.desktop.tide_island.enable = false;
-        vitorf7.desktop.caelestia_shell.enable = true;
+        vitorf7.desktop.caelestia_shell.enable = false;
+        vitorf7.desktop.dank_material_shell.enable = true;
         vitorf7.desktop.flatpak.enable = true;
         vitorf7.desktop.gaming.enable = true;
         vitorf7.desktop.winboat.enable = true;
@@ -82,6 +83,7 @@ in
       self.modules.nixos.quickshell
       self.modules.nixos.qs-brain-shell
       self.modules.nixos.ambxst
+      self.modules.nixos.dank-material-shell
       self.modules.nixos.secrets
       self.modules.nixos.flatpak
       self.modules.nixos.docker

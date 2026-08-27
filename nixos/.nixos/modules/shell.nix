@@ -20,6 +20,8 @@
         fastfetch
         ripgrep
         fd
+        # nh is needed for the `nrs` and `hm` fish aliases on both Linux and macOS.
+        nh
       ] ++ lib.optionals isLinux [
         # Wayland colour-generation + wallpaper (not needed without Hyprland on darwin)
         matugen
@@ -38,11 +40,11 @@
         "fish/config.fish".source          = link "${dot}/fish/.config/fish/config.fish";
         "fish/aliases.fish".source         = link "${dot}/fish/.config/fish/aliases.fish";
       "fish/functions/sudo.fish".text = ''
-        function sudo --wraps /usr/bin/sudo --description 'sudo with reattach-to-user-namespace'
+        function sudo --wraps sudo --description 'sudo with reattach-to-user-namespace'
           if command -q reattach-to-user-namespace
-            reattach-to-user-namespace /usr/bin/sudo $argv
+            reattach-to-user-namespace (command -s sudo) $argv
           else
-            /usr/bin/sudo $argv
+            command sudo $argv
           end
         end
       '';
@@ -59,5 +61,12 @@
       };
 
       home.file.".tmux.conf".source = link "${dot}/tmux/.tmux.conf";
+
+      # NH_FLAKE lets the `nh` helper default to this flake for `nh home`, `nh os`,
+      # and `nh darwin` commands. It is set here for both Linux and macOS so the
+      # `nrs` and `hm` fish aliases work the same way on both platforms.
+      home.sessionVariables = {
+        NH_FLAKE = "${config.home.homeDirectory}/dotfiles/nixos/.nixos";
+      };
     };
 }

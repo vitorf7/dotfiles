@@ -1,6 +1,6 @@
 { ... }:
 {
-  flake.modules.nixos.nix-base = { ... }: {
+  flake.modules.nixos.nix-base = { config, ... }: {
     programs.nix-ld.enable = true;
 
     nixpkgs.config.allowUnfree = true;
@@ -16,6 +16,16 @@
     ];
 
     nix.settings.experimental-features = [ "nix-command" "flakes" ];
+    nix.settings.auto-optimise-store = true;
+
+    programs.nh = {
+      enable = true;
+      flake = "/home/${config.vitorf7.username}/dotfiles/nixos/.nixos";
+      clean = {
+        enable = true;
+        extraArgs = "--keep-since 2w --keep 5";
+      };
+    };
 
     programs.gpu-screen-recorder.enable = true;
   };

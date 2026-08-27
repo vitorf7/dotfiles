@@ -111,6 +111,44 @@
         "type": "github"
       }
     },
+    "dank-material-shell": {
+      "inputs": {
+        "dank-qml-common": "dank-qml-common",
+        "flake-compat": "flake-compat",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1787861996,
+        "narHash": "sha256-m83fEhEJ0SbYmV4vK44Mb9uTk+NEyMNEsGJ9hyrsWUo=",
+        "owner": "AvengeMedia",
+        "repo": "DankMaterialShell",
+        "rev": "030974ce752396dfe2b5e67ab1fc7d3f97a34d6f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "AvengeMedia",
+        "repo": "DankMaterialShell",
+        "type": "github"
+      }
+    },
+    "dank-qml-common": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1787846844,
+        "narHash": "sha256-YyjFo4w1e+w9IWDTLcPQxrb8K/BAfIYHuDTik1nKVvQ=",
+        "owner": "AvengeMedia",
+        "repo": "dank-qml-common",
+        "rev": "440f5158279fa284fef64a40bd47b59a097065b9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "AvengeMedia",
+        "repo": "dank-qml-common",
+        "type": "github"
+      }
+    },
     "fenix": {
       "inputs": {
         "nixpkgs": [
@@ -131,6 +169,22 @@
       "original": {
         "owner": "nix-community",
         "repo": "fenix",
+        "type": "github"
+      }
+    },
+    "flake-compat": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1767039857,
+        "narHash": "sha256-vNpUSpF5Nuw8xvDLj2KCwwksIbjua2LZCqhV1LNRDns=",
+        "owner": "NixOS",
+        "repo": "flake-compat",
+        "rev": "5edf11c44bc78a0d334f6334cdaf7d60d732daab",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "repo": "flake-compat",
         "type": "github"
       }
     },
@@ -498,6 +552,7 @@
         "ambxst": "ambxst",
         "brain-shell": "brain-shell",
         "caelestia-shell": "caelestia-shell",
+        "dank-material-shell": "dank-material-shell",
         "flake-parts": "flake-parts",
         "globalprotect-openconnect": "globalprotect-openconnect",
         "home-manager": "home-manager",
