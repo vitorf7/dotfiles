@@ -37,6 +37,15 @@
       } // {
         "fish/config.fish".source          = link "${dot}/fish/.config/fish/config.fish";
         "fish/aliases.fish".source         = link "${dot}/fish/.config/fish/aliases.fish";
+      "fish/functions/sudo.fish".text = ''
+        function sudo --wraps /usr/bin/sudo --description 'sudo with reattach-to-user-namespace'
+          if command -q reattach-to-user-namespace
+            reattach-to-user-namespace /usr/bin/sudo $argv
+          else
+            /usr/bin/sudo $argv
+          end
+        end
+      '';
         "fish/fish_plugins".source         = link "${dot}/fish/.config/fish/fish_plugins";
         "fish/functions/nvims.fish".source = link "${dot}/fish/.config/fish/functions/nvims.fish";
         "fish/functions/__sops_key_file.fish".source  = link "${dot}/fish/.config/fish/functions/__sops_key_file.fish";

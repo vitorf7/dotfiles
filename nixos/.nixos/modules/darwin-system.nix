@@ -38,6 +38,10 @@
 
     time.timeZone = "Europe/London";
 
-    security.pam.services.sudo_local.touchIdAuth = true;
+    security.pam.services.sudo_local = {
+      enable = true;
+      touchIdAuth = true;
+      reattach = true; # Touch ID sudo in tmux / detached GUI sessions
+    };
   };
 }

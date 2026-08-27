@@ -41,6 +41,15 @@ function docker-fatality() {
     echo '============ FLAWLESS VICTORY ============'
 }
 
+# Reattach sudo to the current GUI session so Touch ID works in Ghostty/tmux on macOS 26
+function sudo() {
+  if command -v reattach-to-user-namespace >/dev/null 2>&1; then
+    reattach-to-user-namespace /usr/bin/sudo "$@"
+  else
+    /usr/bin/sudo "$@"
+  fi
+}
+
 function tmux-named() {
   session_name="$(basename "$PWD" | tr . -)"
 
