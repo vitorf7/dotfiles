@@ -10,14 +10,10 @@
     ];
   };
 
-  flake.modules.homeManager.input = { config, pkgs, lib, ... }:
+  flake.modules.homeManager.input = { config, pkgs, lib, ... }: {
     home.packages = lib.optionals pkgs.stdenv.isLinux [ pkgs.openlogi ];
-
-    let
-      isDarwin = pkgs.stdenv.isDarwin;
-      link = config.lib.file.mkOutOfStoreSymlink;
-    in
-    lib.mkIf isDarwin {
-      xdg.configFile."karabiner".source = link "${config.home.homeDirectory}/dotfiles/karabiner/.config/karabiner";
+    xdg.configFile = lib.mkIf pkgs.stdenv.isDarwin {
+      "karabiner".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/karabiner/.config/karabiner";
     };
+  };
 }
