@@ -274,18 +274,19 @@ function nrs
     builtin cd $flake_dir
 
     if test (uname) = Darwin
+        # nh darwin switch is unreliable with Touch ID sudo on this machine
+        # (nh #687 — its "set profile" step drives sudo through a capture()
+        # call that isn't suited to interactive prompts, killing it with
+        # SIGKILL). darwin-rebuild's own sudo handling doesn't have this
+        # problem, so always use it directly here.
         echo "Rebuilding nix-darwin flake: $flake"
-        if command -q nh
-            nh darwin switch . -H $flake
-        else
-            sudo darwin-rebuild switch --flake ".#$flake"
-        end
+        sudo darwin-rebuild switch --flake ".#$flake" --show-trace
     else
         echo "Rebuilding NixOS flake: $flake"
         if command -q nh
-            nh os switch . -H $flake
+            nh os switch . -H $flake --show-trace
         else
-            sudo nixos-rebuild switch --flake ".#$flake"
+            sudo nixos-rebuild switch --flake ".#$flake" --show-trace
         end
     end
 
@@ -329,13 +330,13 @@ function hm
     # fast home-manager-only apply without a full system rebuild.
     if command -q nh
         echo "Switching home-manager flake: $flake"
-        nh home switch . -c $flake
+        nh home switch . -c $flake --show-trace
     else if not command -q home-manager
         echo "home-manager CLI not found — bootstrapping via nix run…"
-        nix run github:nix-community/home-manager/master -- switch -b hm-bak --flake ".#$flake"
+        nix run github:nix-community/home-manager/master -- switch -b hm-bak --flake ".#$flake" --show-trace
     else
         echo "Switching home-manager flake: $flake"
-        home-manager switch -b hm-bak --flake ".#$flake"
+        home-manager switch -b hm-bak --flake ".#$flake" --show-trace
     end
 
     builtin cd $saved_dir

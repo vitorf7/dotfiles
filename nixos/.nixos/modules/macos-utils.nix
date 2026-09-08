@@ -10,7 +10,6 @@
         "desktoppr"
         "keepingyouawake"
         "meetingbar"
-        "tomatobar"
         "utm"
         "logos"
         "obsidian"

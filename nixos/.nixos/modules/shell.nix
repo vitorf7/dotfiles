@@ -65,8 +65,11 @@
       # NH_FLAKE lets the `nh` helper default to this flake for `nh home`, `nh os`,
       # and `nh darwin` commands. It is set here for both Linux and macOS so the
       # `nrs` and `hm` fish aliases work the same way on both platforms.
+      # NH_SHOW_ACTIVATION_LOGS restores the activation-script output (e.g. the
+      # Homebrew update/upgrade log) that `nh` hides by default since 4.3.0.
       home.sessionVariables = {
         NH_FLAKE = "${config.home.homeDirectory}/dotfiles/nixos/.nixos";
+        NH_SHOW_ACTIVATION_LOGS = "1";
       };
     };
 }
