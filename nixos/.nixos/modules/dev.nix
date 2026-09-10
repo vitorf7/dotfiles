@@ -35,6 +35,7 @@
         evans
         grpcui
 
+        self.packages.${pkgs.stdenv.hostPlatform.system}.apix
         self.packages.${pkgs.stdenv.hostPlatform.system}.strongbox
       ] ++ lib.optionals isDarwin [
         cmake ninja pkg-config pre-commit stylua shellcheck semgrep richgo

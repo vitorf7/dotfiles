@@ -23,6 +23,7 @@
     in
     {
       packages = linuxOnlyPackages // {
+        apix        = inputs.apix.packages.${system}.default;
         go-latest   = pkgs.callPackage ../pkgs/go-latest.nix { };
         strongbox   = pkgs.callPackage ../pkgs/strongbox.nix { };
         wiresteward = pkgs.callPackage ../pkgs/wiresteward.nix { };
