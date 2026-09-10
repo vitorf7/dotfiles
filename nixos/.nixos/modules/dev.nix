@@ -16,6 +16,8 @@
       "cocoapods"
       "composer"
       "openjdk"
+      "evans"
+      "grpcui"
     ];
   };
 
@@ -28,8 +30,10 @@
         nodejs
         yarn
         python3
-        go
+        go_1_26
         rustup
+        evans
+        grpcui
 
         self.packages.${pkgs.stdenv.hostPlatform.system}.strongbox
       ] ++ lib.optionals isDarwin [
