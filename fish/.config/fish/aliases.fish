@@ -341,3 +341,74 @@ function hm
 
     builtin cd $saved_dir
 end
+
+function nix-update-derivations
+    # Always the real dotfiles checkout, not ~/.nixos (the stow symlink) —
+    # nix-update shells out to `git diff -- <path>`, and git's repo-
+    # containment check doesn't follow symlinks, so a path reached via
+    # ~/.nixos gets rejected as outside the repo it discovers from there.
+    set -l flake_dir $HOME/dotfiles/nixos/.nixos
+
+    set -l updater nix-update
+    if not command -q nix-update
+        set updater nix run nixpkgs#nix-update --
+    end
+
+    set -l saved_dir $PWD
+    builtin cd $flake_dir
+
+    # tide-island and mouseless lose their `version`/`src` source position
+    # under nix-update's --flake mode (stdenv.mkDerivation / wrapAppImage
+    # don't preserve it), so they go through the non-flake shim instead —
+    # see pkgs/nix-update-shim.nix.
+    set -l shim $flake_dir/pkgs/nix-update-shim.nix
+
+    set -l failed
+    set -l skipped
+
+    for pkg in strongbox wiresteward
+        echo "==> $pkg"
+        if not $updater $pkg --flake
+            set -a failed $pkg
+        end
+    end
+
+    echo "==> tide-island"
+    if not $updater tide-island -f $shim --override-filename $flake_dir/pkgs/tide-island.nix
+        set -a failed tide-island
+    end
+
+    # mouseless has no darwin sources at all (only x86_64-linux/aarch64-linux),
+    # and updating it means actually fetching+hashing a linux-only AppImage —
+    # darwin has no builder for that. Run this alias from a Linux host to
+    # update it.
+    if test (uname) = Darwin
+        echo "==> mouseless (skipped — run this from a Linux host)"
+        set -a skipped mouseless
+    else
+        echo "==> mouseless"
+        if not $updater mouseless -f $shim --override-filename $flake_dir/pkgs/mouseless.nix
+            set -a failed mouseless
+        end
+    end
+
+    builtin cd $saved_dir
+
+    if test (count $skipped) -gt 0
+        echo ""
+        echo "Skipped (needs a Linux host): $skipped"
+    end
+
+    if test (count $failed) -gt 0
+        echo ""
+        echo "Needs a manual look (see nixos/AGENTS.md): $failed"
+        return 1
+    end
+
+    echo ""
+    echo "Done — review with: git -C $flake_dir diff pkgs/, then rebuild with nrs"
+end
+
+function nix-update-golatest
+    $HOME/dotfiles/scripts/update-go.sh
+end
