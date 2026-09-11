@@ -1,6 +1,5 @@
-{ self, ... }:
-{
-  flake.modules.darwin.dev = { ... }: {
+{self, ...}: {
+  flake.modules.darwin.dev = {...}: {
     homebrew.taps = [
       "hashicorp/tap"
       "snyk/tap"
@@ -21,12 +20,18 @@
     ];
   };
 
-  flake.modules.homeManager.dev = { pkgs, lib, ... }:
-    let
-      isDarwin = pkgs.stdenv.isDarwin;
-    in
-    {
-      home.packages = with pkgs; [
+  flake.modules.homeManager.dev = {
+    config,
+    pkgs,
+    lib,
+    ...
+  }: let
+    isDarwin = pkgs.stdenv.isDarwin;
+    dot = "${config.home.homeDirectory}/dotfiles";
+    link = config.lib.file.mkOutOfStoreSymlink;
+  in {
+    home.packages = with pkgs;
+      [
         nodejs
         yarn
         python3
@@ -37,9 +42,30 @@
 
         self.packages.${pkgs.stdenv.hostPlatform.system}.apix
         self.packages.${pkgs.stdenv.hostPlatform.system}.strongbox
-      ] ++ lib.optionals isDarwin [
-        cmake ninja pkg-config pre-commit stylua shellcheck semgrep richgo
-        luarocks watchman wakatime-cli tectonic uv pipenv
+      ]
+      ++ lib.optionals isDarwin [
+        cmake
+        ninja
+        pkg-config
+        pre-commit
+        stylua
+        shellcheck
+        semgrep
+        richgo
+        luarocks
+        watchman
+        wakatime-cli
+        tectonic
+        uv
+        pipenv
       ];
-    };
+
+    # `cargo install --git` (e.g. Mason installing nil, which isn't on
+    # crates.io) uses cargo's bundled libgit2 by default, which can't
+    # complete SSH-agent auth against the 1Password SSH agent even though
+    # the git.nix `url."git@github.com:".insteadOf` rewrite + real `git`
+    # CLI work fine for normal repo use. Forcing cargo to shell out to the
+    # real `git` binary sidesteps that libgit2 limitation entirely.
+    home.file.".cargo/config.toml".source = link "${dot}/cargo/.cargo/config.toml";
+  };
 }

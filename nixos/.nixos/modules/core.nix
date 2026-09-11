@@ -8,7 +8,6 @@
     in
     {
       home.packages = with pkgs; [
-        gcc
         gnumake
         unzip
         curl
@@ -19,6 +18,7 @@
         fx
         jq
       ] ++ lib.optionals isLinux [
+        gcc
         killall
         nix-ld
         os-prober
