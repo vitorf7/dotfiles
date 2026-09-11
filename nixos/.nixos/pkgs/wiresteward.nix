@@ -3,7 +3,6 @@
   fetchFromGitHub,
   lib,
 }:
-
 buildGoModule rec {
   pname = "wiresteward";
   version = "0.3.5";
@@ -27,6 +26,6 @@ buildGoModule rec {
     license = lib.licenses.mit;
     mainProgram = "wiresteward";
     platforms = lib.platforms.all;
-    sourceProvenance = with lib.sourceTypes; [ fromSource ];
+    sourceProvenance = with lib.sourceTypes; [fromSource];
   };
 }

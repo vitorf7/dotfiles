@@ -1,6 +1,5 @@
-{ ... }:
-{
-  flake.modules.darwin.media = { ... }: {
+{...}: {
+  flake.modules.darwin.media = {...}: {
     homebrew.casks = [
       "spotify"
       "vlc"
@@ -12,22 +11,29 @@
     ];
   };
 
-  flake.modules.homeManager.media = { pkgs, lib, osConfig, ... }:
-    let
-      isLinux  = pkgs.stdenv.isLinux;
-      isDarwin = pkgs.stdenv.isDarwin;
-    in
+  flake.modules.homeManager.media = {
+    pkgs,
+    lib,
+    osConfig,
+    ...
+  }: let
+    isLinux = pkgs.stdenv.isLinux;
+    isDarwin = pkgs.stdenv.isDarwin;
+  in
     lib.mkIf (osConfig.vitorf7.desktop.enable or (osConfig.vitorf7.darwin.enable or false)) {
       home.packages = with pkgs;
         [
           imagemagick
           ffmpegthumbnailer
-        ] ++ lib.optionals isLinux [
+        ]
+        ++ lib.optionals isLinux [
           ffmpeg
           vlc
-        ] ++ lib.optionals (isLinux && pkgs.stdenv.isx86_64) [
+        ]
+        ++ lib.optionals (isLinux && pkgs.stdenv.isx86_64) [
           spotify
-        ] ++ lib.optionals isDarwin [
+        ]
+        ++ lib.optionals isDarwin [
           nowplaying-cli
           switchaudio-osx
         ];

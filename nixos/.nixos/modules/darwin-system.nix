@@ -1,8 +1,12 @@
-{ ... }:
-{
-  flake.modules.darwin.system = { config, pkgs, lib, ... }:
-    let username = config.vitorf7.username; in
-    {
+{...}: {
+  flake.modules.darwin.system = {
+    config,
+    pkgs,
+    lib,
+    ...
+  }: let
+    username = config.vitorf7.username;
+  in {
     # nix-darwin manages /etc/nix/nix.conf and the nix-daemon launchd job directly
     # (nix.enable defaults to true) — safe because we install plain Nix via
     # NixOS/nix-installer, not Determinate Nix, so nothing else owns nix.conf.
@@ -12,7 +16,7 @@
     # user's --extra-experimental-features override is silently ignored by the
     # nix-daemon, so without this only root/sudo invocations would have nix-command
     # and flakes available.
-    nix.settings.experimental-features = [ "nix-command" "flakes" ];
+    nix.settings.experimental-features = ["nix-command" "flakes"];
 
     nixpkgs.config.allowUnfree = true;
 
@@ -21,7 +25,7 @@
     system.primaryUser = username;
 
     programs.fish.enable = true;
-    environment.shells = [ pkgs.fish pkgs.zsh pkgs.bash ];
+    environment.shells = [pkgs.fish pkgs.zsh pkgs.bash];
 
     system.activationScripts.postActivation.text = ''
       fish="/run/current-system/sw/bin/fish"

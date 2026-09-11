@@ -1,20 +1,25 @@
-{ inputs, ... }:
-let
+{inputs, ...}: let
   # DMS 1.6-beta currently ships symlinks inside share/quickshell/dms/ that
   # point to files not copied into the output, breaking the noBrokenSymlinks
   # fixup hook. Override the package to remove them before the hook runs.
   dmsShell = pkgs:
     inputs.dank-material-shell.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs
-      (old: {
-        preFixup = (old.preFixup or "") + ''
+    (old: {
+      preFixup =
+        (old.preFixup or "")
+        + ''
           rm -f $out/share/quickshell/dms/AGENTS.md \
                 $out/share/quickshell/dms/CLAUDE.md
         '';
-      });
-in
-{
-  flake.modules.nixos.dank-material-shell = { config, pkgs, lib, ... }: {
-    imports = [ inputs.dank-material-shell.nixosModules.dank-material-shell ];
+    });
+in {
+  flake.modules.nixos.dank-material-shell = {
+    config,
+    pkgs,
+    lib,
+    ...
+  }: {
+    imports = [inputs.dank-material-shell.nixosModules.dank-material-shell];
 
     config = lib.mkIf config.vitorf7.desktop.dank_material_shell.enable {
       programs.dank-material-shell = {
@@ -25,8 +30,14 @@ in
     };
   };
 
-  flake.modules.homeManager.dank-material-shell = { config, pkgs, lib, osConfig, ... }: {
-    imports = [ inputs.dank-material-shell.homeModules.dank-material-shell ];
+  flake.modules.homeManager.dank-material-shell = {
+    config,
+    pkgs,
+    lib,
+    osConfig,
+    ...
+  }: {
+    imports = [inputs.dank-material-shell.homeModules.dank-material-shell];
 
     config = lib.mkIf osConfig.vitorf7.desktop.dank_material_shell.enable {
       assertions = [
@@ -53,20 +64,19 @@ in
 
       xdg.configFile."hypr-dank-material-shell/keybinds.lua".source =
         config.lib.file.mkOutOfStoreSymlink
-          "${config.home.homeDirectory}/dotfiles/hyprland/.config/hypr/modules/dank-material-shell-keybinds.lua";
+        "${config.home.homeDirectory}/dotfiles/hyprland/.config/hypr/modules/dank-material-shell-keybinds.lua";
 
       # DMS writes ~/.config/hypr/dms/{colors,layout,outputs}.lua at runtime.
       # Ensure empty placeholders exist so the Hyprland Lua require() at startup
       # does not fail before DMS has had a chance to populate them.
-      home.activation.dankMaterialShellHyprlandConfig =
-        lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-          $DRY_RUN_CMD mkdir -p $HOME/.config/hypr/dms
-          for f in colors.lua layout.lua outputs.lua; do
-            if [ ! -e "$HOME/.config/hypr/dms/$f" ]; then
-              $DRY_RUN_CMD touch "$HOME/.config/hypr/dms/$f"
-            fi
-          done
-        '';
+      home.activation.dankMaterialShellHyprlandConfig = lib.hm.dag.entryAfter ["writeBoundary"] ''
+        $DRY_RUN_CMD mkdir -p $HOME/.config/hypr/dms
+        for f in colors.lua layout.lua outputs.lua; do
+          if [ ! -e "$HOME/.config/hypr/dms/$f" ]; then
+            $DRY_RUN_CMD touch "$HOME/.config/hypr/dms/$f"
+          fi
+        done
+      '';
     };
   };
 }

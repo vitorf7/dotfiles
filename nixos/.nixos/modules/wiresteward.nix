@@ -1,14 +1,17 @@
-{ ... }:
-{
-  flake.modules.nixos.wiresteward = { config, lib, pkgs, ... }:
-    let
-      wiresteward = pkgs.callPackage ../pkgs/wiresteward.nix { };
-      secretsFile = import ../secrets/wiresteward-secrets.nix;
-    in
+{...}: {
+  flake.modules.nixos.wiresteward = {
+    config,
+    lib,
+    pkgs,
+    ...
+  }: let
+    wiresteward = pkgs.callPackage ../pkgs/wiresteward.nix {};
+    secretsFile = import ../secrets/wiresteward-secrets.nix;
+  in
     lib.mkIf config.vitorf7.networking.wiresteward.enable {
-      environment.systemPackages = [ pkgs.wireguard-tools ];
+      environment.systemPackages = [pkgs.wireguard-tools];
 
-      boot.kernelModules = [ "wireguard" ];
+      boot.kernelModules = ["wireguard"];
 
       sops.secrets."wiresteward-config" = {
         sopsFile = ../sops/nixos/wiresteward-config.json;
@@ -25,9 +28,9 @@
 
       systemd.services.wiresteward-agent = {
         description = "Wiresteward Agent";
-        wantedBy = [ "multi-user.target" ];
-        after = [ "network-online.target" ];
-        wants = [ "network-online.target" ];
+        wantedBy = ["multi-user.target"];
+        after = ["network-online.target"];
+        wants = ["network-online.target"];
         serviceConfig = {
           ExecStartPre = pkgs.writeShellScript "wiresteward-cleanup" ''
             for iface in $(${pkgs.iproute2}/bin/ip -o link show | ${pkgs.gnugrep}/bin/grep -oP '(?<=\d: )wg-[^:@]+'); do

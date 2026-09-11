@@ -1,7 +1,11 @@
-{ ... }:
-{
-  flake.modules.darwin.homebrew = { config, lib, ... }:
-    let cfg = config.vitorf7.darwin; in
+{...}: {
+  flake.modules.darwin.homebrew = {
+    config,
+    lib,
+    ...
+  }: let
+    cfg = config.vitorf7.darwin;
+  in
     lib.mkIf cfg.homebrew.enable {
       homebrew = {
         enable = true;

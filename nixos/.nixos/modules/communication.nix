@@ -1,6 +1,5 @@
-{ ... }:
-{
-  flake.modules.darwin.communication = { ... }: {
+{...}: {
+  flake.modules.darwin.communication = {...}: {
     homebrew.casks = [
       "slack"
       "whatsapp"
@@ -9,7 +8,11 @@
     ];
   };
 
-  flake.modules.homeManager.communication = { pkgs, lib, ... }: {
+  flake.modules.homeManager.communication = {
+    pkgs,
+    lib,
+    ...
+  }: {
     home.packages = lib.optionals pkgs.stdenv.isLinux [
       pkgs.ferdium
     ];

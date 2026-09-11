@@ -1,7 +1,10 @@
-{ inputs, ... }:
-{
-  flake.modules.nixos.fingerprint = { config, lib, ... }: {
-    imports = [ inputs.nixos-06cb-009a-fingerprint-sensor.nixosModules."06cb-009a-fingerprint-sensor" ];
+{inputs, ...}: {
+  flake.modules.nixos.fingerprint = {
+    config,
+    lib,
+    ...
+  }: {
+    imports = [inputs.nixos-06cb-009a-fingerprint-sensor.nixosModules."06cb-009a-fingerprint-sensor"];
 
     config = lib.mkIf config.vitorf7.hardware.fingerprint.enable {
       services."06cb-009a-fingerprint-sensor" = {

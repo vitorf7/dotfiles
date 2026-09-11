@@ -1,6 +1,5 @@
-{ ... }:
-{
-  flake.modules.darwin.ides = { ... }: {
+{...}: {
+  flake.modules.darwin.ides = {...}: {
     homebrew.casks = [
       "cursor"
       "visual-studio-code@insiders"

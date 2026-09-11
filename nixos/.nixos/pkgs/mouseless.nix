@@ -1,6 +1,9 @@
-{ lib, appimageTools, fetchurl, stdenv }:
-
-let
+{
+  lib,
+  appimageTools,
+  fetchurl,
+  stdenv,
+}: let
   # Per-platform release asset, keyed by version so a bump only needs the
   # version + hashes updated here — not a sibling attribute of the final
   # derivation, since nixpkgs would try to stringify it as an env var.
@@ -15,16 +18,16 @@ let
     };
   };
 in
-appimageTools.wrapAppImage rec {
-  pname = "mouseless";
-  version = "1.0.0-preview.3";
-  src = fetchurl (sourcesFor version).${stdenv.system};
+  appimageTools.wrapAppImage rec {
+    pname = "mouseless";
+    version = "1.0.0-preview.3";
+    src = fetchurl (sourcesFor version).${stdenv.system};
 
-  meta = with lib; {
-    description = "Keyboard-driven launcher and window manager companion (mouseless.click)";
-    homepage = "https://mouseless.click";
-    license = licenses.unfree;
-    platforms = [ "x86_64-linux" "aarch64-linux" ];
-    mainProgram = "mouseless";
-  };
-}
+    meta = with lib; {
+      description = "Keyboard-driven launcher and window manager companion (mouseless.click)";
+      homepage = "https://mouseless.click";
+      license = licenses.unfree;
+      platforms = ["x86_64-linux" "aarch64-linux"];
+      mainProgram = "mouseless";
+    };
+  }

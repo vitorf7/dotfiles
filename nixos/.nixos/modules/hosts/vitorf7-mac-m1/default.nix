@@ -1,29 +1,48 @@
-{ inputs, self, ... }:
-let
+{
+  inputs,
+  self,
+  ...
+}: let
   username = "vitorf7";
   # Single source of truth for the user's home-manager config, referenced by
   # both the darwin-integrated activation (nrs) and the standalone
   # homeConfigurations output (hm / home-manager CLI) below — so the two
   # entry points can never drift apart while sharing the same generation
   # profile.
-  homeManagerUserConfig = { lib, ... }: {
+  homeManagerUserConfig = {lib, ...}: {
     imports = with self.modules.homeManager; [
-      core shell editor git secrets dev
-      ghostty kitty alacritty vicinae
-      darwin-packages darwin-symlinks
-      kubernetes docker aerospace sketchybar
-      browsers media communication input onepassword ai
+      core
+      shell
+      editor
+      git
+      secrets
+      dev
+      ghostty
+      kitty
+      alacritty
+      vicinae
+      darwin-packages
+      darwin-symlinks
+      kubernetes
+      docker
+      aerospace
+      sketchybar
+      browsers
+      media
+      communication
+      input
+      onepassword
+      ai
     ];
     home.username = username;
     home.homeDirectory = lib.mkForce "/Users/${username}";
     home.stateVersion = "26.05";
     programs.home-manager.enable = true;
   };
-in
-{
+in {
   flake.darwinConfigurations.vitorf7-mac-m1 = inputs.nix-darwin.lib.darwinSystem {
     modules = [
-      { nixpkgs.hostPlatform = "aarch64-darwin"; }
+      {nixpkgs.hostPlatform = "aarch64-darwin";}
       self.modules.darwin.options
       {
         vitorf7.username = username;
@@ -37,7 +56,7 @@ in
         vitorf7.networking.nordvpn.enable = true;
         vitorf7.git.defaultProfile = "personal";
         vitorf7.git.personal.enable = true;
-        vitorf7.git.personal.directories = [ "~/dotfiles/" "~/code/personal/" "~/code/nvim-kick" "~/.config/nvim" ];
+        vitorf7.git.personal.directories = ["~/dotfiles/" "~/code/personal/" "~/code/nvim-kick" "~/.config/nvim"];
       }
       # Phase 4 darwin system modules
       self.modules.darwin.system
@@ -85,24 +104,23 @@ in
         home-manager.useGlobalPkgs = true;
         home-manager.useUserPackages = true;
         home-manager.backupFileExtension = "hm-bak";
-        home-manager.sharedModules = [ inputs.sops-nix.homeManagerModules.sops ];
+        home-manager.sharedModules = [inputs.sops-nix.homeManagerModules.sops];
         home-manager.users.${username} = homeManagerUserConfig;
       }
     ];
   };
 
-  flake.homeConfigurations.vitorf7-mac-m1 =
-    inputs.home-manager.lib.homeManagerConfiguration {
-      pkgs = import inputs.nixpkgs {
-        system = "aarch64-darwin";
-        config.allowUnfree = true;
-      };
-      extraSpecialArgs = {
-        osConfig = self.darwinConfigurations.vitorf7-mac-m1.config;
-      };
-      modules = [
-        inputs.sops-nix.homeManagerModules.sops
-        homeManagerUserConfig
-      ];
+  flake.homeConfigurations.vitorf7-mac-m1 = inputs.home-manager.lib.homeManagerConfiguration {
+    pkgs = import inputs.nixpkgs {
+      system = "aarch64-darwin";
+      config.allowUnfree = true;
     };
+    extraSpecialArgs = {
+      osConfig = self.darwinConfigurations.vitorf7-mac-m1.config;
+    };
+    modules = [
+      inputs.sops-nix.homeManagerModules.sops
+      homeManagerUserConfig
+    ];
+  };
 }

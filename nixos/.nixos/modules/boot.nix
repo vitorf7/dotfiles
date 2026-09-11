@@ -1,6 +1,5 @@
-{ ... }:
-{
-  flake.modules.nixos.boot = { ... }: {
+{...}: {
+  flake.modules.nixos.boot = {...}: {
     boot.loader.grub.enable = true;
     boot.loader.grub.efiSupport = true;
     boot.loader.grub.device = "nodev";

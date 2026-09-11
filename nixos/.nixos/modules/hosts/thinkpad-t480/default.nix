@@ -1,5 +1,8 @@
-{ inputs, self, ... }:
-let
+{
+  inputs,
+  self,
+  ...
+}: let
   username = "vitorf7";
   # Single source of truth for the user's home-manager config, referenced by
   # both the nixos-integrated activation (nrs) and the standalone
@@ -8,23 +11,43 @@ let
   # profile.
   homeManagerUserConfig = {
     imports = with self.modules.homeManager; [
-      core shell editor git secrets dev desktop onepassword
-      browsers media communication ai gaming
-      ghostty kitty alacritty vicinae
-      hyprland theming quickshell qs-brain-shell ambxst
-      tide-island caelestia-shell dank-material-shell
-      kubernetes docker
+      core
+      shell
+      editor
+      git
+      secrets
+      dev
+      desktop
+      onepassword
+      browsers
+      media
+      communication
+      ai
+      gaming
+      ghostty
+      kitty
+      alacritty
+      vicinae
+      hyprland
+      theming
+      quickshell
+      qs-brain-shell
+      ambxst
+      tide-island
+      caelestia-shell
+      dank-material-shell
+      kubernetes
+      docker
     ];
     home.username = username;
     home.homeDirectory = "/home/${username}";
     home.stateVersion = "26.05";
     programs.home-manager.enable = true;
   };
-in
-{
+in {
   flake.nixosConfigurations.thinkpad-t480 = inputs.nixpkgs.lib.nixosSystem {
     modules = [
-      { nixpkgs.hostPlatform = "x86_64-linux"; }
+      {nixpkgs.hostPlatform = "x86_64-linux";}
       self.modules.nixos.options
       self.modules.nixos.nix-base
       ./_hardware-configuration.nix
@@ -33,7 +56,7 @@ in
         vitorf7.username = username;
         networking.hostName = "thinkpad-t480";
         # NVIDIA DRM params: modesetting and fbdev handoff on PRIME systems.
-        boot.kernelParams = [ "nvidia-drm.modeset=1" "nvidia-drm.fbdev=1" ];
+        boot.kernelParams = ["nvidia-drm.modeset=1" "nvidia-drm.fbdev=1"];
         # PRIME offload shifts DRM card numbering — pin Hyprland to Intel node.
         environment.sessionVariables.AQ_DRM_DEVICES = "/dev/dri/card1";
       }
@@ -57,9 +80,9 @@ in
         vitorf7.hardware.nvidia.enable = true;
         vitorf7.git.defaultProfile = "personal";
         vitorf7.git.personal.enable = true;
-        vitorf7.git.personal.directories = [ "~/dotfiles/" "~/code/personal/" "~/code/nvim-kick" "~/.config/nvim" ];
+        vitorf7.git.personal.directories = ["~/dotfiles/" "~/code/personal/" "~/code/nvim-kick" "~/.config/nvim"];
         vitorf7.git.work.enable = true;
-        vitorf7.git.work.directories = [ "~/code/uw/" ];
+        vitorf7.git.work.directories = ["~/code/uw/"];
         system.stateVersion = "26.05";
       }
       # NixOS modules (Phase 2)
@@ -94,7 +117,7 @@ in
       # Upstream NixOS modules
       inputs.brain-shell.nixosModules.default
       inputs.ambxst.nixosModules.default
-      ({ lib, ... }: { programs.ambxst.enable = lib.mkOverride 999 false; })
+      ({lib, ...}: {programs.ambxst.enable = lib.mkOverride 999 false;})
       inputs.sops-nix.nixosModules.sops
       # nixos-hardware: throttled, fstrim, TrackPoint, Kaby Lake i915, NVIDIA PRIME/Pascal
       inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t480
@@ -105,24 +128,23 @@ in
       {
         home-manager.useGlobalPkgs = true;
         home-manager.useUserPackages = true;
-        home-manager.sharedModules = [ inputs.sops-nix.homeManagerModules.sops ];
+        home-manager.sharedModules = [inputs.sops-nix.homeManagerModules.sops];
         home-manager.users.${username} = homeManagerUserConfig;
       }
     ];
   };
 
-  flake.homeConfigurations.thinkpad-t480 =
-    inputs.home-manager.lib.homeManagerConfiguration {
-      pkgs = import inputs.nixpkgs {
-        system = "x86_64-linux";
-        config.allowUnfree = true;
-      };
-      extraSpecialArgs = {
-        osConfig = self.nixosConfigurations.thinkpad-t480.config;
-      };
-      modules = [
-        inputs.sops-nix.homeManagerModules.sops
-        homeManagerUserConfig
-      ];
+  flake.homeConfigurations.thinkpad-t480 = inputs.home-manager.lib.homeManagerConfiguration {
+    pkgs = import inputs.nixpkgs {
+      system = "x86_64-linux";
+      config.allowUnfree = true;
     };
+    extraSpecialArgs = {
+      osConfig = self.nixosConfigurations.thinkpad-t480.config;
+    };
+    modules = [
+      inputs.sops-nix.homeManagerModules.sops
+      homeManagerUserConfig
+    ];
+  };
 }

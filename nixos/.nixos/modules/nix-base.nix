@@ -1,6 +1,5 @@
-{ ... }:
-{
-  flake.modules.nixos.nix-base = { config, ... }: {
+{...}: {
+  flake.modules.nixos.nix-base = {config, ...}: {
     programs.nix-ld.enable = true;
 
     nixpkgs.config.allowUnfree = true;
@@ -10,12 +9,12 @@
     nixpkgs.overlays = [
       (final: prev: {
         throttled = prev.throttled.overrideAttrs (old: {
-          pythonPath = old.pythonPath ++ [ prev.python3Packages.dbus-next ];
+          pythonPath = old.pythonPath ++ [prev.python3Packages.dbus-next];
         });
       })
     ];
 
-    nix.settings.experimental-features = [ "nix-command" "flakes" ];
+    nix.settings.experimental-features = ["nix-command" "flakes"];
     nix.settings.auto-optimise-store = true;
 
     programs.nh = {

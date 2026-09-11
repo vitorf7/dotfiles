@@ -1,6 +1,5 @@
-{ ... }:
-let
-  fontPackages = { pkgs, ... }: {
+{...}: let
+  fontPackages = {pkgs, ...}: {
     fonts.packages = with pkgs; [
       nerd-fonts.jetbrains-mono
       nerd-fonts.hack
@@ -11,11 +10,10 @@ let
       noto-fonts-color-emoji
     ];
   };
-in
-{
+in {
   flake.modules.nixos.fonts = fontPackages;
 
-  flake.modules.darwin.fonts = { pkgs, ... }: {
+  flake.modules.darwin.fonts = {pkgs, ...}: {
     fonts.packages = with pkgs; [
       nerd-fonts.jetbrains-mono
       nerd-fonts.hack

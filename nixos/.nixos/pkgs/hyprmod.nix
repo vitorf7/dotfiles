@@ -1,20 +1,19 @@
-{ lib
-, fetchFromGitHub
-, glib
-, gnome-desktop
-, gobject-introspection
-, gtk4
-, libadwaita
-, lua5_4
-, python3Packages
-, wrapGAppsHook4
+{
+  lib,
+  fetchFromGitHub,
+  glib,
+  gnome-desktop,
+  gobject-introspection,
+  gtk4,
+  libadwaita,
+  lua5_4,
+  python3Packages,
+  wrapGAppsHook4,
 }:
-
 # Derivations for the five Python deps that aren't in nixpkgs yet.
 # Track https://github.com/NixOS/nixpkgs/pull/505419 — once merged, replace
 # this file with a simple `pkgs.hyprmod` reference.
 # Last updated for hyprmod v0.4.0.
-
 let
   hyprland-socket = python3Packages.buildPythonPackage {
     pname = "hyprland-socket";
@@ -26,7 +25,7 @@ let
       tag = "v0.12.2";
       hash = "sha256-XPVhHnIwq4Plkuk3uf/IUcg9L0OsZT76cr60x7EG1lc=";
     };
-    build-system = [ python3Packages.hatchling ];
+    build-system = [python3Packages.hatchling];
     doCheck = false;
     meta.description = "Typed Python library for Hyprland IPC via Unix sockets";
   };
@@ -41,7 +40,7 @@ let
       tag = "v0.9.12";
       hash = "sha256-TTh5UnFdRaGvYNlx/qkSWnDEnj101tmi+jDuXU/jCnI=";
     };
-    build-system = [ python3Packages.hatchling ];
+    build-system = [python3Packages.hatchling];
     doCheck = false;
     meta.description = "Round-trip parser and editor for Hyprland configuration files";
   };
@@ -56,7 +55,7 @@ let
       tag = "v0.6.3";
       hash = "sha256-yAhzzv08vK19M0ypOH8LvmXUDFE92LoQi3QW134q1Ao=";
     };
-    build-system = [ python3Packages.hatchling ];
+    build-system = [python3Packages.hatchling];
     doCheck = false;
     meta.description = "Typed Python schema for every Hyprland configuration option";
   };
@@ -71,8 +70,8 @@ let
       tag = "v0.8.0";
       hash = "sha256-a7fEDPPN9XYsrpE99C9c9MZGpqg24ZlY6vvHzgvNtzc=";
     };
-    build-system = [ python3Packages.hatchling ];
-    dependencies = [ hyprland-socket ];
+    build-system = [python3Packages.hatchling];
+    dependencies = [hyprland-socket];
     doCheck = false;
     meta.description = "Monitor management utilities for Hyprland";
   };
@@ -87,74 +86,73 @@ let
       tag = "v0.4.3";
       hash = "sha256-gFmACUjLwkBV0LGdSkoxE8viV1Jr7DDM9obpfPuP+A0=";
     };
-    build-system = [ python3Packages.hatchling ];
-    dependencies = [ hyprland-config hyprland-monitors hyprland-schema hyprland-socket ];
+    build-system = [python3Packages.hatchling];
+    dependencies = [hyprland-config hyprland-monitors hyprland-schema hyprland-socket];
     doCheck = false;
     meta.description = "Live state interface for Hyprland";
   };
 in
+  python3Packages.buildPythonApplication {
+    pname = "hyprmod";
+    version = "0.4.0";
+    pyproject = true;
 
-python3Packages.buildPythonApplication {
-  pname = "hyprmod";
-  version = "0.4.0";
-  pyproject = true;
+    src = fetchFromGitHub {
+      owner = "BlueManCZ";
+      repo = "hyprmod";
+      tag = "v0.4.0";
+      hash = "sha256-MYxYraLMc9QecjKsoVxYO3wkeXDTgLJnBH131VVs0hI=";
+    };
 
-  src = fetchFromGitHub {
-    owner = "BlueManCZ";
-    repo = "hyprmod";
-    tag = "v0.4.0";
-    hash = "sha256-MYxYraLMc9QecjKsoVxYO3wkeXDTgLJnBH131VVs0hI=";
-  };
+    build-system = [python3Packages.hatchling];
 
-  build-system = [ python3Packages.hatchling ];
+    nativeBuildInputs = [
+      glib
+      gobject-introspection
+      wrapGAppsHook4
+    ];
 
-  nativeBuildInputs = [
-    glib
-    gobject-introspection
-    wrapGAppsHook4
-  ];
+    buildInputs = [
+      gnome-desktop
+      gtk4
+      libadwaita
+    ];
 
-  buildInputs = [
-    gnome-desktop
-    gtk4
-    libadwaita
-  ];
+    dependencies = with python3Packages; [
+      hyprland-config
+      hyprland-monitors
+      hyprland-schema
+      hyprland-socket
+      hyprland-state
+      pygobject3
+      pygobject-stubs
+    ];
 
-  dependencies = with python3Packages; [
-    hyprland-config
-    hyprland-monitors
-    hyprland-schema
-    hyprland-socket
-    hyprland-state
-    pygobject3
-    pygobject-stubs
-  ];
+    pythonRelaxDeps = ["pygobject"];
 
-  pythonRelaxDeps = [ "pygobject" ];
+    # Correct wrapper approach for both x86_64 and aarch64
+    dontWrapGApps = true;
+    preFixup = ''
+      makeWrapperArgs+=("''${gappsWrapperArgs[@]}")
+      makeWrapperArgs+=(--prefix PATH : ${lib.makeBinPath [lua5_4]})
+    '';
 
-  # Correct wrapper approach for both x86_64 and aarch64
-  dontWrapGApps = true;
-  preFixup = ''
-    makeWrapperArgs+=("''${gappsWrapperArgs[@]}")
-    makeWrapperArgs+=(--prefix PATH : ${lib.makeBinPath [ lua5_4 ]})
-  '';
+    postInstall = ''
+      install -Dm0644 data/applications/io.github.bluemancz.hyprmod.desktop \
+        -t $out/share/applications
+      install -Dm0644 data/icons/hicolor/scalable/apps/io.github.bluemancz.hyprmod.svg \
+        -t $out/share/icons/hicolor/scalable/apps
+      install -Dm0644 data/metainfo/io.github.bluemancz.hyprmod.metainfo.xml \
+        -t $out/share/metainfo
+    '';
 
-  postInstall = ''
-    install -Dm0644 data/applications/io.github.bluemancz.hyprmod.desktop \
-      -t $out/share/applications
-    install -Dm0644 data/icons/hicolor/scalable/apps/io.github.bluemancz.hyprmod.svg \
-      -t $out/share/icons/hicolor/scalable/apps
-    install -Dm0644 data/metainfo/io.github.bluemancz.hyprmod.metainfo.xml \
-      -t $out/share/metainfo
-  '';
+    doCheck = false;
 
-  doCheck = false;
-
-  meta = with lib; {
-    description = "Native GTK4/libadwaita settings application for Hyprland";
-    homepage = "https://github.com/BlueManCZ/hyprmod";
-    license = licenses.gpl3Plus;
-    platforms = platforms.linux;
-    mainProgram = "hyprmod";
-  };
-}
+    meta = with lib; {
+      description = "Native GTK4/libadwaita settings application for Hyprland";
+      homepage = "https://github.com/BlueManCZ/hyprmod";
+      license = licenses.gpl3Plus;
+      platforms = platforms.linux;
+      mainProgram = "hyprmod";
+    };
+  }

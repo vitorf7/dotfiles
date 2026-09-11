@@ -1,8 +1,12 @@
-{ inputs, ... }:
-{
-  flake.modules.nixos.globalprotect = { config, lib, pkgs, ... }: lib.mkIf config.vitorf7.networking.globalprotect.enable {
-    environment.systemPackages =
-      let
+{inputs, ...}: {
+  flake.modules.nixos.globalprotect = {
+    config,
+    lib,
+    pkgs,
+    ...
+  }:
+    lib.mkIf config.vitorf7.networking.globalprotect.enable {
+      environment.systemPackages = let
         opensslLegacyCnf = pkgs.writeText "openssl-gp-legacy.cnf" ''
           openssl_conf = openssl_init
 
@@ -30,8 +34,8 @@
         gpPkg = inputs.globalprotect-openconnect.packages.${pkgs.system}.default;
         gpWrapped = pkgs.symlinkJoin {
           name = "globalprotect-openconnect-wrapped";
-          paths = [ gpPkg ];
-          nativeBuildInputs = [ pkgs.makeWrapper ];
+          paths = [gpPkg];
+          nativeBuildInputs = [pkgs.makeWrapper];
           postBuild = ''
             for bin in gpclient gpauth gpservice gpgui gpgui-helper; do
               if [ -f "$out/bin/$bin" ]; then
@@ -41,10 +45,9 @@
             done
           '';
         };
-      in
-      [ gpWrapped ];
+      in [gpWrapped];
 
-    services.ayatana-indicators.enable = true;
-    security.polkit.enable = true;
-  };
+      services.ayatana-indicators.enable = true;
+      security.polkit.enable = true;
+    };
 }

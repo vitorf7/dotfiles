@@ -1,6 +1,5 @@
-{ ... }:
-{
-  flake.modules.darwin.defaults = { ... }: {
+{...}: {
+  flake.modules.darwin.defaults = {...}: {
     system.defaults = {
       NSGlobalDomain = {
         ApplePressAndHoldEnabled = false;
@@ -23,17 +22,17 @@
         show-process-indicators = true;
         mouse-over-hilite-stack = true;
         persistent-apps = [
-          { app = "/System/Applications/Calendar.app"; }
-          { app = "/Applications/Ghostty.app"; }
-          { app = "/Applications/Ferdium.app"; }
-          { app = "/Applications/Zen.app"; }
-          { app = "/Applications/Postman.app"; }
-          { spacer = { small = true; }; }
-          { app = "/Applications/Arc.app"; }
-          { app = "/Applications/kitty.app"; }
-          { spacer = { small = true; }; }
-          { app = "/Applications/Spotify.app"; }
-          { app = "/System/Applications/System Settings.app"; }
+          {app = "/System/Applications/Calendar.app";}
+          {app = "/Applications/Ghostty.app";}
+          {app = "/Applications/Ferdium.app";}
+          {app = "/Applications/Zen.app";}
+          {app = "/Applications/Postman.app";}
+          {spacer = {small = true;};}
+          {app = "/Applications/Arc.app";}
+          {app = "/Applications/kitty.app";}
+          {spacer = {small = true;};}
+          {app = "/Applications/Spotify.app";}
+          {app = "/System/Applications/System Settings.app";}
         ];
       };
       finder = {

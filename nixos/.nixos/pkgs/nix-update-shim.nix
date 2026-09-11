@@ -4,11 +4,12 @@
 # non-flake mode — which imports a plain nixpkgs-style `{ system, overlays }:`
 # file instead of evaluating a flake attribute — a path that works around it.
 # Use with: nix-update -f pkgs/nix-update-shim.nix <name> --override-filename pkgs/<name>.nix
-{ system ? builtins.currentSystem, overlays ? [ ] }:
-let
-  pkgs = import <nixpkgs> { inherit system overlays; };
-in
 {
-  tide-island = pkgs.callPackage ./tide-island.nix { };
-  mouseless   = pkgs.callPackage ./mouseless.nix { };
+  system ? builtins.currentSystem,
+  overlays ? [],
+}: let
+  pkgs = import <nixpkgs> {inherit system overlays;};
+in {
+  tide-island = pkgs.callPackage ./tide-island.nix {};
+  mouseless = pkgs.callPackage ./mouseless.nix {};
 }

@@ -1,17 +1,16 @@
-{ lib
-, stdenv
-, fetchFromGitHub
-, cmake
-, qt6
-, systemd
-, quickshell
+{
+  lib,
+  stdenv,
+  fetchFromGitHub,
+  cmake,
+  qt6,
+  systemd,
+  quickshell,
 }:
-
 # Custom derivation for Tide Island — a Quickshell/Qt6-based Dynamic Island
 # widget for Hyprland. Not yet in nixpkgs.
 # https://github.com/enhaoswen/Tide-island
 # Last updated for Tide Island v1.0.20.
-
 stdenv.mkDerivation rec {
   pname = "tide-island";
   version = "1.0.38";
@@ -30,12 +29,12 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     qt6.qtbase
-    qt6.qtdeclarative    # Qt6::Qml, Qt6::Quick, Qt6::QuickControls2, Qt6::QuickDialogs2
-    qt6.qtwayland        # Wayland integration
-    qt6.qtconnectivity   # Qt6::Bluetooth (BluetoothPairingAgent, WifiController)
-    qt6.qtsvg            # SVG icon rendering
-    systemd              # libudev (find_library UDEV_LIB)
-    quickshell           # runtime dep for the launcher wrapper
+    qt6.qtdeclarative # Qt6::Qml, Qt6::Quick, Qt6::QuickControls2, Qt6::QuickDialogs2
+    qt6.qtwayland # Wayland integration
+    qt6.qtconnectivity # Qt6::Bluetooth (BluetoothPairingAgent, WifiController)
+    qt6.qtsvg # SVG icon rendering
+    systemd # libudev (find_library UDEV_LIB)
+    quickshell # runtime dep for the launcher wrapper
   ];
 
   postPatch = ''

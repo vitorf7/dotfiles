@@ -1,11 +1,14 @@
-{ ... }:
-{
-  flake.modules.nixos.users = { config, pkgs, ... }: {
+{...}: {
+  flake.modules.nixos.users = {
+    config,
+    pkgs,
+    ...
+  }: {
     programs.fish.enable = true;
 
     users.users.${config.vitorf7.username} = {
       isNormalUser = true;
-      extraGroups = [ "networkmanager" "wheel" "video" "audio" "input" ];
+      extraGroups = ["networkmanager" "wheel" "video" "audio" "input"];
       shell = pkgs.fish;
     };
 

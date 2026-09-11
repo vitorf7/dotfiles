@@ -1,6 +1,5 @@
-{ lib, ... }:
-let
-  vitorf7Options = { lib, ... }: {
+{lib, ...}: let
+  vitorf7Options = {lib, ...}: {
     options.vitorf7 = {
       username = lib.mkOption {
         type = lib.types.str;
@@ -33,7 +32,7 @@ let
 
       git = {
         defaultProfile = lib.mkOption {
-          type = lib.types.enum [ "personal" "work" ];
+          type = lib.types.enum ["personal" "work"];
           default = "personal";
           description = "Which git profile provides the top-level [user] identity";
         };
@@ -41,7 +40,7 @@ let
           enable = lib.mkEnableOption "Personal git profile";
           directories = lib.mkOption {
             type = lib.types.listOf lib.types.str;
-            default = [ "~/configfiles/" ];
+            default = ["~/configfiles/"];
             description = "Directories where the personal includeIf applies";
           };
         };
@@ -56,8 +55,7 @@ let
       };
     };
   };
-in
-{
-  flake.modules.nixos.options   = vitorf7Options;
-  flake.modules.darwin.options  = vitorf7Options;
+in {
+  flake.modules.nixos.options = vitorf7Options;
+  flake.modules.darwin.options = vitorf7Options;
 }

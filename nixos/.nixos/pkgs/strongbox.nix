@@ -1,4 +1,8 @@
-{ buildGoModule, fetchFromGitHub, lib, }:
+{
+  buildGoModule,
+  fetchFromGitHub,
+  lib,
+}:
 buildGoModule rec {
   pname = "strongbox";
   version = "2.1.0";
