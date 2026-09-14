@@ -1,22 +1,27 @@
--- Clamshell mode: disable/enable the internal monitor on lid close/open.
+-- Clamshell mode: disable/enable eDP-1 when the lid is closed/opened.
 --
--- When the monitor state changes, Hyprland fires monitor.added / monitor.removed,
--- which triggers assign_workspaces() in monitors.lua automatically.
--- The hl.timer call below is a safety net in case the monitor event is delayed.
+-- WHY A DAEMON instead of hl.bind("switch:on:Lid Switch"):
+--   hl.bind registers all actions through the __lua dispatcher, which does
+--   not fire for switch events in the current Hyprland Lua integration.
+--   A background daemon polls /proc/acpi/button/lid/*/state and calls
+--   hyprctl eval, bypassing this limitation entirely. It survives reloads.
+--
+-- WHY monitor.added:
+--   On boot the daemon's initial check may run before external monitors have
+--   finished connecting (total_monitors() == 1 → skip disable). The
+--   monitor.added event fires each time an external monitor comes online,
+--   giving a second chance to apply the correct clamshell state.
 
-local monitor_manager = require("modules.monitor_manager")
+local script = os.getenv("HOME") .. "/.config/hypr/scripts/clamshell.sh"
+local daemon = os.getenv("HOME") .. "/.config/hypr/scripts/clamshell-daemon.sh"
 
--- Must match the hl.monitor() definition in monitors.lua exactly.
-local EDPS_ON = "eDP-1,1920x1080@60,3840x0,1"
+-- Start the polling daemon once for ongoing lid open/close detection.
+hl.on("hyprland.start", function()
+    hl.exec_cmd(daemon)
+end)
 
--- Lid close: disable internal display.
-hl.bind("switch:on:Lid Switch", function()
-	hl.exec_cmd("hyprctl keyword monitor eDP-1,disable")
-	hl.timer(monitor_manager.assign_workspaces, { timeout = 600, type = "oneshot" })
-end, { locked = true })
-
--- Lid open: re-enable internal display.
-hl.bind("switch:off:Lid Switch", function()
-	hl.exec_cmd("hyprctl keyword monitor " .. EDPS_ON)
-	hl.timer(monitor_manager.assign_workspaces, { timeout = 600, type = "oneshot" })
-end, { locked = true })
+-- Re-check lid state whenever a monitor connects (handles boot-time race where
+-- external monitors arrive after the daemon's first check saw only eDP-1).
+hl.on("monitor.added", function()
+    hl.exec_cmd(script .. " check")
+end)

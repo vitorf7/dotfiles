@@ -15,19 +15,21 @@
 local function find_monitors()
 	local internal, lg, dell
 	for _, m in ipairs(hl.get_monitors()) do
+		if m.disabled then goto continue end  -- skip disabled monitors (e.g. eDP-1 in clamshell)
 		if     m.name == "eDP-1"              then internal = m
 		elseif m.description:find("27GL650F") then lg       = m
 		elseif m.description:find("U2419HC")  then dell     = m
 		end
+		::continue::
 	end
 	return internal, lg, dell
 end
 
 local function move_workspace(ws, mon_name)
-	-- Set workspace rule so unvisited workspaces land on the right monitor
-	hl.exec_cmd(("hyprctl keyword workspace '%d, monitor:%s'"):format(ws, mon_name))
-	-- Move the workspace if it already exists (has windows)
-	hl.exec_cmd(("hyprctl dispatch moveworkspacetomonitor %d %s"):format(ws, mon_name))
+	-- Set the default monitor for this workspace (applies to unvisited workspaces too).
+	hl.workspace_rule({ workspace = tostring(ws), monitor = mon_name })
+	-- Move the workspace to the correct monitor if it already exists (has windows).
+	hl.dispatch(hl.dsp.workspace.move({ workspace = tostring(ws), monitor = mon_name }))
 end
 
 local function assign(first, last, mon_name)
