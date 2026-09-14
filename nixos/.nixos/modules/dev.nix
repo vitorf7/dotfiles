@@ -67,5 +67,6 @@
     # CLI work fine for normal repo use. Forcing cargo to shell out to the
     # real `git` binary sidesteps that libgit2 limitation entirely.
     home.file.".cargo/config.toml".source = link "${dot}/cargo/.cargo/config.toml";
+    home.file.".apix.yaml".source = link "${dot}/secrets/.apix.yaml";
   };
 }
