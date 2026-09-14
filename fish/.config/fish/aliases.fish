@@ -76,9 +76,8 @@ alias brew-up-to-date="brew update && brew upgrade -y"
 alias brew-force-update-casks="brew update && brew upgrade -y --cask --greedy --force"
 alias brew-upgrade-everything="brew update && brew upgrade -y && brew upgrade -y --cask --greedy --force"
 
-# Exa alias for ls (https://github.com/ogham/exa)
-alias lh="eza --icons -lha"
-alias ls="eza --icons"
+alias lh="eza --icons=always -lha"
+alias ls="eza --icons=always"
 
 # Mac setup for pomo
 alias work="timer 25m && terminal-notifier -message 'Pomodoro'\
