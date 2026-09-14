@@ -30,6 +30,9 @@ fish/.config/fish/functions/*
 !fish/.config/fish/functions/sops-edit.fish
 !fish/.config/fish/functions/sops-view.fish
 !fish/.config/fish/functions/sops-updatekeys.fish
+!fish/.config/fish/functions/auth_apix.fish
+!fish/.config/fish/functions/auth_junifer.fish
+!fish/.config/fish/functions/grpc-test.fish
 
 # Matugen generated files
 waybar/.config/waybar/colors/colors.css
