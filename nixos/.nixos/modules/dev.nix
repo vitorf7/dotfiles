@@ -39,6 +39,7 @@
         rustup
         evans
         grpcui
+        yq-go
 
         self.packages.${pkgs.stdenv.hostPlatform.system}.apix
         self.packages.${pkgs.stdenv.hostPlatform.system}.strongbox

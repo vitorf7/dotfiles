@@ -7,7 +7,6 @@
       wimlib
       mas
       scdoc
-      yq-go
     ];
   };
 }
