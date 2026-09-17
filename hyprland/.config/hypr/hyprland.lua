@@ -11,8 +11,13 @@ require("modules.animations")
 require("modules.keybindings")
 require("modules.windowrules")
 
--- HyprMod managed settings
-require("hyprland-gui")
+-- HyprMod managed settings (only loaded if hyprmod.enable = true on this host)
+local hyprmodGui = os.getenv("HOME") .. "/.config/hypr-hyprmod/hyprland-gui.lua"
+local e = io.open(hyprmodGui, "r")
+if e then
+	e:close()
+	loadfile(hyprmodGui)()
+end
 
 -- Tide Island keybinds (only loaded if tide_island.enable = true on this host)
 local tideKeybinds = os.getenv("HOME") .. "/.config/hypr-tide-island/keybinds.lua"

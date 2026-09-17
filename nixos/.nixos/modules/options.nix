@@ -8,6 +8,9 @@
 
       desktop.enable = lib.mkEnableOption "General desktop environment (browser, fonts, themes, audio)";
       desktop.hyprland.enable = lib.mkEnableOption "Hyprland Wayland Desktop Ecosystem";
+      desktop.hypridle.enable = lib.mkEnableOption "Hypridle idle daemon config + package (Hyprland only)";
+      desktop.hyprlock.enable = lib.mkEnableOption "Hyprlock screen locker config + package (Hyprland only)";
+      desktop.hyprmod.enable = lib.mkEnableOption "Hyprmod GTK settings GUI config + package (Hyprland only)";
       hardware.nvidia.enable = lib.mkEnableOption "Nvidia PRIME Hybrid Graphics";
       hardware.fingerprint.enable = lib.mkEnableOption "Fingerprint Reader Support";
       hardware.vm.enable = lib.mkEnableOption "VM guest optimizations (QEMU/SPICE)";

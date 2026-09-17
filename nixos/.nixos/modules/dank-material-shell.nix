@@ -64,7 +64,11 @@ in {
 
       xdg.configFile."hypr-dank-material-shell/keybinds.lua".source =
         config.lib.file.mkOutOfStoreSymlink
-        "${config.home.homeDirectory}/dotfiles/hyprland/.config/hypr/modules/dank-material-shell-keybinds.lua";
+        "${config.home.homeDirectory}/dotfiles/dank-material-shell/.config/hypr/modules/dank-material-shell-keybinds.lua";
+
+      xdg.configFile."hypr/dms".source =
+        config.lib.file.mkOutOfStoreSymlink
+        "${config.home.homeDirectory}/dotfiles/dank-material-shell/.config/hypr/dms";
 
       # DMS writes ~/.config/hypr/dms/{colors,layout,outputs}.lua at runtime.
       # Ensure empty placeholders exist so the Hyprland Lua require() at startup

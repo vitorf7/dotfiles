@@ -29,6 +29,9 @@
       alacritty
       vicinae
       hyprland
+      hypridle
+      hyprlock
+      hyprmod
       theming
       quickshell
       qs-brain-shell
@@ -64,6 +67,9 @@ in {
       {
         vitorf7.desktop.enable = true;
         vitorf7.desktop.hyprland.enable = true;
+        vitorf7.desktop.hypridle.enable = false;
+        vitorf7.desktop.hyprlock.enable = false;
+        vitorf7.desktop.hyprmod.enable = true;
         vitorf7.desktop.quickshell.enable = true;
         vitorf7.desktop.qs_brain_shell.enable = false;
         vitorf7.desktop.ambxst.enable = false;

@@ -2,13 +2,15 @@ local terminal = "ghostty"
 local mainMod = "ALT"
 
 local function find_cmd(...)
-  for _, cmd in ipairs({...}) do
-    local handle = io.popen("command -v " .. cmd .. " 2>/dev/null")
-    local result = handle:read("*a")
-    handle:close()
-    if result ~= "" then return cmd end
-  end
-  return select(1, ...)
+	for _, cmd in ipairs({ ... }) do
+		local handle = io.popen("command -v " .. cmd .. " 2>/dev/null")
+		local result = handle:read("*a")
+		handle:close()
+		if result ~= "" then
+			return cmd
+		end
+	end
+	return select(1, ...)
 end
 
 local browser = find_cmd("zen-browser", "zen")
@@ -39,7 +41,7 @@ hl.bind("SHIFT + " .. mainMod .. " + SUPER + N", hl.dsp.exec_cmd(notes))
 hl.bind(mainMod .. " + M", hl.dsp.exit())
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
-hl.bind("SUPER + Space", hl.dsp.exec_cmd("$HOME/.config/rofi/launchers/launcher.sh || pkill rofi"))
+-- hl.bind("SUPER + Space", hl.dsp.exec_cmd("$HOME/.config/rofi/launchers/launcher.sh || pkill rofi"))
 hl.bind(mainMod .. " + Space", hl.dsp.exec_cmd("vicinae toggle"))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))
