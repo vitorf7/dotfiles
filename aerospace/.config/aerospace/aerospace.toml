@@ -114,7 +114,7 @@ cmd-6 = 'workspace 6'
 cmd-7 = 'workspace 7'
 cmd-8 = 'workspace 8'
 cmd-9 = 'workspace 9'
-# ctrl-0 = 'workspace 10'
+cmd-0 = 'workspace 10'
 
 cmd-alt-1 = 'move-node-to-workspace 1 --focus-follows-window'
 cmd-alt-2 = 'move-node-to-workspace 2 --focus-follows-window'
@@ -125,7 +125,7 @@ cmd-alt-6 = 'move-node-to-workspace 6 --focus-follows-window'
 cmd-alt-7 = 'move-node-to-workspace 7 --focus-follows-window'
 cmd-alt-8 = 'move-node-to-workspace 8 --focus-follows-window'
 cmd-alt-9 = 'move-node-to-workspace 9 --focus-follows-window'
-# alt-shift-0 = 'move-node-to-workspace 10'
+cmd-alt-0 = 'move-node-to-workspace 10 --focus-follows-window'
 
 alt-shift-c = 'reload-config'
 
@@ -183,20 +183,20 @@ run = 'move-node-to-workspace 3'
 if.app-id = 'md.obsidian'
 run = 'move-node-to-workspace 4'
 
-# workspace 5 - Arc Browser, Zen Browser (secondary window)
+# workspace 5 - Beekeeper Studio or Postman
 #
 
-# workspace 6 - Spotify
+# workspace 7 - Spotify
 [[on-window-detected]]
 if.app-id = 'com.spotify.client'
-run = 'move-node-to-workspace 6'
+run = 'move-node-to-workspace 7'
 
 # float windows for certain apps
 [[on-window-detected]]
 if.app-id = 'com.cisco.secureclient.gui'
 run = 'layout floating'
 
-# workspace 7 - Slack
+# workspace 8 - BlueStacks
 [[on-window-detected]]
 if.app-id = 'com.now.gg.BlueStacks'
 run = ['layout floating']
@@ -206,8 +206,9 @@ run = ['layout floating']
 2 = 1
 3 = 1
 4 = 1
-5 = 2
+5 = 1
 6 = 2
 7 = 2
 8 = 2
-9 = 1
+9 = 2
+10 = 2
