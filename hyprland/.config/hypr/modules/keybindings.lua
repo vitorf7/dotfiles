@@ -170,6 +170,11 @@ hl.bind("XF86AudioMicMute", hl.dsp.exec_cmd("volumectl -m toggle-mute"), {
 -- Hyprpicker - Color picker (already installed)
 hl.bind(mainMod .. " + C", hl.dsp.exec_cmd("hyprpicker -a | wl-copy"))
 
+-- Keyboard layout toggle (US ↔ GB) — cycles layouts, notifies active one
+hl.bind("SUPER + SHIFT + K", hl.dsp.exec_cmd(
+	"notify-send -t 2000 'Keyboard Layout' \"$(hyprctl switchxkblayout all next)\""
+))
+
 -- Media — commented out: handled by caelestia:media* when caelestia is enabled
 -- hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"), { locked = true })
 -- hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })

@@ -11,6 +11,11 @@
         xwayland.enable = true;
       };
 
+      i18n.inputMethod = {
+        enable = true;
+        type = "ibus";
+      };
+
       xdg.portal = {
         enable = true;
         extraPortals = [pkgs.xdg-desktop-portal-gtk];
