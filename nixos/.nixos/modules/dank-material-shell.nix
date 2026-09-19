@@ -73,8 +73,8 @@ in {
       # DMS writes ~/.config/hypr/dms/{colors,layout,outputs}.lua at runtime.
       # Ensure empty placeholders exist so the Hyprland Lua require() at startup
       # does not fail before DMS has had a chance to populate them.
+      # These files are not tracked in git; this script covers fresh-install scenarios.
       home.activation.dankMaterialShellHyprlandConfig = lib.hm.dag.entryAfter ["writeBoundary"] ''
-        $DRY_RUN_CMD mkdir -p $HOME/.config/hypr/dms
         for f in colors.lua layout.lua outputs.lua; do
           if [ ! -e "$HOME/.config/hypr/dms/$f" ]; then
             $DRY_RUN_CMD touch "$HOME/.config/hypr/dms/$f"
