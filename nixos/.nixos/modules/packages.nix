@@ -29,7 +29,7 @@
       };
 
     devShells.default = pkgs.mkShell {
-      packages = [pkgs.nix-update pkgs.nurl pkgs.jq pkgs.yq pkgs.git pkgs.curl];
+      packages = [pkgs.nix-update pkgs.nurl pkgs.jq pkgs.curl];
     };
   };
 }
