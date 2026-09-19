@@ -1,7 +1,7 @@
 -- https://wiki.hyprland.org/Configuring/Variables/#input
 hl.config({
     input = {
-        kb_layout  = "us,gb",
+        kb_layout  = "gb,us",
         kb_variant = "",
         kb_model   = "",
         kb_options = "lv3:ralt_alt",
