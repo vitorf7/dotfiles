@@ -48,6 +48,14 @@ if h then
 	loadfile(dmsConfig)()
 end
 
+-- Swaync (only loaded if quickshell is NOT active — quickshell owns notifications instead)
+local swayNcAutostart = os.getenv("HOME") .. "/.config/hypr-swaync/autostart.lua"
+local s = io.open(swayNcAutostart, "r")
+if s then
+	s:close()
+	loadfile(swayNcAutostart)()
+end
+
 -- Ambxst
 -- loadfile(os.getenv("HOME") .. "/.local/share/ambxst/hyprland.lua")()
 

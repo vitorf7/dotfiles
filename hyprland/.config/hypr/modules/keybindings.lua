@@ -170,9 +170,14 @@ hl.bind("XF86AudioMicMute", hl.dsp.exec_cmd("volumectl -m toggle-mute"), {
 -- Hyprpicker - Color picker (already installed)
 hl.bind(mainMod .. " + C", hl.dsp.exec_cmd("hyprpicker -a | wl-copy"))
 
--- Keyboard layout toggle (US ↔ GB) — cycles layouts, notifies active one
+-- £ — replicates macOS Option+3 muscle memory
+hl.bind(mainMod .. " + 3", hl.dsp.exec_cmd("wtype £"))
+
+-- Keyboard layout toggle (US ↔ GB) — cycles layouts, notifies active layout name.
+-- hyprctl switchxkblayout prints "ok" (IPC ack), so we query the name separately.
 hl.bind("SUPER + SHIFT + K", hl.dsp.exec_cmd(
-	"notify-send -t 2000 'Keyboard Layout' \"$(hyprctl switchxkblayout all next)\""
+	"hyprctl switchxkblayout all next && notify-send -t 3000 'Keyboard Layout' " ..
+	"\"$(hyprctl -j devices | jq -r '[.keyboards[] | select(.main)] | first | .active_keymap')\""
 ))
 
 -- Media — commented out: handled by caelestia:media* when caelestia is enabled

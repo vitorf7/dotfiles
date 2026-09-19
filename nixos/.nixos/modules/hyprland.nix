@@ -50,6 +50,7 @@
 
         wiremix
         bluetui
+        wtype
       ];
 
       xdg.configFile = {
@@ -64,6 +65,12 @@
         "swaync".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/swaync/.config/swaync";
         "wlogout".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/wlogout/.config/wlogout";
         "matugen".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/matugen/.config/matugen";
+        # Only symlinked when quickshell is NOT active; its presence tells hyprland.lua
+        # to autostart swaync as the notification daemon (waybar-based setup).
+        # When quickshell is active it owns DBus org.freedesktop.Notifications instead.
+        "hypr-swaync" = lib.mkIf (!osConfig.vitorf7.desktop.quickshell.enable) {
+          source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/swaync/.config/hypr-swaync";
+        };
       };
     };
 
