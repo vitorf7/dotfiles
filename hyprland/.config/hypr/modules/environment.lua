@@ -9,7 +9,4 @@ hl.env("SDL_VIDEODRIVER", "wayland")
 hl.env("_JAVA_AWT_WM_NONREPARENTING", "1")
 hl.env("ELECTRON_OZONE_PLATFORM_HINT", "auto")
 hl.env("HYPRSHOT_DIR", "~/Pictures/Screenshots")
--- IBus: route XWayland apps through ibus for keyboard layout support.
--- GTK_IM_MODULE and QT_IM_MODULE are intentionally omitted — setting them
--- to "ibus" breaks GTK4/Qt6 native Wayland apps that use text-input-v3.
-hl.env("XMODIFIERS", "@im=ibus")
+

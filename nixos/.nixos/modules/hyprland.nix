@@ -11,11 +11,6 @@
         xwayland.enable = true;
       };
 
-      i18n.inputMethod = {
-        enable = true;
-        type = "ibus";
-      };
-
       xdg.portal = {
         enable = true;
         extraPortals = [pkgs.xdg-desktop-portal-gtk];
@@ -40,7 +35,6 @@
         wlogout
         rofi
         waybar
-        swaynotificationcenter
         networkmanagerapplet
         swayosd
         nwg-look
@@ -51,6 +45,13 @@
         wiremix
         bluetui
         wtype
+      ]
+      ++ lib.optionals (!osConfig.vitorf7.desktop.quickshell.enable) [
+        # swaync ships a systemd user service (BusName=org.freedesktop.Notifications,
+        # WantedBy=graphical-session.target) that starts automatically. Only install
+        # it when quickshell is NOT active — otherwise quickshell owns the DBus
+        # notification service and swaync.service would steal it.
+        swaynotificationcenter
       ];
 
       xdg.configFile = {
