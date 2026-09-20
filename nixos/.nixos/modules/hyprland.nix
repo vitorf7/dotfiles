@@ -45,6 +45,7 @@
         wiremix
         bluetui
         wtype
+        ydotool
       ]
       ++ lib.optionals (!osConfig.vitorf7.desktop.quickshell.enable) [
         # swaync ships a systemd user service (BusName=org.freedesktop.Notifications,
@@ -53,6 +54,19 @@
         # notification service and swaync.service would steal it.
         swaynotificationcenter
       ];
+
+      systemd.user.services.ydotool = {
+        Unit = {
+          Description = "ydotoold — ydotool input event daemon";
+          After = ["graphical-session.target"];
+          PartOf = ["graphical-session.target"];
+        };
+        Service = {
+          ExecStart = "${pkgs.ydotool}/bin/ydotoold";
+          Restart = "always";
+        };
+        Install.WantedBy = ["graphical-session.target"];
+      };
 
       xdg.configFile = {
         "hypr/scheme".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/hyprland/.config/hypr/scheme";

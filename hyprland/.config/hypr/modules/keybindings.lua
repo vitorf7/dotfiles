@@ -170,8 +170,10 @@ hl.bind("XF86AudioMicMute", hl.dsp.exec_cmd("volumectl -m toggle-mute"), {
 -- Hyprpicker - Color picker (already installed)
 hl.bind(mainMod .. " + C", hl.dsp.exec_cmd("hyprpicker -a | wl-copy"))
 
--- £ — replicates macOS Option+3 muscle memory
-hl.bind(mainMod .. " + 3", hl.dsp.exec_cmd("wtype £"))
+-- £ — replicates macOS Option+3 muscle memory.
+-- Uses ydotool (uinput events) instead of wtype so it works in
+-- security-sensitive fields like 1Password that block virtual keyboard input.
+hl.bind(mainMod .. " + 3", hl.dsp.exec_cmd("ydotool type -- £"))
 
 -- Keyboard layout toggle (US ↔ GB) — cycles layouts, notifies active layout name.
 -- hyprctl switchxkblayout prints "ok" (IPC ack), so we query the name separately.
