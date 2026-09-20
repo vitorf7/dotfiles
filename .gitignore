@@ -40,9 +40,8 @@ hyprland/.config/hypr/hyprlock/matugen/matugen-hyprlock.conf
 swaync/.config/swaync/matugen/matugen-swaync.css
 rofi/.config/rofi/matugen/matugen-rofi.rasi
 
-# DMS generated files (wallpaper/monitor-driven, not settings)
-dank-material-shell/.config/hypr/dms/colors.lua
-dank-material-shell/.config/hypr/dms/outputs.lua
+# DMS runtime files — entirely managed by DMS, not tracked in git
+dank-material-shell/.config/hypr/dms/
 dank-material-shell/.config/DankMaterialShell/zen.css
 alacritty/.config/alacritty/dank-theme.toml
 ghostty/.config/ghostty/themes/dankcolors

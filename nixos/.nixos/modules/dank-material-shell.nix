@@ -66,28 +66,12 @@ in {
         config.lib.file.mkOutOfStoreSymlink
         "${config.home.homeDirectory}/dotfiles/dank-material-shell/.config/hypr/modules/dank-material-shell-keybinds.lua";
 
-      xdg.configFile."hypr/dms".source =
-        config.lib.file.mkOutOfStoreSymlink
-        "${config.home.homeDirectory}/dotfiles/dank-material-shell/.config/hypr/dms";
-
       # DMS shell settings — bar layout, widgets, fonts, corner radius, etc.
       # Using mkOutOfStoreSymlink so DMS can write back to this file when the
       # user changes settings through the GUI.
       xdg.configFile."DankMaterialShell/settings.json".source =
         config.lib.file.mkOutOfStoreSymlink
         "${config.home.homeDirectory}/dotfiles/dank-material-shell/.config/DankMaterialShell/settings.json";
-
-      # DMS writes ~/.config/hypr/dms/{colors,layout,outputs}.lua at runtime.
-      # Ensure empty placeholders exist so the Hyprland Lua require() at startup
-      # does not fail before DMS has had a chance to populate them.
-      # These files are not tracked in git; this script covers fresh-install scenarios.
-      home.activation.dankMaterialShellHyprlandConfig = lib.hm.dag.entryAfter ["writeBoundary"] ''
-        for f in colors.lua layout.lua outputs.lua; do
-          if [ ! -e "$HOME/.config/hypr/dms/$f" ]; then
-            $DRY_RUN_CMD touch "$HOME/.config/hypr/dms/$f"
-          fi
-        done
-      '';
     };
   };
 }
