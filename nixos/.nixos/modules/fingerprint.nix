@@ -14,6 +14,7 @@
       };
       security.pam.services = {
         login.fprintAuth = lib.mkForce true;
+        sudo.fprintAuth = false;
         hyprlock.fprintAuth = true;
       };
 
