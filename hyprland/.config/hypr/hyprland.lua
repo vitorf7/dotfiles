@@ -40,11 +40,6 @@ local dmsConfig = os.getenv("HOME") .. "/.config/hypr-dank-material-shell/keybin
 local h = io.open(dmsConfig, "r")
 if h then
 	h:close()
-	-- DMS-managed Hyprland colors, layout, and outputs
-	require("dms.colors")
-	require("dms.layout")
-	require("dms.outputs")
-	-- DMS keybinds and rules
 	loadfile(dmsConfig)()
 end
 
