@@ -44,6 +44,9 @@ rofi/.config/rofi/matugen/matugen-rofi.rasi
 dank-material-shell/.config/hypr/dms/colors.lua
 dank-material-shell/.config/hypr/dms/outputs.lua
 dank-material-shell/.config/DankMaterialShell/zen.css
+alacritty/.config/alacritty/dank-theme.toml
+ghostty/.config/ghostty/themes/dankcolors
+hyprland/.config/hypr/dms/
 
 # rofi images
 rofi/.config/rofi/images/*
