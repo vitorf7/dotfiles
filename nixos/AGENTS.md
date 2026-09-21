@@ -1,10 +1,11 @@
 # NixOS / nix-darwin Configuration — Agent Guide
 
-Modular flake-parts setup supporting three NixOS hosts and two nix-darwin (macOS) hosts.
+Modular flake-parts setup supporting four NixOS hosts and two nix-darwin (macOS) hosts.
 
 | Host | System | Role |
 |------|--------|------|
 | `thinkpad-t480` | x86_64-linux | Primary laptop — Hyprland, NVIDIA PRIME, full desktop |
+| `uw-thinkpad-x1` | x86_64-linux | Work laptop (ThinkPad X1 Carbon) — Hyprland, Intel-only, UW VPNs, no gaming |
 | `nixos-arm-vm` | aarch64-linux | ARM VM |
 | `nixos-x86-vm` | x86_64-linux | x86 VM |
 | `uw-mac-m1` | aarch64-darwin | Work MacBook M1 (`work.enable = true`) |
@@ -33,6 +34,7 @@ A single file may populate more than one class (e.g. `git.nix` sets both `flake.
 │   ├── packages.nix            Custom packages (perSystem block; non-conforming)
 │   ├── hosts/                  Per-host module lists
 │   │   ├── thinkpad-t480/      NixOS — default.nix + _hardware-configuration.nix
+│   │   ├── uw-thinkpad-x1/     NixOS — default.nix + placeholder _hardware-configuration.nix
 │   │   ├── nixos-arm-vm/       NixOS — default.nix only (hardware config must be generated)
 │   │   ├── nixos-x86-vm/       NixOS — default.nix only
 │   │   ├── uw-mac-m1/          nix-darwin — work.enable = true

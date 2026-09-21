@@ -1,10 +1,11 @@
 # NixOS / nix-darwin Configuration
 
-Modular flake-parts setup supporting three NixOS hosts and two nix-darwin (macOS) hosts.
+Modular flake-parts setup supporting four NixOS hosts and two nix-darwin (macOS) hosts.
 
 | Host | System | Features |
 |------|--------|----------|
 | `thinkpad-t480` | x86_64-linux | desktop, hyprland, caelestia-shell, gaming, winboat, flatpak, fingerprint, nvidia, nordvpn, globalprotect, wiresteward |
+| `uw-thinkpad-x1` | x86_64-linux | Work laptop (ThinkPad X1 Carbon) — desktop, hyprland, dank-material-shell, fingerprint (fprintd), globalprotect, wiresteward |
 | `nixos-arm-vm` | aarch64-linux | desktop, hyprland, quickshell, vm |
 | `nixos-x86-vm` | x86_64-linux | hyprland, quickshell, vm |
 | `uw-mac-m1` | aarch64-darwin | UW work MacBook Pro (M1 Pro) — homebrew, aerospace, work.enable |
@@ -255,6 +256,9 @@ All feature toggles live under `vitorf7` in `modules/options.nix`, shared verbat
 │       │   ├── default.nix          nixosSystem call — module list pulled from self.modules.nixos.*
 │       │   │                        and self.modules.homeManager.*
 │       │   └── _hardware-configuration.nix
+│       ├── uw-thinkpad-x1/
+│       │   ├── default.nix          nixosSystem call — no NVIDIA/gaming, generic fprintd, work git profile
+│       │   └── _hardware-configuration.nix   placeholder until the real machine generates one
 │       ├── nixos-arm-vm/default.nix
 │       ├── nixos-x86-vm/default.nix
 │       ├── uw-mac-m1/default.nix    darwinSystem call, work.enable = true

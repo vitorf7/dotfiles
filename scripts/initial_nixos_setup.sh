@@ -18,22 +18,24 @@
 #   5. Run `nixos-rebuild boot --flake .#<hostname>` (activates on next reboot)
 #
 # Secret management:
+#   - The sops age key (~/.config/sops/age/keys.txt) must be in place before the
+#     first nixos-rebuild, on every host — retrieve it from 1Password
+#     ("age key — <hostname>"), or generate a new one with:
+#     mkdir -p ~/.config/sops/age && age-keygen -o ~/.config/sops/age/keys.txt
 #   - nixos/.nixos/secrets/wiresteward-secrets.nix is imported at nix eval time
 #     and stays strongbox-encrypted. The strongbox keyring must be present before
-#     running this script on thinkpad-t480.
+#     running this script on hosts with vitorf7.networking.wiresteward.enable
+#     (thinkpad-t480, uw-thinkpad-x1).
 #   - nixos/.nixos/sops/nixos/wiresteward-config.json is sops-encrypted and
 #     decrypted automatically by sops-nix at activation time using the age key.
-#   - The sops age key (~/.config/sops/age/keys.txt) must be in place before the
-#     first nixos-rebuild — retrieve it from 1Password ("age key — <hostname>"),
-#     or generate a new one with: mkdir -p ~/.config/sops/age && age-keygen -o ~/.config/sops/age/keys.txt
 #
 # Prerequisites:
 #   - /etc/nixos/hardware-configuration.nix already generated
-#   - ~/.strongbox_identity present (retrieve from 1Password — needed for git filter
-#     on nixos/.nixos/secrets/wiresteward-secrets.nix)
 #   - ~/.config/sops/age/keys.txt present (retrieve from 1Password as
 #     "age key — <hostname>" — needed for sops-nix to decrypt secrets on activation
-#     for both system-level and home-manager secrets)
+#     for both system-level and home-manager secrets), on every host
+#   - ~/.strongbox_identity present (retrieve from 1Password — needed for git filter
+#     on nixos/.nixos/secrets/wiresteward-secrets.nix), on hosts with wiresteward
 
 set -euo pipefail
 
@@ -131,59 +133,59 @@ else
 fi
 ok "nvim-kick present at $NVIM_KICK_TARGET"
 
-# ─── Pre-flight: wiresteward secrets + sops age key (T480 only) ──────────────
+# ─── Pre-flight: sops age key (all hosts) ────────────────────────────────────
+# sops-nix decrypts fish/private_config.fish, git identity secrets, and (on
+# hosts with wiresteward) wiresteward-config.json automatically during
+# activation; the age key must exist first, regardless of host.
+info "Checking sops age key…"
+SOPS_KEY="$HOME/.config/sops/age/keys.txt"
+if [[ ! -f "$SOPS_KEY" ]]; then
+  die "sops age key not found at $SOPS_KEY.\n   Retrieve from 1Password (\"age key — ${HOSTNAME}\"), save it there, then re-run.\n   To generate a new key: mkdir -p $HOME/.config/sops/age && age-keygen -o $SOPS_KEY"
+fi
+ok "sops age key present at $SOPS_KEY."
+
+# ─── Pre-flight: wiresteward secrets (strongbox) — hosts with wiresteward ───
 # wiresteward-secrets.nix is imported at nix eval time so it stays strongbox-
 # encrypted — the strongbox keyring must be present and the file must be plaintext
-# on disk before nixos-rebuild runs.
-# wiresteward-config.json is now sops-encrypted and decrypted automatically at
-# activation by sops-nix; no manual checkout needed for it.
-# The sops age key must also be present before the first activation.
-if [[ "$HOSTNAME" == "thinkpad-t480" ]]; then
-  # ── Strongbox (wiresteward-secrets.nix) ──
-  info "Checking strongbox keyring…"
-  if [[ ! -f "$HOME/.strongbox_identity" ]]; then
-    die "~/.strongbox_identity not found.\n   Retrieve from 1Password, save to ~/.strongbox_identity, then re-run."
-  fi
+# on disk before nixos-rebuild runs. Only hosts with
+# vitorf7.networking.wiresteward.enable = true need this.
+case "$HOSTNAME" in
+  thinkpad-t480 | uw-thinkpad-x1)
+    info "Checking strongbox keyring…"
+    if [[ ! -f "$HOME/.strongbox_identity" ]]; then
+      die "~/.strongbox_identity not found.\n   Retrieve from 1Password, save to ~/.strongbox_identity, then re-run."
+    fi
 
-  # Ensure git is available — may not be present on a minimal NixOS install.
-  if command -v git &>/dev/null; then
-    _git() { git "$@"; }
-  else
-    info "git not in PATH — routing git calls through nix-shell…"
-    _git() { nix-shell -p git --run "git $*"; }
-  fi
+    # Ensure git is available — may not be present on a minimal NixOS install.
+    if command -v git &>/dev/null; then
+      _git() { git "$@"; }
+    else
+      info "git not in PATH — routing git calls through nix-shell…"
+      _git() { nix-shell -p git --run "git $*"; }
+    fi
 
-  _git config --global filter.strongbox.clean "strongbox -clean %f"
-  _git config --global filter.strongbox.smudge "strongbox -smudge %f"
-  _git config --global filter.strongbox.required true
-  _git config --global diff.strongbox.textconv "strongbox -diff"
+    _git config --global filter.strongbox.clean "strongbox -clean %f"
+    _git config --global filter.strongbox.smudge "strongbox -smudge %f"
+    _git config --global filter.strongbox.required true
+    _git config --global diff.strongbox.textconv "strongbox -diff"
 
-  info "Building strongbox…"
-  STRONGBOX_OUT=$(nix build --no-link --print-out-paths \
-    --extra-experimental-features 'nix-command flakes' \
-    "$DOTFILES/nixos/.nixos#strongbox")
-  export PATH="$STRONGBOX_OUT/bin:$PATH"
+    info "Building strongbox…"
+    STRONGBOX_OUT=$(nix build --no-link --print-out-paths \
+      --extra-experimental-features 'nix-command flakes' \
+      "$DOTFILES/nixos/.nixos#strongbox")
+    export PATH="$STRONGBOX_OUT/bin:$PATH"
 
-  if head -1 "$DOTFILES/nixos/.nixos/secrets/wiresteward-secrets.nix" 2>/dev/null \
-      | grep -qE 'STRONGBOX ENCRYPTED RESOURCE|BEGIN AGE ENCRYPTED FILE'; then
-    # Delete only after we know git + strongbox are ready; restore in one step.
-    rm -f "$DOTFILES/nixos/.nixos/secrets/"*.nix
-    _git -C "$DOTFILES" checkout -- nixos/.nixos/secrets
-    ok "Wiresteward secrets decrypted."
-  else
-    ok "Wiresteward secrets already decrypted — leaving as-is."
-  fi
-
-  # ── sops age key (wiresteward-config.json + fish private_config) ──
-  # sops age key — sops-nix decrypts fish/private_config.fish and weather_vars.lua
-  # automatically during activation; the key must exist first.
-  info "Checking sops age key…"
-  SOPS_KEY="$HOME/.config/sops/age/keys.txt"
-  if [[ ! -f "$SOPS_KEY" ]]; then
-    die "sops age key not found at $SOPS_KEY.\n   Retrieve from 1Password (\"age key — ${HOSTNAME}\"), save it there, then re-run.\n   To generate a new key: mkdir -p $HOME/.config/sops/age && age-keygen -o $SOPS_KEY"
-  fi
-  ok "sops age key present at $SOPS_KEY."
-fi
+    if head -1 "$DOTFILES/nixos/.nixos/secrets/wiresteward-secrets.nix" 2>/dev/null \
+        | grep -qE 'STRONGBOX ENCRYPTED RESOURCE|BEGIN AGE ENCRYPTED FILE'; then
+      # Delete only after we know git + strongbox are ready; restore in one step.
+      rm -f "$DOTFILES/nixos/.nixos/secrets/"*.nix
+      _git -C "$DOTFILES" checkout -- nixos/.nixos/secrets
+      ok "Wiresteward secrets decrypted."
+    else
+      ok "Wiresteward secrets already decrypted — leaving as-is."
+    fi
+    ;;
+esac
 
 # ─── Pre-flight: NVIDIA bus IDs (T480 only) ──────────────────────────────────
 if [[ "$HOSTNAME" == "thinkpad-t480" ]]; then
@@ -295,21 +297,23 @@ nix run --extra-experimental-features 'nix-command flakes' \
 ok "Standalone home-manager activated — 'hm'/'home-manager' now on PATH."
 
 # ─── Step 4: Remove bootstrap ~/.gitconfig ────────────────────────────────────
-# The strongbox git filter wiring (thinkpad-t480 only) wrote entries into
-# ~/.gitconfig via `git config --global`. After reboot, home-manager will deploy
-# the full nix-managed git config. Remove the bootstrap file now so it does not
-# conflict with or shadow the nix-managed one on first login.
-if [[ "$HOSTNAME" == "thinkpad-t480" ]]; then
-  info "Removing bootstrap ~/.gitconfig (nix-managed config will be active after reboot)…"
-  if [[ -f "$HOME/.gitconfig" && ! -L "$HOME/.gitconfig" ]]; then
-    rm "$HOME/.gitconfig"
-    ok "Removed bootstrap ~/.gitconfig"
-  elif [[ -L "$HOME/.gitconfig" ]]; then
-    ok "~/.gitconfig is already a symlink (nix-managed) — skipping removal."
-  else
-    ok "~/.gitconfig not present — nothing to remove."
-  fi
-fi
+# The strongbox git filter wiring (hosts with wiresteward, above) wrote entries
+# into ~/.gitconfig via `git config --global`. After reboot, home-manager will
+# deploy the full nix-managed git config. Remove the bootstrap file now so it
+# does not conflict with or shadow the nix-managed one on first login.
+case "$HOSTNAME" in
+  thinkpad-t480 | uw-thinkpad-x1)
+    info "Removing bootstrap ~/.gitconfig (nix-managed config will be active after reboot)…"
+    if [[ -f "$HOME/.gitconfig" && ! -L "$HOME/.gitconfig" ]]; then
+      rm "$HOME/.gitconfig"
+      ok "Removed bootstrap ~/.gitconfig"
+    elif [[ -L "$HOME/.gitconfig" ]]; then
+      ok "~/.gitconfig is already a symlink (nix-managed) — skipping removal."
+    else
+      ok "~/.gitconfig not present — nothing to remove."
+    fi
+    ;;
+esac
 
 # ─── Done ─────────────────────────────────────────────────────────────────────
 echo
