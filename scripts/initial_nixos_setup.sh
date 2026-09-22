@@ -157,11 +157,19 @@ case "$HOSTNAME" in
     fi
 
     # Ensure git is available — may not be present on a minimal NixOS install.
+    # The nix-shell fallback has to re-quote its arguments: `--run` takes a
+    # single shell string, and a bare "git $*" collapses multi-word arguments
+    # (e.g. the "strongbox -clean %f" filter values below) into separate words,
+    # which git then rejects with "error: no action specified".
     if command -v git &>/dev/null; then
       _git() { git "$@"; }
     else
       info "git not in PATH — routing git calls through nix-shell…"
-      _git() { nix-shell -p git --run "git $*"; }
+      _git() {
+        local _args
+        _args=$(printf '%q ' "$@")
+        nix-shell -p git --run "git $_args"
+      }
     fi
 
     _git config --global filter.strongbox.clean "strongbox -clean %f"
