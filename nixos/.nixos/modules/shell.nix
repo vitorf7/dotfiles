@@ -74,6 +74,14 @@
           end
         '';
         "fish/fish_plugins".source = link "${dot}/fish/.config/fish/fish_plugins";
+        # Fish functions are enumerated one by one on purpose: fisher writes its
+        # own plugin functions into ~/.config/fish/functions at runtime, so this
+        # directory cannot be a single out-of-store symlink without home-manager
+        # fighting fisher over ownership of it.
+        #
+        # Consequence: adding a .fish file to the repo does nothing until it is
+        # declared here AND `hm` has run. Editing a file already listed below is
+        # live immediately, since these are out-of-store symlinks into the repo.
         "fish/functions/nvims.fish".source = link "${dot}/fish/.config/fish/functions/nvims.fish";
         "fish/functions/__sops_key_file.fish".source = link "${dot}/fish/.config/fish/functions/__sops_key_file.fish";
         "fish/functions/sops-edit.fish".source = link "${dot}/fish/.config/fish/functions/sops-edit.fish";
