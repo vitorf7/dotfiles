@@ -7,7 +7,7 @@ keys:
   - &uw-mac-m1 age14ruj5rtwj0ep5apccv44neqd0yg77jryx2wf22vzz5y9pevdv5wq58j0mp
   - &vitorf7-mac-m1 age1ad7c9y293660cwda9ssqzqyxna04nfw085lwpz6w52xssthjdctswmllls
   - &thinkpad-t480 age17env34jshhufuclfcs9hrc28nvvqzw8keg2d2c8stp9dtympdqfquew8tt
-  # - &uw-thinkpad-x1 age1...
+  - &uw-thinkpad-x1 age1y45fzxvz6l6kstg5pfm6g7r4u97ppqgny4cst3x8a7pvvwpwcd4qc8q00n
   # - &nixos-arm-vm age1...
   # - &nixos-x86-vm age1...
 
@@ -19,7 +19,7 @@ creation_rules:
           - *uw-mac-m1
           - *vitorf7-mac-m1
           - *thinkpad-t480
-          # - *uw-thinkpad-x1
+          - *uw-thinkpad-x1
 
   # macOS-only secrets — sketchybar weather API key
   - path_regex: nixos/\.nixos/sops/darwin/.*$
@@ -27,13 +27,16 @@ creation_rules:
       - age:
           - *uw-mac-m1
           - *vitorf7-mac-m1
+          - *thinkpad-t480
+          - *uw-thinkpad-x1
 
   # NixOS-only secrets — wiresteward VPN config
   - path_regex: nixos/\.nixos/sops/nixos/.*$
     key_groups:
       - age:
+          - *uw-mac-m1
           - *thinkpad-t480
-          # - *uw-thinkpad-x1
+          - *uw-thinkpad-x1
 
   # Git identity — personal profile (all machines)
   - path_regex: nixos/\.nixos/sops/git/personal\.yaml$
@@ -42,12 +45,13 @@ creation_rules:
           - *uw-mac-m1
           - *vitorf7-mac-m1
           - *thinkpad-t480
-          # - *uw-thinkpad-x1
+          - *uw-thinkpad-x1
 
   # Git identity — work profile (work machines only)
   - path_regex: nixos/\.nixos/sops/git/work\.yaml$
     key_groups:
       - age:
           - *uw-mac-m1
+          - *vitorf7-mac-m1
           - *thinkpad-t480
-          # - *uw-thinkpad-x1
+          - *uw-thinkpad-x1
