@@ -52,6 +52,11 @@
         };
       };
 
+      # networkd isn't managing any links here — it only watches for the
+      # interface-name match above and applies DNS reactively once wiresteward
+      # brings the device up. Without this, boot blocks on wait-online until it
+      # times out, because the wg-* interfaces don't exist until after the user
+      # has authenticated at localhost:7773.
       systemd.services.systemd-networkd-wait-online.enable = lib.mkForce false;
     };
 }
