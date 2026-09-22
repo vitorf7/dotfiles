@@ -296,11 +296,17 @@ sudo nixos-rebuild boot \
 # ~/.local/state/nix/profiles/home-manager lineage. This self-installs the
 # `home-manager` package going forward, so `hm`/`home-manager news`/
 # `home-manager generations` etc. work afterward without further bootstrap.
-# Safe to run before reboot: this only needs the flake to evaluate, not the
-# new system generation to be active yet.
+# This runs before reboot, which matters for how the experimental features are
+# passed: `nixos-rebuild boot` only *stages* the new generation, so the
+# nix.settings.experimental-features from modules/nix-base.nix are not in
+# /etc/nix/nix.conf yet. A `--extra-experimental-features` flag would only
+# apply to the `nix run` process itself, and home-manager's switch script
+# spawns its own `nix build`/`nix eval` subprocesses that would still fail with
+# "experimental Nix feature 'nix-command' is disabled". NIX_CONFIG is read by
+# every nix process, so the whole subprocess tree inherits it.
 info "Bootstrapping standalone home-manager (for the 'hm' command)…"
-nix run --extra-experimental-features 'nix-command flakes' \
-  github:nix-community/home-manager/master -- \
+NIX_CONFIG="experimental-features = nix-command flakes" \
+  nix run github:nix-community/home-manager/master -- \
   switch -b hm-bak --flake "${FLAKE_DIR}#${HOSTNAME}"
 ok "Standalone home-manager activated — 'hm'/'home-manager' now on PATH."
 
