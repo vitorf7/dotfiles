@@ -76,7 +76,6 @@ in {
         vitorf7.desktop.tide_island.enable = false;
         vitorf7.desktop.caelestia_shell.enable = false;
         vitorf7.desktop.dank_material_shell.enable = true;
-        vitorf7.networking.globalprotect.enable = true;
         vitorf7.networking.wiresteward.enable = true;
         vitorf7.hardware.fingerprint.enable = true;
         vitorf7.git.defaultProfile = "work";
@@ -97,7 +96,6 @@ in {
       self.modules.nixos.bluetooth
       self.modules.nixos.display
       self.modules.nixos.fingerprint-generic
-      self.modules.nixos.globalprotect
       self.modules.nixos.wiresteward
       # NixOS modules (Phase 3 cross-class)
       self.modules.nixos.hyprland
@@ -113,18 +111,13 @@ in {
       inputs.ambxst.nixosModules.default
       ({lib, ...}: {programs.ambxst.enable = lib.mkOverride 999 false;})
       inputs.sops-nix.nixosModules.sops
-      # nixos-hardware: generation-agnostic X1 base (TrackPoint, common/pc/laptop
-      # → TLP, common/cpu/intel → microcode + i915). Once the exact generation is
-      # known, add the matching module BELOW this line — it is strictly additive
-      # (each gen module imports ../. ):
-      #   Gen  9 → lenovo-thinkpad-x1-9th-gen    (Tiger Lake)
-      #   Gen 10 → lenovo-thinkpad-x1-10th-gen   (Alder Lake)
-      #   Gen 11 → lenovo-thinkpad-x1-11th-gen   (Raptor Lake)
-      #   Gen 12 → lenovo-thinkpad-x1-12th-gen   (Meteor Lake)
-      #   Gen 13 → lenovo-thinkpad-x1-13th-gen   (Lunar Lake; enables thermald)
-      # Gen 14+ is not in nixos-hardware yet — stay on the generic module.
-      inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x1
-      inputs.nixos-hardware.nixosModules.common-pc-laptop-ssd
+      # nixos-hardware: ThinkPad X1 Carbon Gen 12 (Meteor Lake). This one module
+      # transitively covers everything — it imports the generic x1 base
+      # (TrackPoint + common/pc/laptop → TLP + common/cpu/intel → microcode),
+      # common/pc/ssd (fstrim), and common/cpu/intel/meteor-lake (intel-media-driver
+      # for VA-API). It also sets i915.enable_guc=3 and i915.force_probe=7d55.
+      # No separate common-* lines needed.
+      inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x1-12th-gen
       # Home-manager
       inputs.home-manager.nixosModules.home-manager
       {

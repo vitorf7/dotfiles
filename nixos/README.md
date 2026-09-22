@@ -5,7 +5,7 @@ Modular flake-parts setup supporting four NixOS hosts and two nix-darwin (macOS)
 | Host | System | Features |
 |------|--------|----------|
 | `thinkpad-t480` | x86_64-linux | desktop, hyprland, caelestia-shell, gaming, winboat, flatpak, fingerprint, nvidia, nordvpn, globalprotect, wiresteward |
-| `uw-thinkpad-x1` | x86_64-linux | Work laptop (ThinkPad X1 Carbon) — desktop, hyprland, dank-material-shell, fingerprint (fprintd), globalprotect, wiresteward |
+| `uw-thinkpad-x1` | x86_64-linux | Work laptop (ThinkPad X1 Carbon) — desktop, hyprland, dank-material-shell, fingerprint (fprintd), wiresteward |
 | `nixos-arm-vm` | aarch64-linux | desktop, hyprland, quickshell, vm |
 | `nixos-x86-vm` | x86_64-linux | hyprland, quickshell, vm |
 | `uw-mac-m1` | aarch64-darwin | UW work MacBook Pro (M1 Pro) — homebrew, aerospace, work.enable |
