@@ -8,6 +8,7 @@
   flake.modules.homeManager.ai = {pkgs, ...}: {
     home.packages = with pkgs; [
       opencode
+      opencode-claude-auth
       rtk
       claude-code
       fence

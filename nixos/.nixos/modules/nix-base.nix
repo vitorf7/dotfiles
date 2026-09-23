@@ -1,6 +1,23 @@
 {...}: {
-  flake.modules.nixos.nix-base = {config, ...}: {
-    programs.nix-ld.enable = true;
+  flake.modules.nixos.nix-base = {
+    config,
+    pkgs,
+    ...
+  }: {
+    programs.nix-ld = {
+      enable = true;
+
+      libraries = with pkgs; [
+        curl
+        expat
+        fuse3
+        icu
+        nss
+        openssl
+        stdenv.cc.cc
+        zlib
+      ];
+    };
 
     nixpkgs.config.allowUnfree = true;
 

@@ -5,6 +5,8 @@
     ...
   }:
     lib.mkIf config.vitorf7.desktop.hyprland.enable {
+      security.rtkit.enable = true;
+
       services.pipewire = {
         enable = true;
         alsa.enable = true;
