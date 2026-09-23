@@ -23,6 +23,7 @@
       media
       communication
       ai
+      gaming
       ghostty
       kitty
       alacritty
@@ -76,6 +77,9 @@ in {
         vitorf7.desktop.tide_island.enable = false;
         vitorf7.desktop.caelestia_shell.enable = false;
         vitorf7.desktop.dank_material_shell.enable = true;
+        vitorf7.desktop.flatpak.enable = true;
+        vitorf7.desktop.gaming.enable = true;
+        vitorf7.desktop.winboat.enable = true;
         vitorf7.networking.wiresteward.enable = true;
         vitorf7.hardware.fingerprint.enable = true;
         vitorf7.git.defaultProfile = "work";

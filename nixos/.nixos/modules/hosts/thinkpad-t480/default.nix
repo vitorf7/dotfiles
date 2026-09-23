@@ -79,8 +79,6 @@ in {
         vitorf7.desktop.flatpak.enable = true;
         vitorf7.desktop.gaming.enable = true;
         vitorf7.desktop.winboat.enable = true;
-        vitorf7.networking.nordvpn.enable = true;
-        vitorf7.networking.globalprotect.enable = true;
         vitorf7.networking.wiresteward.enable = true;
         vitorf7.hardware.fingerprint.enable = true;
         vitorf7.hardware.nvidia.enable = true;
@@ -101,11 +99,8 @@ in {
       self.modules.nixos.audio
       self.modules.nixos.bluetooth
       self.modules.nixos.display
-      self.modules.nixos.vm
       self.modules.nixos.fingerprint
       self.modules.nixos.nvidia
-      self.modules.nixos.nordvpn
-      self.modules.nixos.globalprotect
       self.modules.nixos.wiresteward
       # NixOS modules (Phase 3 cross-class)
       self.modules.nixos.hyprland
