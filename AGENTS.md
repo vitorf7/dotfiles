@@ -36,6 +36,10 @@ Each top-level directory (except `nixos/`, `scripts/`, `secrets/`, `configs/`, `
 
 See `nixos/AGENTS.md` for the full Nix flake guide.
 
+## Claude Code on Linux (perf workaround)
+
+`fish/.config/fish/functions/claude.fish` runs Claude Code with `HOME=$HOME/.claude-home`. The enterprise sandbox expands wildcard deny rules by walking `$HOME` and following symlinked directories — on NixOS that cascades into `/nix/store` (~1M stats, 30-40s per command). Details and evidence: `nixos/CLAUDE_CODE_NIXOS_SANDBOX_PERF.md`. Run `scripts/setup-claude-home.sh` once after cloning to wire the isolated home.
+
 ## RULE: never read secrets
 
 **Do NOT read any file inside `secrets/` or any path matching `*/secrets/*` or `*/sops/*` anywhere in this repo.** These directories contain encrypted secrets (Strongbox / SOPS) and must never be accessed by an agent.
