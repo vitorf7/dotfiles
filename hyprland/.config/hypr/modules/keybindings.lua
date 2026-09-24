@@ -72,10 +72,10 @@ hl.bind(mainMod .. " + SUPER + R", hl.dsp.exec_cmd(hyprScripts .. "/refresh.sh")
 -- ---------------taking screenshot-------------------------------------------------#
 
 -- ---------------------------------------------------------------------------------#
-hl.bind(mainMod .. " + Print", hl.dsp.exec_cmd("hyprshot -m output -m active -o ~/Screenshots | wl-copy"))
-hl.bind(mainMod .. " + SHIFT + Print", hl.dsp.exec_cmd("hyprshot -m region -o ~/Screenshots | wl-copy"))
-hl.bind(mainMod .. " + CTRL + Print", hl.dsp.exec_cmd("hyprshot -m window -m active -o ~/Screenshots | wl-copy"))
-hl.bind(mainMod .. " + SUPER + S", hl.dsp.exec_cmd("hyprshot -m region --freeze -o ~/Screenshots | wl-copy"))
+hl.bind("SUPER + SHIFT + 5", hl.dsp.exec_cmd("hyprshot -m output -m active -o ~/Screenshots | wl-copy"))
+hl.bind("SUPER + SHIFT + 4", hl.dsp.exec_cmd("hyprshot -m region -o ~/Screenshots | wl-copy"))
+hl.bind("SUPER + CTRL + 5", hl.dsp.exec_cmd("hyprshot -m window -m active -o ~/Screenshots | wl-copy"))
+hl.bind("SUPER + CTRL + 4", hl.dsp.exec_cmd("hyprshot -m region --freeze -o ~/Screenshots | wl-copy"))
 
 -- Move focus with mainMod + arrow keys
 hl.bind(mainMod .. " + h", hl.dsp.focus({ direction = "left" }))
