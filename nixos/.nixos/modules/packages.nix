@@ -23,6 +23,7 @@
       linuxOnlyPackages
       // {
         apix = inputs.apix.packages.${system}.default;
+        claude-code-latest = pkgs.callPackage ../pkgs/claude-code-latest.nix {};
         go-latest = pkgs.callPackage ../pkgs/go-latest.nix {};
         strongbox = pkgs.callPackage ../pkgs/strongbox.nix {};
         wiresteward = pkgs.callPackage ../pkgs/wiresteward.nix {};

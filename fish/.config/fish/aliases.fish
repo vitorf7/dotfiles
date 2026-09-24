@@ -411,3 +411,7 @@ end
 function nix-update-golatest
     $HOME/dotfiles/scripts/update-go.sh
 end
+
+function nix-update-claude
+    $HOME/dotfiles/scripts/update-claude-code.sh
+end

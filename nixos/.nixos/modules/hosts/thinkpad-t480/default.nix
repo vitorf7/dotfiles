@@ -42,6 +42,7 @@
       kubernetes
       docker
       input
+      databases
     ];
     home.username = username;
     home.homeDirectory = "/home/${username}";

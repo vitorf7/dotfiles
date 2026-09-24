@@ -1,4 +1,4 @@
-{...}: {
+{self, ...}: {
   flake.modules.darwin.ai = {...}: {
     homebrew.casks = [
       "ollama-app"
@@ -10,8 +10,8 @@
       opencode
       opencode-claude-auth
       rtk
-      claude-code
       fence
+      self.packages.${pkgs.stdenv.hostPlatform.system}.claude-code-latest
     ];
   };
 }
