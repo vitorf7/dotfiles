@@ -33,6 +33,7 @@ fish/.config/fish/functions/*
 !fish/.config/fish/functions/auth_apix.fish
 !fish/.config/fish/functions/auth_junifer.fish
 !fish/.config/fish/functions/grpc-test.fish
+!fish/.config/fish/functions/claude.fish
 
 # Matugen generated files
 waybar/.config/waybar/colors/colors.css
