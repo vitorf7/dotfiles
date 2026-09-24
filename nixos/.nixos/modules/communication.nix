@@ -5,6 +5,7 @@
       "whatsapp"
       "zoom"
       "ferdium"
+      "rambox"
     ];
   };
 
@@ -15,6 +16,7 @@
   }: {
     home.packages = lib.optionals pkgs.stdenv.isLinux [
       pkgs.ferdium
+      pkgs.rambox
     ];
   };
 }

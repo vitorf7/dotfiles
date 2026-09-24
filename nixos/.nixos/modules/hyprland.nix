@@ -11,6 +11,14 @@
         xwayland.enable = true;
       };
 
+      # uinput is only present as a lazy-autoload static device node (0600 root:root)
+      # until the module is actually loaded — and permission checks on that node
+      # happen before autoload kicks in, so an unprivileged open (ydotoold) fails
+      # before the "input" group udev rule (see users.nix) ever gets a chance to
+      # apply. Force-load it at boot so the real "add" uevent fires and the rule
+      # sticks.
+      boot.kernelModules = ["uinput"];
+
       xdg.portal = {
         enable = true;
         extraPortals = [pkgs.xdg-desktop-portal-gtk];
@@ -66,6 +74,31 @@
           Restart = "always";
         };
         Install.WantedBy = ["graphical-session.target"];
+      };
+
+      # This bare Hyprland setup has no session manager (UWSM, gnome-session,
+      # etc.) to ever activate graphical-session.target, and Hyprland itself
+      # can't do it directly either — the target ships upstream with
+      # RefuseManualStart=yes, so even `systemctl --user start
+      # graphical-session.target` from Hyprland's own autostart is refused.
+      # It can only be pulled in as a dependency of some other unit that
+      # legitimately starts. This service exists purely to hold that
+      # dependency open for the lifetime of the session — autostart.lua
+      # starts it first, which transitively activates graphical-session.target,
+      # which in turn lets everything actually WantedBy/Requisite= it
+      # (xdg-desktop-portal, openlogi-agent, ydotool, dms) start correctly.
+      # Without this, camera/screen-share portals and the above silently
+      # never start on every single login, not just after a rebuild.
+      systemd.user.services.graphical-session-holder = {
+        Unit = {
+          Description = "Keep graphical-session.target active (no session manager to do this for bare Hyprland)";
+          Wants = ["graphical-session.target"];
+          After = ["graphical-session.target"];
+        };
+        Service = {
+          ExecStart = "${pkgs.coreutils}/bin/sleep infinity";
+          Restart = "always";
+        };
       };
 
       xdg.configFile = {

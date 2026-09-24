@@ -41,6 +41,7 @@
       dank-material-shell
       kubernetes
       docker
+      input
     ];
     home.username = username;
     home.homeDirectory = "/home/${username}";
@@ -110,6 +111,7 @@ in {
       self.modules.nixos.secrets
       self.modules.nixos.fonts
       self.modules.nixos.onepassword
+      self.modules.nixos.input
       # Upstream NixOS modules
       inputs.brain-shell.nixosModules.default
       inputs.ambxst.nixosModules.default

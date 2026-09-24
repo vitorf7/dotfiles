@@ -15,7 +15,7 @@ end
 
 local browser = find_cmd("zen-browser", "zen")
 local music = "spotify-launcher"
-local social = "rambox"
+local social = "ferdium"
 local notes = "obsidian"
 local fileManager = "nautilus"
 local hyprScripts = "~/.config/hypr/scripts"
@@ -72,10 +72,10 @@ hl.bind(mainMod .. " + SUPER + R", hl.dsp.exec_cmd(hyprScripts .. "/refresh.sh")
 -- ---------------taking screenshot-------------------------------------------------#
 
 -- ---------------------------------------------------------------------------------#
-hl.bind(mainMod .. " + Print", hl.dsp.exec_cmd("hyprshot -m output -m active -o ~/Pictures/Screenshots"))
-hl.bind(mainMod .. " + SHIFT + Print", hl.dsp.exec_cmd("hyprshot -m region -o ~/Pictures/Screenshots"))
-hl.bind(mainMod .. " + CTRL + Print", hl.dsp.exec_cmd("hyprshot -m window -m active -o ~/Pictures/Screenshots"))
-hl.bind(mainMod .. " + SUPER + S", hl.dsp.exec_cmd("hyprshot -m region --freeze -o ~/Pictures/Screenshots"))
+hl.bind(mainMod .. " + Print", hl.dsp.exec_cmd("hyprshot -m output -m active -o ~/Screenshots | wl-copy"))
+hl.bind(mainMod .. " + SHIFT + Print", hl.dsp.exec_cmd("hyprshot -m region -o ~/Screenshots | wl-copy"))
+hl.bind(mainMod .. " + CTRL + Print", hl.dsp.exec_cmd("hyprshot -m window -m active -o ~/Screenshots | wl-copy"))
+hl.bind(mainMod .. " + SUPER + S", hl.dsp.exec_cmd("hyprshot -m region --freeze -o ~/Screenshots | wl-copy"))
 
 -- Move focus with mainMod + arrow keys
 hl.bind(mainMod .. " + h", hl.dsp.focus({ direction = "left" }))
@@ -173,14 +173,21 @@ hl.bind(mainMod .. " + C", hl.dsp.exec_cmd("hyprpicker -a | wl-copy"))
 -- £ — replicates macOS Option+3 muscle memory.
 -- Uses ydotool (uinput events) instead of wtype so it works in
 -- security-sensitive fields like 1Password that block virtual keyboard input.
-hl.bind(mainMod .. " + 3", hl.dsp.exec_cmd("ydotool type -- £"))
+-- `ydotool type` uses a fixed US ASCII keymap internally and can't represent
+-- £ at all (silently no-ops), so we send raw keycodes for Shift+3 instead —
+-- resolved to £ via the "gb" layout pinned to ydotoold's device in input.lua.
+-- KEY_LEFTSHIFT=42, KEY_3=4 (see /usr/include/linux/input-event-codes.h).
+hl.bind(mainMod .. " + 3", hl.dsp.exec_cmd("ydotool key 42:1 4:1 4:0 42:0"))
 
 -- Keyboard layout toggle (US ↔ GB) — cycles layouts, notifies active layout name.
 -- hyprctl switchxkblayout prints "ok" (IPC ack), so we query the name separately.
-hl.bind("SUPER + SHIFT + K", hl.dsp.exec_cmd(
-	"hyprctl switchxkblayout all next && notify-send -t 3000 'Keyboard Layout' " ..
-	"\"$(hyprctl -j devices | jq -r '[.keyboards[] | select(.main)] | first | .active_keymap')\""
-))
+hl.bind(
+	"SUPER + SHIFT + K",
+	hl.dsp.exec_cmd(
+		"hyprctl switchxkblayout all next && notify-send -t 3000 'Keyboard Layout' "
+			.. "\"$(hyprctl -j devices | jq -r '[.keyboards[] | select(.main)] | first | .active_keymap')\""
+	)
+)
 
 -- Media — commented out: handled by caelestia:media* when caelestia is enabled
 -- hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"), { locked = true })

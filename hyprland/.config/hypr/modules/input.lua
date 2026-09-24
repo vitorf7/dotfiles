@@ -28,3 +28,11 @@ hl.device({
     name = "epic-mouse-v1",
     sensitivity = -0.5,
 })
+
+-- ydotool's virtual keyboard doesn't inherit the global "us,gb" layout — it
+-- always resolves raw keycodes via whatever layout is assigned to it here.
+-- Pin it to GB so "Shift+3" (KEY_3=4) resolves to £ (see keybindings.lua).
+hl.device({
+    name = "ydotoold-virtual-device",
+    kb_layout = "gb",
+})
