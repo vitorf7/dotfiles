@@ -43,6 +43,7 @@
       docker
       input
       databases
+      webcam
     ];
     home.username = username;
     home.homeDirectory = "/home/${username}";
