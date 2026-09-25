@@ -415,3 +415,28 @@ end
 function nix-update-claude
     $HOME/dotfiles/scripts/update-claude-code.sh
 end
+
+function nvim-fix -d "Repair bob's nvim symlink when it breaks after a nix flake update"
+    set -l bob_dir $HOME/.local/share/bob
+    set -l used (cat $bob_dir/used 2>/dev/null | string trim)
+
+    if test -z "$used"
+        echo "nvim-fix: no bob version in use found at $bob_dir/used"
+        return 1
+    end
+
+    if command nvim --version >/dev/null 2>&1
+        echo "nvim is working, nothing to fix"
+        return 0
+    end
+
+    rm -f $bob_dir/nvim-bin/nvim
+    ln -s $bob_dir/$used/bin/nvim $bob_dir/nvim-bin/nvim
+
+    if command nvim --version >/dev/null 2>&1
+        echo "nvim fixed — restored symlink to bob's $used binary (nix-ld provides the linker)"
+    else
+        echo "nvim-fix: still broken — re-download the binary with: bob install $used"
+        return 1
+    end
+end
