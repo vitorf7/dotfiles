@@ -12,6 +12,7 @@
       rtk
       fence
       self.packages.${pkgs.stdenv.hostPlatform.system}.claude-code-latest
+      bubblewrap
     ];
   };
 }
