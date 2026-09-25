@@ -19,7 +19,6 @@
         quickshell
         playerctl
         cava
-        wf-recorder
         imagemagick
         brightnessctl
         libnotify

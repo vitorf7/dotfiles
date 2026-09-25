@@ -91,7 +91,7 @@
         "fish/functions/auth_junifer.fish".source = link "${dot}/fish/.config/fish/functions/auth_junifer.fish";
         "fish/functions/grpc-test.fish".source = link "${dot}/fish/.config/fish/functions/grpc-test.fish";
         "fish/functions/claude.fish".source = link "${dot}/fish/.config/fish/functions/claude.fish";
-        "fish/completions/apix.fish".source = link "${dot}/fish/.config/fish/completions/apix.fish";
+        # "fish/completions/apix.fish".source = link "${dot}/fish/.config/fish/completions/apix.fish";
         "tmux".source = link "${dot}/tmux/.config/tmux";
         "starship.toml".source = link "${dot}/starship/.config/starship.toml";
         "bat".source = link "${dot}/bat/.config/bat";

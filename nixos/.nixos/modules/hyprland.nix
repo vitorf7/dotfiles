@@ -21,7 +21,7 @@
 
       xdg.portal = {
         enable = true;
-        extraPortals = [pkgs.xdg-desktop-portal-gtk];
+        extraPortals = [pkgs.xdg-desktop-portal-gtk pkgs.xdg-desktop-portal-hyprland];
         config = {
           common.default = ["hyprland" "gtk"];
           hyprland.default = ["hyprland" "gtk"];
@@ -37,31 +37,34 @@
     ...
   }:
     lib.mkIf osConfig.vitorf7.desktop.hyprland.enable {
-      home.packages = with pkgs; [
-        hyprsunset
-        hyprshot
-        wlogout
-        rofi
-        waybar
-        networkmanagerapplet
-        swayosd
-        nwg-look
-        avizo
-        nwg-dock-hyprland
-        lxqt.lxqt-policykit
+      home.packages = with pkgs;
+        [
+          hyprsunset
+          hyprshot
+          wf-recorder
+          slurp
+          wlogout
+          rofi
+          waybar
+          networkmanagerapplet
+          swayosd
+          nwg-look
+          avizo
+          nwg-dock-hyprland
+          lxqt.lxqt-policykit
 
-        wiremix
-        bluetui
-        wtype
-        ydotool
-      ]
-      ++ lib.optionals (!osConfig.vitorf7.desktop.quickshell.enable) [
-        # swaync ships a systemd user service (BusName=org.freedesktop.Notifications,
-        # WantedBy=graphical-session.target) that starts automatically. Only install
-        # it when quickshell is NOT active — otherwise quickshell owns the DBus
-        # notification service and swaync.service would steal it.
-        swaynotificationcenter
-      ];
+          wiremix
+          bluetui
+          wtype
+          ydotool
+        ]
+        ++ lib.optionals (!osConfig.vitorf7.desktop.quickshell.enable) [
+          # swaync ships a systemd user service (BusName=org.freedesktop.Notifications,
+          # WantedBy=graphical-session.target) that starts automatically. Only install
+          # it when quickshell is NOT active — otherwise quickshell owns the DBus
+          # notification service and swaync.service would steal it.
+          swaynotificationcenter
+        ];
 
       systemd.user.services.ydotool = {
         Unit = {
