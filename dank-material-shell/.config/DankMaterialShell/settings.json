@@ -30,6 +30,8 @@
   "fontFamily": "MonaspiceNe Nerd Font Propo",
   "fontScale": 1.14,
   "textRenderQuality": 3,
+  "showDock": true,
+  "dockAutoHide": true,
   "notificationShowTimeoutBar": true,
   "osdAlwaysShowValue": true,
   "osdPowerProfileEnabled": true,
