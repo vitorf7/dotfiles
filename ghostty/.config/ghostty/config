@@ -4,8 +4,8 @@ term = xterm-256color
 # theme = "dark:catppuccin-mocha,light:catppuccin-latte"
 theme = Rose Pine
 background-opacity-cells = true
-background-opacity = 0.75
-background-blur-radius = 15
+background-opacity = .90
+background-blur-radius = 20
 
 macos-non-native-fullscreen = true
 macos-titlebar-style = hidden
