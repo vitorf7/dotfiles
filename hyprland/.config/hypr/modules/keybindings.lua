@@ -78,7 +78,7 @@ hl.bind("SUPER + CTRL + 5", hl.dsp.exec_cmd("hyprshot -m window -m active -o ~/S
 hl.bind("SUPER + CTRL + 4", hl.dsp.exec_cmd("hyprshot -m region --freeze -o ~/Screenshots | wl-copy"))
 
 -- --------------------Screen recording-------------------------------------------#
-hl.bind("SHIFT + SUPER + ALT + CTRL + R", hl.dsp.exec_cmd(hyprScripts .. "/record.sh"))
+hl.bind("SHIFT + SUPER + ALT + CTRL + R", hl.dsp.exec_cmd(hyprScripts .. "/record.sh --sound"))
 
 -- Move focus with mainMod + arrow keys
 hl.bind(mainMod .. " + h", hl.dsp.focus({ direction = "left" }))

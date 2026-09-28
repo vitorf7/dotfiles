@@ -7,9 +7,6 @@
 getdate() {
   date '+%Y-%m-%d_%H%M%S'
 }
-getaudiooutput() {
-  pactl list sources | grep 'Name' | grep 'monitor' | cut -d ' ' -f2
-}
 getactivemonitor() {
   hyprctl monitors -j | jq -r '.[] | select(.focused == true) | .name'
 }
@@ -27,11 +24,11 @@ if pgrep wf-recorder >/dev/null; then
 else
   if [[ "$1" == "--fullscreen-sound" ]]; then
     notify-send "Starting recording" 'recording_'"$(getdate)"'.mp4' -a 'Recorder'
-    wf-recorder -o $(getactivemonitor) --pixel-format yuv420p -f './recording_'"$(getdate)"'.mp4' -t --audio="$(getaudiooutput)" &
+    wf-recorder -o $(getactivemonitor) -f './recording_'"$(getdate)"'.mp4' -t -a &
     disown
   elif [[ "$1" == "--fullscreen" ]]; then
     notify-send "Starting recording" 'recording_'"$(getdate)"'.mp4' -a 'Recorder'
-    wf-recorder -o $(getactivemonitor) --pixel-format yuv420p -f './recording_'"$(getdate)"'.mp4' -t &
+    wf-recorder -o $(getactivemonitor) -f './recording_'"$(getdate)"'.mp4' -t &
     disown
   else
     if ! region="$(slurp 2>&1)"; then
@@ -40,10 +37,10 @@ else
     fi
     notify-send "Starting recording" 'recording_'"$(getdate)"'.mp4' -a 'Recorder'
     if [[ "$1" == "--sound" ]]; then
-      wf-recorder --pixel-format yuv420p -f './recording_'"$(getdate)"'.mp4' -t --geometry "$region" --audio="$(getaudiooutput)" &
+      wf-recorder -f './recording_'"$(getdate)"'.mp4' -t --geometry "$region" -a &
       disown
     else
-      wf-recorder --pixel-format yuv420p -f './recording_'"$(getdate)"'.mp4' -t --geometry "$region" &
+      wf-recorder -f './recording_'"$(getdate)"'.mp4' -t --geometry "$region" &
       disown
     fi
   fi
