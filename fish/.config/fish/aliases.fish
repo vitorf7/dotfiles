@@ -372,6 +372,11 @@ function nix-update-derivations
         end
     end
 
+    echo "==> quickshell-share-picker"
+    if not $updater quickshell-share-picker --flake
+        set -a failed quickshell-share-picker
+    end
+
     echo "==> tide-island"
     if not $updater tide-island -f $shim --override-filename $flake_dir/pkgs/tide-island.nix
         set -a failed tide-island
