@@ -6,6 +6,15 @@
   "fontFamily": "MonaspiceNe Nerd Font Propo",
   "fontScale": 1.14,
   "textRenderQuality": 3,
+  "powerMenuActions": [
+    "reboot",
+    "logout",
+    "poweroff",
+    "lock",
+    "suspend",
+    "restart",
+    "hibernate"
+  ],
   "dockConfigs": [
     {
       "id": "dock",
@@ -81,6 +90,17 @@
   ],
   "firstDayOfWeek": 0,
   "appIdSubstitutions": [],
+  "dashOptions": {
+    "weather": {
+      "city": true
+    },
+    "calendar": {
+      "weekends": true
+    },
+    "memory": {
+      "swap": true
+    }
+  },
   "networkPreference": "wifi",
   "cursorSettings": {
     "theme": "System Default",
@@ -99,8 +119,13 @@
     }
   },
   "acLockTimeout": 300,
-  "acPostLockMonitorTimeout": 3600,
+  "acSuspendTimeout": 7200,
+  "batteryLockTimeout": 300,
+  "batterySuspendTimeout": 3600,
+  "batteryNotifyLow": true,
+  "batteryLowNotificationType": 1,
   "lockBeforeSuspend": true,
+  "enableFprint": true,
   "notificationShowTimeoutBar": true,
   "osdAlwaysShowValue": true,
   "osdPowerProfileEnabled": true,
@@ -220,5 +245,6 @@
       "trigger": "qrg"
     }
   },
+  "clipboardEnterToPaste": true,
   "configVersion": 31
 }
