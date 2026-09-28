@@ -21,6 +21,8 @@
       desktop.caelestia_shell.enable = lib.mkEnableOption "Caelestia Shell Quickshell Config";
       desktop.dank_material_shell.enable = lib.mkEnableOption "DankMaterialShell (DMS)";
       desktop.flatpak.enable = lib.mkEnableOption "Flatpak support with declarative package management";
+      desktop.mouseless.enable = lib.mkEnableOption "Mouseless (Flatpak on Linux, Homebrew cask on macOS)";
+      desktop.stremio.enable = lib.mkEnableOption "Stremio (Flatpak on Linux, Homebrew cask on macOS)";
       desktop.gaming.enable = lib.mkEnableOption "Gaming (Steam, Lutris, emulators)";
       desktop.winboat.enable = lib.mkEnableOption "WinBoat — run Windows applications on Linux via Docker + KVM + RemoteApp";
       networking.nordvpn.enable = lib.mkEnableOption "NordVPN client (CLI + GUI) with systemd daemon";

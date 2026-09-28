@@ -4,7 +4,6 @@
       "karabiner-elements"
       "homerow"
       "keycastr"
-      "mouseless@preview"
       "openlogi"
     ];
   };

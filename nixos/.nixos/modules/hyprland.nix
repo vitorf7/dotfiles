@@ -46,6 +46,7 @@
           hyprsunset
           hyprshot
           wf-recorder
+          wl-clipboard
           slurp
           wlogout
           rofi

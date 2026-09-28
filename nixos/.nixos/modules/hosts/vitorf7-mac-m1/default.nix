@@ -53,6 +53,8 @@ in {
         vitorf7.darwin.aerospace.enable = true;
         vitorf7.darwin.colima.enable = false;
         vitorf7.darwin.work.enable = false;
+        vitorf7.desktop.mouseless.enable = true;
+        vitorf7.desktop.stremio.enable = true;
         vitorf7.networking.nordvpn.enable = true;
         vitorf7.git.defaultProfile = "personal";
         vitorf7.git.personal.enable = true;
@@ -79,6 +81,8 @@ in {
       self.modules.darwin.ides
       self.modules.darwin.databases
       self.modules.darwin.input
+      self.modules.darwin.mouseless
+      self.modules.darwin.stremio
       self.modules.darwin.macos-utils
       self.modules.darwin.onepassword
       self.modules.darwin.nordvpn

@@ -54,6 +54,7 @@ in {
         vitorf7.darwin.aerospace.enable = true;
         vitorf7.darwin.colima.enable = true;
         vitorf7.darwin.work.enable = true;
+        vitorf7.desktop.mouseless.enable = true;
         vitorf7.git.defaultProfile = "work";
         vitorf7.git.personal.enable = true;
         vitorf7.git.personal.directories = ["~/dotfiles/" "~/code/personal/" "~/code/nvim-kick" "~/.config/nvim"];
@@ -81,6 +82,7 @@ in {
       self.modules.darwin.ides
       self.modules.darwin.databases
       self.modules.darwin.input
+      self.modules.darwin.mouseless
       self.modules.darwin.macos-utils
       self.modules.darwin.onepassword
       self.modules.darwin.nordvpn
