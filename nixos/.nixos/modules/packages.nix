@@ -17,6 +17,7 @@
       tide-island = pkgs.callPackage ../pkgs/tide-island.nix {};
       mouseless = pkgs.callPackage ../pkgs/mouseless.nix {};
       hyprmod = inputs.hyprmod.packages.${system}.default;
+      quickshell-share-picker = pkgs.callPackage ../pkgs/quickshell-share-picker.nix {};
     };
   in {
     packages =

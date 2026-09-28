@@ -1,4 +1,4 @@
-{...}: {
+{self, ...}: {
   flake.modules.nixos.hyprland = {
     config,
     pkgs,
@@ -6,6 +6,10 @@
     ...
   }:
     lib.mkIf config.vitorf7.desktop.hyprland.enable {
+      environment.systemPackages = [
+        self.packages.${pkgs.stdenv.hostPlatform.system}.quickshell-share-picker
+      ];
+
       programs.hyprland = {
         enable = true;
         xwayland.enable = true;
@@ -105,6 +109,12 @@
       };
 
       xdg.configFile = {
+        "hypr/xdph.conf".text = ''
+          screencopy {
+            custom_picker_binary = ${self.packages.${pkgs.stdenv.hostPlatform.system}.quickshell-share-picker}/bin/quickshell-share-picker
+            allow_token_by_default = true
+          }
+        '';
         "hypr/scheme".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/hyprland/.config/hypr/scheme";
         "hypr/hyprland.lua".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/hyprland/.config/hypr/hyprland.lua";
         "hypr/.claude".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/hyprland/.config/hypr/.claude";
