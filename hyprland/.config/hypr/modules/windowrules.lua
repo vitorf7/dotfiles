@@ -25,6 +25,15 @@ hl.window_rule({
     no_focus = true,
 })
 
+-- Float the polkit agent authentication prompt
+hl.window_rule({
+    name = "float-polkit-agent",
+    match = {
+        title = "Authentication Required",
+    },
+    float = true,
+})
+
 -- Hyprland-run windowrule
 hl.window_rule({
     name = "move-hyprland-run",
