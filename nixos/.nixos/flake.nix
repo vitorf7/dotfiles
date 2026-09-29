@@ -40,6 +40,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    dankcalendar = {
+      url = "github:AvengeMedia/dankcalendar";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     hyprmod = {
       url = "github:vitorf7/hyprmod/nix-flake";
       inputs.nixpkgs.follows = "nixpkgs";

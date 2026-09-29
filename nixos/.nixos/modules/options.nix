@@ -20,6 +20,7 @@
       desktop.tide_island.enable = lib.mkEnableOption "Tide Island Dynamic Island for Hyprland (Quickshell-based)";
       desktop.caelestia_shell.enable = lib.mkEnableOption "Caelestia Shell Quickshell Config";
       desktop.dank_material_shell.enable = lib.mkEnableOption "DankMaterialShell (DMS)";
+      desktop.dankcalendar.enable = lib.mkEnableOption "DankCalendar (dcal) — Google/Microsoft/CalDAV calendar daemon, DMS calendar backend";
       desktop.flatpak.enable = lib.mkEnableOption "Flatpak support with declarative package management";
       desktop.mouseless.enable = lib.mkEnableOption "Mouseless (Flatpak on Linux, Homebrew cask on macOS)";
       desktop.stremio.enable = lib.mkEnableOption "Stremio (Flatpak on Linux, Homebrew cask on macOS)";

@@ -39,6 +39,7 @@
       tide-island
       caelestia-shell
       dank-material-shell
+      dankcalendar
       kubernetes
       docker
       input
@@ -80,6 +81,7 @@ in {
         vitorf7.desktop.tide_island.enable = false;
         vitorf7.desktop.caelestia_shell.enable = false;
         vitorf7.desktop.dank_material_shell.enable = true;
+        vitorf7.desktop.dankcalendar.enable = true;
         vitorf7.desktop.flatpak.enable = true;
         vitorf7.desktop.mouseless.enable = true;
         vitorf7.desktop.stremio.enable = true;
@@ -114,6 +116,7 @@ in {
       self.modules.nixos.qs-brain-shell
       self.modules.nixos.ambxst
       self.modules.nixos.dank-material-shell
+      self.modules.nixos.dankcalendar
       self.modules.nixos.secrets
       self.modules.nixos.flatpak
       self.modules.nixos.mouseless

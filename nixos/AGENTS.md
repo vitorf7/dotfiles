@@ -103,7 +103,7 @@ Details, if running things by hand:
 
 **If any of the above stops partway through** (a real build failure, a network hiccup, etc.), it can leave the `.nix` file half-updated — e.g. `version` bumped but `vendorHash`/`hash` still the old value. Check `git diff pkgs/` after a failed run and revert by hand if so, rather than leaving a derivation with mismatched version/hash pairs.
 
-The `overrideAttrs` patches in `modules/nix-base.nix` (`throttled`) and `modules/dank-material-shell.nix` ride whatever version `nix flake update` brings in — no separate update step, but re-check the patch still applies after a big nixpkgs/DMS bump.
+The `overrideAttrs` patches in `modules/nix-base.nix` (`throttled`), `modules/dank-material-shell.nix`, and `modules/dankcalendar.nix` (narrows the Google OAuth consent to `calendar.events.owned` and drops the Tasks scope — required by the work Workspace admin) ride whatever version `nix flake update` brings in — no separate update step, but re-check the patch still applies after a big nixpkgs/DMS/dankcalendar bump.
 
 ## Secrets — never read
 
