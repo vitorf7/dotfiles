@@ -5,6 +5,7 @@ hl.on("hyprland.start", function()
 	-- hl.exec_cmd("waybar")
 	hl.exec_cmd("vicinae server")
 	hl.exec_cmd("avizo-service")
+	hl.exec_cmd("easyeffects --service-mode")
 	hl.exec_cmd("lxqt-policykit-agent")
 	-- hl.exec_cmd("caelestia shell -d")
 	-- hl.exec_cmd("tide-island")
@@ -23,5 +24,3 @@ hl.on("hyprland.start", function()
 	hl.exec_cmd("systemctl --user start openlogi-agent.service")
 	hl.exec_cmd("systemctl --user start ydotool.service")
 end)
-
--- exec-once = easyeffects --gapplication-service
