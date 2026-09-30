@@ -1,0 +1,71 @@
+/*
+  Zen-style pinned tabs for Vivaldi's vertical tab bar (left or right).
+
+  Pinned tabs render as a vertical stack of icon-only square buttons at the
+  top of the tab bar, like Zen Browser's pinned tabs section.
+
+  One-time setup (not declarative — stored in the binary profile):
+    1. vivaldi://experiments -> enable "Allow CSS Modifications"
+    2. Settings -> Appearance -> Custom UI Modifications -> select
+       ~/.config/vivaldi-mods  (symlinked from ~/dotfiles by home-manager)
+    3. Settings -> Tabs -> Tab Bar Position -> Left
+    4. Right-click a tab -> Pin Tab (pins live per-workspace; use Web Panels
+       on the opposite side for cross-workspace "global" pins)
+
+  If a Vivaldi update changes DOM class names, tweak the selectors below —
+  inspect the UI with: vivaldi --debug-packed-apps --silent-debugger-extension-api
+*/
+
+:root {
+  --zen-pin-size: 36px;
+  --zen-pin-icon: 18px;
+  --zen-pin-gap: 6px;
+}
+
+/* Pinned rows shrink to square, centered, icon-only cells */
+#tabs-container .tab-strip .tab-position.is-pinned .tab-wrapper {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  min-height: var(--zen-pin-size) !important;
+  max-height: var(--zen-pin-size) !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  border-radius: var(--radius, 8px) !important;
+}
+
+#tabs-container .tab-strip .tab-position.is-pinned .tab-header {
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+}
+
+/* No titles, no close buttons, no stack counters on pins */
+#tabs-container .tab-strip .tab-position.is-pinned .title,
+#tabs-container .tab-strip .tab-position.is-pinned .close,
+#tabs-container .tab-strip .tab-position.is-pinned .stack-counter {
+  display: none !important;
+}
+
+/* Centered favicon as the button face */
+#tabs-container .tab-strip .tab-position.is-pinned .favicon {
+  width: var(--zen-pin-icon) !important;
+  height: var(--zen-pin-icon) !important;
+  min-width: var(--zen-pin-icon) !important;
+  margin: 0 !important;
+  flex: 0 0 auto !important;
+}
+
+/* Zen-like active/hover treatment */
+#tabs-container .tab-strip .tab-position.is-pinned .tab-wrapper.active {
+  background-color: var(--colorAccentBg, rgba(128, 128, 128, 0.25)) !important;
+}
+
+#tabs-container .tab-strip .tab-position.is-pinned:not(.active) .tab-wrapper:hover {
+  background-color: var(--colorFgAlpha, rgba(128, 128, 128, 0.12)) !important;
+}
+
+/* Breathing room between the pin stack and regular tabs */
+#tabs-container .tab-strip .tab-position.is-pinned {
+  margin-bottom: var(--zen-pin-gap) !important;
+}

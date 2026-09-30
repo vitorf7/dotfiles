@@ -1,0 +1,67 @@
+/*
+  Zen-style "Essentials" strip for Vivaldi's Web Panels.
+
+  Vivaldi's Web Panels are the Essentials analog: sites pinned as icon buttons
+  in a side panel, window-level so they persist across all Workspaces and open
+  alongside the main content. This file restyles the panel toggle strip
+  (#switch) into Zen's clean square Essentials column.
+
+  One-time setup (not declarative — stored in the binary profile):
+    1. vivaldi://experiments -> enable "Allow CSS Modifications"
+    2. Settings -> Appearance -> Custom UI Modifications -> select
+       ~/.config/vivaldi-mods  (symlinked from ~/dotfiles by home-manager)
+    3. Settings -> Panels -> Panel Position -> Right (tabs stay Left)
+    4. Create panels: drag a tab (or the site-info button) down onto the
+       panel toggle bar — or right-click the panel bar -> Add Web Panel
+    5. Middle-click a panel's icon to open that site as a full tab instead
+
+  If a Vivaldi update changes DOM class names, tweak the selectors below —
+  inspect the UI with: vivaldi --debug-packed-apps --silent-debugger-extension-api
+*/
+
+:root {
+  --zen-essential-size: 34px;
+  --zen-essential-icon: 18px;
+}
+
+/* Narrow, centered icon column like Zen's Essentials */
+#panels-container #switch {
+  padding: 6px 4px !important;
+}
+
+/* Square, evenly spaced buttons for every panel toggle
+   (web panels + built-in panels + the add-panel button) */
+#panels-container #switch .button-toolbar,
+#panels-container #switch .addwebpanel-wrapper {
+  justify-content: center !important;
+  align-items: center !important;
+  min-height: var(--zen-essential-size) !important;
+  max-height: var(--zen-essential-size) !important;
+  margin: 2px auto !important;
+  border-radius: var(--radius, 8px) !important;
+}
+
+/* Icon sizing */
+#panels-container #switch .button-toolbar svg,
+#panels-container #switch .button-toolbar img,
+#panels-container #switch .addwebpanel-wrapper svg {
+  width: var(--zen-essential-icon) !important;
+  height: var(--zen-essential-icon) !important;
+}
+
+/* Zen-like pressed/hover treatment */
+#panels-container #switch .button-toolbar:hover,
+#panels-container #switch .addwebpanel-wrapper:hover {
+  background-color: var(--colorFgAlpha, rgba(128, 128, 128, 0.12)) !important;
+}
+
+#panels-container #switch .button-toolbar.active,
+#panels-container #switch > .button-toolbar.active,
+#panels-container #switch > * > .button-toolbar.active {
+  background-color: var(--colorAccentBg, rgba(128, 128, 128, 0.25)) !important;
+}
+
+/* Panel stack styling — keep the opened panel calm and borderless */
+#panels .webpanel-stack .webpanel .webpanel-content {
+  border: none !important;
+}
