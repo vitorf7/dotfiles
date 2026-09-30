@@ -1,0 +1,111 @@
+#!/usr/bin/env bash
+# nvfix — repair foreign-managed binaries (Mason, bob, `go install`,
+# `cargo install`) that broke because nixpkgs-patched toolchains bake
+# GC-able /nix/store/<hash>-glibc interpreter paths into everything
+# they build. After a `nrs` + `nh clean`, those store paths vanish and
+# every such binary dies with "required file not found".
+#
+# Three jobs:
+#   1. Repair bob's nvim (the old `nvim-fix` alias logic).
+#   2. Reap orphaned `nvim --embed` leak processes (see below).
+#   3. Rewrite any ELF interpreter pointing into /nix/store onto the
+#      rebuild-stable nix-ld loader path:
+#        PT_INTERP -> /lib64/ld-linux-x86-64.so.2
+#      which survives nixos-rebuild switch + garbage collection; shared
+#      libraries are resolved at runtime via NIX_LD_LIBRARY_PATH, which
+#      the nix-ld NixOS module sets system-wide.
+#      (No --add-rpath/--set-rpath: Go cgo-built binaries — most of what
+#      Mason `go install` produces — segfault when a RUNPATH is patched
+#      in; interpreter-only rewrites are safe for Go and Rust alike.)
+#
+# Runs on demand (`nvfix` / `nvim-fix`) and daily via the home-manager
+# systemd user timer declared in nixos/.nixos/modules/dev.nix.
+
+set -u
+
+if [ "$(uname -s)" != "Linux" ]; then
+    exit 0
+fi
+
+# --- 1. bob nvim repair ------------------------------------------------------
+
+bob_dir="$HOME/.local/share/bob"
+if [ -d "$bob_dir" ]; then
+    used=$(tr -d '[:space:]' < "$bob_dir/used" 2>/dev/null || true)
+    cur="$bob_dir/nvim-bin/nvim"
+    if [ -n "$used" ] && ! "$cur" --version >/dev/null 2>&1; then
+        if "$bob_dir/$used/bin/nvim" --version >/dev/null 2>&1; then
+            rm -f "$cur"
+            ln -s "$bob_dir/$used/bin/nvim" "$cur"
+            echo "nvfix: bob nvim restored -> $used (nix-ld provides the linker)"
+        else
+            echo "nvfix: bob $used binary itself is broken — re-download with: bob install $used" >&2
+        fi
+    fi
+fi
+
+# --- 2. ELF interpreter repair ---------------------------------------------
+
+if ! command -v patchelf >/dev/null 2>&1; then
+    echo "nvfix: patchelf not in PATH — run 'hm' (or nrs) first, then retry" >&2
+    exit 1
+fi
+
+# (helper first, used below)
+reap_embed_orphans() {
+    # An unidentified plugin spawns `nvim --embed` during nvim's exit
+    # sequence (race-dependent, dodge-prone). The orphans hold a self-looped
+    # stdio pipe so they never see EOF, each running a full config copy —
+    # including their own codeium language server. They leak with PPID 1.
+    # Live sessions are safe: their nvim parent is never PID 1.
+    for pid in $(pgrep -x nvim 2>/dev/null); do
+        [ -r "/proc/$pid/cmdline" ] || continue
+        cmd=$(tr '\0' ' ' < "/proc/$pid/cmdline" 2>/dev/null)
+        case "$cmd" in
+            *" --embed "*|*" --embed") ;;
+            *) continue ;;
+        esac
+        ppid=$(awk '{print $4}' "/proc/$pid/stat" 2>/dev/null)
+        if [ "$ppid" = "1" ]; then
+            for child in $(pgrep -P "$pid" 2>/dev/null); do
+                pkill -9 -P "$child" 2>/dev/null
+                kill -9 "$child" 2>/dev/null
+            done
+            kill -9 "$pid" 2>/dev/null
+            echo "nvfix: reaped orphaned embedded nvim $pid (ppid 1)"
+        fi
+    done
+}
+
+reap_embed_orphans
+
+STABLE_INTERP=/lib64/ld-linux-x86-64.so.2
+
+roots=(
+    "$HOME/.local/share/nvim/mason/packages"
+    "$HOME/go/bin"
+    "$HOME/.cargo/bin"
+    "$HOME/.local/bin"
+    "$HOME/.npm-global/bin"
+)
+
+fixed=0
+for root in "${roots[@]}"; do
+    [ -d "$root" ] || continue
+    while IFS= read -r -d '' f; do
+        interp=$(patchelf --print-interpreter "$f" 2>/dev/null) || continue
+        case "$interp" in
+            /nix/store/*)
+                chmod u+w "$f" 2>/dev/null || true
+                if patchelf --set-interpreter "$STABLE_INTERP" "$f" 2>/dev/null; then
+                    echo "nvfix: $f"
+                    fixed=$((fixed + 1))
+                else
+                    echo "nvfix: FAILED to patch $f" >&2
+                fi
+                ;;
+        esac
+    done < <(find "$root" -type f -perm -u+x -print0 2>/dev/null)
+done
+
+echo "nvfix: done ($fixed binaries repointed to nix-ld)"

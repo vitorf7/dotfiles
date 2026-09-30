@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# nvim wrapper — sits earlier in PATH than bob's nvim-bin (config.fish
+# adds ~/.config/bin after nvim-bin and fish_add_path prepends).
+#
+# Mason builds Go tools inside Neovim with `go install`; with the
+# nixpkgs go/cc wrappers that bakes a GC-able /nix/store/<glibc>
+# interpreter path into every binary produced (they die on the next
+# `nrs` + `nh clean`). CGO_ENABLED=0 makes those builds fully static —
+# no interpreter at all, so they can never break. Anything that still
+# slips through (e.g. cargo-built tools) is healed by `nvfix`.
+
+cur_dir=$(cd "$(dirname "$0")" && pwd)
+
+if [ "$(uname -s)" = "Linux" ]; then
+    bob_nv="$HOME/.local/share/bob/nvim-bin/nvim"
+    if [ -x "$bob_nv" ]; then
+        exec env CGO_ENABLED=0 "$bob_nv" "$@"
+    fi
+    # No bob on this machine: still export for the PATH fallback below.
+    export CGO_ENABLED=0
+fi
+
+# Fall back (non-Linux, or Linux without bob): first nvim in PATH that
+# isn't this wrapper itself.
+IFS=:
+for d in $PATH; do
+    [ -n "$d" ] || continue
+    [ "$d" = "$cur_dir" ] && continue
+    if [ -x "$d/nvim" ]; then
+        exec "$d/nvim" "$@"
+    fi
+done
+
+echo "nvim wrapper: no real nvim found in PATH (excluding $cur_dir)" >&2
+exit 127
