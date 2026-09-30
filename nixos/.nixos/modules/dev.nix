@@ -36,7 +36,6 @@
         yarn
         python3
         go_1_26
-        rustup
         evans
         grpcui
         yq-go
@@ -44,7 +43,21 @@
         self.packages.${pkgs.stdenv.hostPlatform.system}.apix
         self.packages.${pkgs.stdenv.hostPlatform.system}.strongbox
       ]
+      # Linux uses a nixpkgs-provided rust toolchain instead of rustup:
+      # rustup shims exec upstream toolchain binaries, whose /lib64
+      # interpreter only works via nix-ld, while binaries the shim builds
+      # (e.g. Mason `cargo install` tools) carry GC-able /nix/store
+      # interpreter paths — see fish/.config/bin/nvfix. On macOS (FHS)
+      # rustup's shims and toolchains work natively, so they stay.
+      # patchelf is nvfix's workhorse on Linux.
+      ++ lib.optionals (!isDarwin) [
+        cargo
+        rustc
+        rustfmt
+        patchelf
+      ]
       ++ lib.optionals isDarwin [
+        rustup
         cmake
         ninja
         pkg-config
@@ -69,5 +82,30 @@
     # real `git` binary sidesteps that libgit2 limitation entirely.
     home.file.".cargo/config.toml".source = link "${dot}/cargo/.cargo/config.toml";
     home.file.".apix.yaml".source = link "${dot}/secrets/.apix.yaml";
+
+    # Self-healing for foreign-managed binaries: anything built on this
+    # machine with the nixpkgs go/cc wrappers (Mason `go install`/cargo
+    # builds, bob's nvim) bakes GC-able /nix/store/<glibc> interpreter
+    # paths into the binaries, so they die after the next `nrs` +
+    # `nh clean`. `nvfix` (fish package, ~/.config/bin/nvfix) repoints
+    # them onto the rebuild-stable nix-ld paths. The nvim wrapper in the
+    # same directory sets CGO_ENABLED=0 so future Mason Go builds come
+    # out fully static instead.
+    systemd.user.services.nvfix = lib.mkIf (!isDarwin) {
+      Unit.Description = "Repoint foreign-built binaries at the stable nix-ld loader";
+      Service = {
+        Type = "oneshot";
+        ExecStart = "${config.home.homeDirectory}/.config/bin/nvfix";
+      };
+    };
+    systemd.user.timers.nvfix = lib.mkIf (!isDarwin) {
+      Unit.Description = "Run nvfix daily to heal binaries broken by rebuilds";
+      Timer = {
+        OnBootSec = "10min";
+        OnUnitActiveSec = "1d";
+        Persistent = true;
+      };
+      Install.WantedBy = ["timers.target"];
+    };
   };
 }

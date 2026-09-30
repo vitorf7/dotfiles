@@ -61,6 +61,14 @@
         "superfile".source = link "${dot}/superfile/.config/superfile";
         "lf".source = link "${dot}/lf/.config/lf";
       }
+      # ~/.config/bin (config.fish puts it on PATH, ahead of bob's nvim-bin):
+      # nvfix repoints foreign-built binaries (Mason `go install`/cargo builds,
+      # bob's nvim) at the rebuild-stable nix-ld paths after nix rebuilds, and
+      # the nvim wrapper sets CGO_ENABLED=0 so Mason Go builds come out fully
+      # static. Linux-only — darwin has no nix-ld and needs neither.
+      // {
+        "bin" = lib.mkIf isLinux {source = link "${dot}/fish/.config/bin";};
+      }
       // {
         "fish/config.fish".source = link "${dot}/fish/.config/fish/config.fish";
         "fish/aliases.fish".source = link "${dot}/fish/.config/fish/aliases.fish";
