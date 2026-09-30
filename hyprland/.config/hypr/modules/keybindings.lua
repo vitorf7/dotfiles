@@ -33,11 +33,11 @@ local hyprScripts = "~/.config/hypr/scripts"
 -- See https://wiki.hyprland.org/Configuring/Keywords/
 
 -- Example binds, see https://wiki.hyprland.org/Configuring/Binds/ for more
-hl.bind("SHIFT + " .. mainMod .. " + SUPER + T", hl.dsp.exec_cmd(terminal))
-hl.bind("SHIFT + " .. mainMod .. " + SUPER + B", hl.dsp.exec_cmd(browser))
-hl.bind("SHIFT + " .. mainMod .. " + SUPER + M", hl.dsp.exec_cmd(music))
-hl.bind("SHIFT + " .. mainMod .. " + SUPER + S", hl.dsp.exec_cmd(social))
-hl.bind("SHIFT + " .. mainMod .. " + SUPER + N", hl.dsp.exec_cmd(notes))
+-- hl.bind("SHIFT + " .. mainMod .. " + SUPER + T", hl.dsp.exec_cmd(terminal))
+-- hl.bind("SHIFT + " .. mainMod .. " + SUPER + B", hl.dsp.exec_cmd(browser))
+-- hl.bind("SHIFT + " .. mainMod .. " + SUPER + M", hl.dsp.exec_cmd(music))
+-- hl.bind("SHIFT + " .. mainMod .. " + SUPER + S", hl.dsp.exec_cmd(social))
+-- hl.bind("SHIFT + " .. mainMod .. " + SUPER + N", hl.dsp.exec_cmd(notes))
 hl.bind(mainMod .. " + M", hl.dsp.exit())
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))

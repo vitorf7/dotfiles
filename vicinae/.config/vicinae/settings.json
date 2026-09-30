@@ -120,16 +120,28 @@
                "shortcut": "control+alt+shift+B"
             },
             "com.mitchellh.ghostty": {
-               "shortcut": "control+alt+shift+T"
+               "shortcut": "super+alt+shift+T"
             },
             "com.spotify.client": {
                "shortcut": "control+alt+shift+M"
             },
+            "ferdium": {
+               "shortcut": "super+alt+shift+S"
+            },
             "md.obsidian": {
                "shortcut": "control+alt+shift+N"
             },
+            "obsidian": {
+               "shortcut": "super+alt+shift+N"
+            },
             "org.ferdium.ferdium-app": {
                "shortcut": "control+alt+shift+S"
+            },
+            "spotify": {
+               "shortcut": "super+alt+shift+M"
+            },
+            "zen": {
+               "shortcut": "super+alt+shift+B"
             }
          }
       }
