@@ -8,14 +8,21 @@
       enable = true;
 
       libraries = with pkgs; [
+        # glib/zstd/brotli/unixODBC: needed by FHS prebuilt LSP binaries
+        # Mason installs (e.g. qmlls links libglib-2.0, libzstd,
+        # libbrotlidec, libodbc on top of the entries below).
+        brotli
         curl
         expat
         fuse3
+        glib
         icu
         nss
         openssl
         stdenv.cc.cc
+        unixODBC
         zlib
+        zstd
       ];
     };
 
