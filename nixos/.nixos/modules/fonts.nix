@@ -20,6 +20,7 @@ in {
       nerd-fonts.meslo-lg
       nerd-fonts.symbols-only
       nerd-fonts.monaspace
+      nerd-fonts.firecode
       commit-mono
       noto-fonts-color-emoji
     ];
