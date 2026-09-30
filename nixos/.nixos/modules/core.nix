@@ -13,6 +13,7 @@
       [
         gnumake
         unzip
+        zip
         curl
         stow
         sops
