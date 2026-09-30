@@ -17,11 +17,24 @@
     ...
   }: let
     isLinux = pkgs.stdenv.isLinux;
+    link = config.lib.file.mkOutOfStoreSymlink;
   in
     lib.mkIf osConfig.vitorf7.desktop.enable {
       home.packages = lib.optionals isLinux [
         inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
+        (pkgs.vivaldi.override {
+          enableWidevine = true;
+          proprietaryCodecs = true;
+        })
       ];
+
+      # CSS mods that restyle Vivaldi into a Zen Browser lookalike
+      # (vertical pinned-tab icon stack + Essentials-style Web Panel strip).
+      # Requires one-time opt-in inside Vivaldi itself:
+      #   vivaldi://experiments -> Allow CSS Modifications
+      #   Settings -> Appearance -> Custom UI Modifications -> ~/.config/vivaldi-mods
+      # (the flag and folder path live in the binary profile, not in Nix).
+      xdg.configFile."vivaldi-mods".source = link "${config.home.homeDirectory}/dotfiles/vivaldi/.config/vivaldi-mods";
 
       xdg.mimeApps.defaultApplications = lib.mkIf isLinux {
         "text/html" = "zen.desktop";
@@ -48,6 +61,22 @@
       # Meet remembers the choice. Native camera apps are smooth.
       #
       # To switch, swap the `allow-pipewire` value below (true <-> false) and rebuild.
+      #
+      # --- DIAGNOSED 2026-09-30: Zen camera pipeline starves; use Vivaldi for Meet ---
+      # Symptom: Meet in Zen intermittently laggy; buttery smooth in Vivaldi.
+      # Diagnosis (about:webrtc dumps saved ~/aboutWebrtc*.html, Sep 30):
+      #   - Device + portal + network all healthy: C922 streams MJPG 1280x720@60
+      #     via PipeWire in both browsers; RTT 20-30ms, nacks ~0, no renegotiation.
+      #   - Zen framesSent/s ~13-15 at "good" times (expected ~30), 2-6 under load,
+      #     all simulcast layers, full resolution. Local self-view masks it (renders
+      #     raw capture); the remote side sees the degradation.
+      #   - Firefox pipeline is CPU-bound: software MJPEG decode + VP8/9 encode +
+      #     Meet AI lighting features (software-only on Firefox, GPU on Chromium)
+      #     collapse under system load. OpenLogi agent polling ruled out.
+      # Decision: Google Meet -> Vivaldi (home.packages above, Widevine + codecs);
+      # Meet installed as a Vivaldi PWA, launched from Vicinae. Zen stays default
+      # browser. Meet emergencies in Zen: disable Meet's AI lighting features and
+      # lower send resolution.
       #
       # Glob the profile dir rather than hardcoding the random profile
       # suffix Zen generates on first launch.
