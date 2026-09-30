@@ -33,6 +33,7 @@ display_input: none
 event_tap_location: hid_head
 excluded_input_devices:
   - MX Master 3
+  - OpenLogi
 general_settings:
   automatically_check_for_updates: true
   check_for_preview_releases: true
