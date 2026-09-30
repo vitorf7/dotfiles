@@ -84,6 +84,7 @@ in {
       self.modules.darwin.input
       self.modules.darwin.mouseless
       self.modules.darwin.macos-utils
+      self.modules.darwin.office
       self.modules.darwin.onepassword
       self.modules.darwin.nordvpn
       self.modules.darwin.dev

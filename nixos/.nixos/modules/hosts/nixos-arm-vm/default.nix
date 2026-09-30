@@ -73,6 +73,7 @@ in {
       self.modules.nixos.boot
       self.modules.nixos.locale
       self.modules.nixos.networking
+      self.modules.nixos.printing
       self.modules.nixos.users
       self.modules.nixos.power
       self.modules.nixos.webcam

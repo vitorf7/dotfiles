@@ -28,9 +28,6 @@
       }
       // lib.optionalAttrs cfg.work.enable {
         "Okta Verify" = 490179405;
-        Keynote = 361285480;
-        Numbers = 361304891;
-        Pages = 361309726;
       };
   };
 }
