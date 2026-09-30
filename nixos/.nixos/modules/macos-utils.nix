@@ -15,7 +15,6 @@
       "meetingbar"
       "utm"
       "logos"
-      "obsidian"
       "sf-symbols"
       "gpg-suite"
       "zulu@17"

@@ -47,6 +47,7 @@
       mouseless
       databases
       webcam
+      notes
     ];
     home.username = username;
     home.homeDirectory = "/home/${username}";

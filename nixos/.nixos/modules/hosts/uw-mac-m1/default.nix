@@ -88,6 +88,7 @@ in {
       self.modules.darwin.onepassword
       self.modules.darwin.nordvpn
       self.modules.darwin.dev
+      self.modules.darwin.notes
       # Home-manager
       inputs.home-manager.darwinModules.home-manager
       {
