@@ -29,52 +29,11 @@ hl.window_rule({
 
 -- DMS recommended app rules
 hl.window_rule({
-	name = "gnome-apps-no-border",
+	name = "gnome-apps-rounding",
 	match = {
 		class = "^(org\\.gnome\\.)",
 	},
-	border_size = 0,
 	rounding = 12,
-})
-
-hl.window_rule({
-	name = "wezterm-no-border",
-	match = {
-		class = "^(org\\.wezfurlong\\.wezterm)$",
-	},
-	border_size = 0,
-})
-
-hl.window_rule({
-	name = "alacritty-no-border",
-	match = {
-		class = "^(Alacritty)$",
-	},
-	border_size = 0,
-})
-
-hl.window_rule({
-	name = "zen-no-border",
-	match = {
-		class = "^(zen)$",
-	},
-	border_size = 0,
-})
-
-hl.window_rule({
-	name = "ghostty-no-border",
-	match = {
-		class = "^(com\\.mitchellh\\.ghostty)$",
-	},
-	border_size = 0,
-})
-
-hl.window_rule({
-	name = "kitty-no-border",
-	match = {
-		class = "^(kitty)$",
-	},
-	border_size = 0,
 })
 
 hl.window_rule({
@@ -125,22 +84,26 @@ hl.bind(mod .. " + P", hl.dsp.exec_cmd("dms ipc call powerprofile toggle"))
 hl.bind(mod .. " + ALT + L", hl.dsp.exec_cmd("dms ipc call lock lock"))
 
 -- === Audio Controls ===
-hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("dms ipc call audio increment 3"), { locked = true, repeating = true })
-hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("dms ipc call audio decrement 3"), { locked = true, repeating = true })
+hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("dms ipc call audio increment 2"), { locked = true, repeating = true })
+hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("dms ipc call audio decrement 2"), { locked = true, repeating = true })
 hl.bind("XF86AudioMute", hl.dsp.exec_cmd("dms ipc call audio mute"), { locked = true })
 hl.bind("XF86AudioMicMute", hl.dsp.exec_cmd("dms ipc call audio micmute"), { locked = true })
-hl.bind("XF86AudioPause", hl.dsp.exec_cmd("dms ipc call mpris playPause"), { locked = true })
-hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("dms ipc call mpris playPause"), { locked = true })
-hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("dms ipc call mpris previous"), { locked = true })
-hl.bind("XF86AudioNext", hl.dsp.exec_cmd("dms ipc call mpris next"), { locked = true })
+-- hl.bind("XF86AudioPause", hl.dsp.exec_cmd("dms ipc call mpris playPause"), { locked = true })
+-- hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("dms ipc call mpris playPause"), { locked = true })
+-- hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("dms ipc call mpris previous"), { locked = true })
+-- hl.bind("XF86AudioNext", hl.dsp.exec_cmd("dms ipc call mpris next"), { locked = true })
+hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
+hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
+hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true })
+hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"), { locked = true })
 hl.bind(
 	"CTRL + XF86AudioRaiseVolume",
-	hl.dsp.exec_cmd("dms ipc call mpris increment 3"),
+	hl.dsp.exec_cmd("dms ipc call mpris increment 2"),
 	{ locked = true, repeating = true }
 )
 hl.bind(
 	"CTRL + XF86AudioLowerVolume",
-	hl.dsp.exec_cmd("dms ipc call mpris decrement 3"),
+	hl.dsp.exec_cmd("dms ipc call mpris decrement 2"),
 	{ locked = true, repeating = true }
 )
 
