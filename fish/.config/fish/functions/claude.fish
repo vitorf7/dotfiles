@@ -26,6 +26,5 @@ function claude --description 'claude-code with an isolated HOME to skip the san
             --tmpfs "$HOME/.nix-defexpr" \
             --tmpfs "$HOME/.local/state/nix" \
             --tmpfs "$HOME/.local/state/home-manager" \
-            --tmpfs "$HOME/.nixos" \
             claude $argv
 end
