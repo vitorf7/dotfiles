@@ -14,7 +14,7 @@ local function find_cmd(...)
 end
 
 local browser = find_cmd("zen-browser", "zen")
-local music = "spotify-launcher"
+local music = "spotify"
 local social = "ferdium"
 local notes = "obsidian"
 local fileManager = "nautilus"
@@ -150,11 +150,11 @@ hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), {
 })
 
 -- Laptop multimedia keys for volume and LCD brightness with Avizo OSD
-hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("volumectl -u up"), {
+hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("volumectl -u up 2"), {
 	repeating = true,
 	locked = true,
 })
-hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("volumectl -u down"), {
+hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("volumectl -u down 2"), {
 	repeating = true,
 	locked = true,
 })
@@ -180,7 +180,7 @@ hl.bind(mainMod .. " + C", hl.dsp.exec_cmd("hyprpicker -a | wl-copy"))
 -- £ at all (silently no-ops), so we send raw keycodes for Shift+3 instead —
 -- resolved to £ via the "gb" layout pinned to ydotoold's device in input.lua.
 -- KEY_LEFTSHIFT=42, KEY_3=4 (see /usr/include/linux/input-event-codes.h).
-hl.bind(mainMod .. " + 3", hl.dsp.exec_cmd("ydotool key 42:1 4:1 4:0 42:0"))
+hl.bind("ALT + 3", hl.dsp.exec_cmd("ydotool key 42:1 4:1 4:0 42:0"))
 
 -- Keyboard layout toggle (US ↔ GB) — cycles layouts, notifies active layout name.
 -- hyprctl switchxkblayout prints "ok" (IPC ack), so we query the name separately.
