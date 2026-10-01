@@ -4,94 +4,110 @@
 
 -- Ignore maximize requests from all apps. You'll probably like this.
 hl.window_rule({
-    name = "suppress-maximize-events",
-    match = {
-        class = ".*",
-    },
-    suppress_event = "maximize",
+	name = "suppress-maximize-events",
+	match = {
+		class = ".*",
+	},
+	suppress_event = "maximize",
 })
 
 -- Fix some dragging issues with XWayland
 hl.window_rule({
-    name = "fix-xwayland-drags",
-    match = {
-        class = "^$",
-        title = "^$",
-        xwayland = true,
-        float = true,
-        fullscreen = false,
-        pin = false,
-    },
-    no_focus = true,
+	name = "fix-xwayland-drags",
+	match = {
+		class = "^$",
+		title = "^$",
+		xwayland = true,
+		float = true,
+		fullscreen = false,
+		pin = false,
+	},
+	no_focus = true,
 })
 
 -- Float the polkit agent authentication prompt
 hl.window_rule({
-    name = "float-polkit-agent",
-    match = {
-        title = "Authentication Required",
-    },
-    float = true,
+	name = "float-polkit-agent",
+	match = {
+		title = "Authentication Required",
+	},
+	float = true,
 })
 
 -- Hyprland-run windowrule
 hl.window_rule({
-    name = "move-hyprland-run",
-    match = {
-        class = "hyprland-run",
-    },
-    move = "20 monitor_h-120",
-    float = true,
+	name = "move-hyprland-run",
+	match = {
+		class = "hyprland-run",
+	},
+	move = "20 monitor_h-120",
+	float = true,
 })
 hl.window_rule({
-    name = "open-ghostty-in-workspace-1",
-    match = {
-        class = "ghostty",
-    },
-    workspace = 1,
+	name = "open-ghostty-in-workspace-1",
+	match = {
+		class = "ghostty",
+	},
+	workspace = 1,
 })
 hl.window_rule({
-    name = "open-zen-in-workspace-2",
-    match = {
-        class = "zen",
-    },
-    workspace = 2,
+	name = "open-zen-in-workspace-2",
+	match = {
+		class = "zen",
+	},
+	workspace = 2,
 })
 hl.window_rule({
-    name = "open-rambox-in-workspace-3",
-    match = {
-        class = "rambox",
-    },
-    workspace = 3,
+	name = "open-rambox-in-workspace-3",
+	match = {
+		class = "rambox",
+	},
+	workspace = 3,
 })
 hl.window_rule({
-    name = "open-obsidian-in-workspace-4",
-    match = {
-        class = "obsidian",
-    },
-    workspace = 4,
+	name = "open-ferdium-in-workspace-3",
+	match = {
+		class = "ferdium",
+	},
+	workspace = 3,
 })
 hl.window_rule({
-    name = "open-spotify-in-workspace-5",
-    match = {
-        class = "spotify",
-    },
-    workspace = 5,
+	name = "open-obsidian-in-workspace-4",
+	match = {
+		class = "obsidian",
+	},
+	workspace = 4,
+})
+hl.window_rule({
+	name = "open-spotify-in-workspace-7",
+	match = {
+		class = "spotify",
+	},
+	workspace = 7,
 })
 hl.layer_rule({
-    name = "vicinae-blur",
-    blur = true,
-    ignore_alpha = 0,
-    match = {
-        namespace = "vicinae",
-    },
+	name = "vicinae-blur",
+	blur = true,
+	ignore_alpha = 0,
+	match = {
+		namespace = "vicinae",
+	},
 })
 
 -- disable animation for vicinae only
 hl.layer_rule({
-    name = "vicinae-no-animation",
-    no_anim = true,
-    match = {
-        namespace = "vicinae",
-    },
+	name = "vicinae-no-animation",
+	no_anim = true,
+	match = {
+		namespace = "vicinae",
+	},
+})
+
+-- Float Easy Effects
+hl.window_rule({
+	name = "float-easy-effects",
+	match = {
+		class = "com.github.wwmm.easyeffects",
+	},
+	float = true,
 })
