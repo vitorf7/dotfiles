@@ -128,6 +128,14 @@ end
 # fish
 fzf --fish | source
 
+# 'atuinsh/atuin' shell history — https://atuin.sh
+# Guarded: config.fish is shared with hosts that don't install atuin.
+# Sourced after fzf so atuin owns ctrl-r (fzf keeps tab-completion).
+if command -s atuin > /dev/null
+    set atuinCLI (which atuin)
+    $atuinCLI init fish | source
+end
+
 set -Ux FZF_DEFAULT_COMMAND "fd -H -E '.git'"
 set -Ux FZF_DEFAULT_OPTS "--layout=reverse --info=inline --margin=8,15 --border"
 

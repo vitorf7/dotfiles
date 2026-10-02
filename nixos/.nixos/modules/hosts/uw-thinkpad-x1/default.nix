@@ -24,6 +24,7 @@
       office
       communication
       ai
+      atuin
       gaming
       ghostty
       kitty

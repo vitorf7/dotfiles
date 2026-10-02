@@ -1,0 +1,8 @@
+# Atuin — https://docs.atuin.sh/configuration/config/
+# Live-edited: this file is symlinked into ~/.config/atuin (no rebuild).
+
+# No sync server: history lives only in the local SQLite DB
+# (~/.local/share/atuin/history.db). Cross-machine sharing is done by
+# manually copying ~/.local/share/atuin (atuin-db-push / atuin-db-pull) —
+# replace, not merge.
+auto_sync = false
