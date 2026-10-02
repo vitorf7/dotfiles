@@ -111,6 +111,7 @@ in {
       self.modules.nixos.display
       self.modules.nixos.fingerprint-generic
       self.modules.nixos.wiresteward
+      self.modules.nixos.docker
       # NixOS modules (Phase 3 cross-class)
       self.modules.nixos.hyprland
       self.modules.nixos.quickshell
