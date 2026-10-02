@@ -7,6 +7,10 @@ background-opacity-cells = true
 background-opacity = .90
 background-blur-radius = 20
 
+# MX Master 3 hi-res wheel sends many scroll reports per ratchet step;
+# scale down scroll speed in Ghostty (also applies to TUIs like opencode)
+mouse-scroll-multiplier = 0.3
+
 macos-non-native-fullscreen = true
 macos-titlebar-style = hidden
 window-decoration = false
