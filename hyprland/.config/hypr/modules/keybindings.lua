@@ -72,10 +72,12 @@ hl.bind(mainMod .. " + SUPER + R", hl.dsp.exec_cmd(hyprScripts .. "/refresh.sh")
 -- ---------------taking screenshot-------------------------------------------------#
 
 -- ---------------------------------------------------------------------------------#
-hl.bind("SUPER + SHIFT + 5", hl.dsp.exec_cmd("hyprshot -m output -m active -o ~/Screenshots | wl-copy"))
-hl.bind("SUPER + SHIFT + 4", hl.dsp.exec_cmd("hyprshot -m region -o ~/Screenshots | wl-copy"))
-hl.bind("SUPER + CTRL + 5", hl.dsp.exec_cmd("hyprshot -m window -m active -o ~/Screenshots | wl-copy"))
-hl.bind("SUPER + CTRL + 4", hl.dsp.exec_cmd("hyprshot -m region --freeze -o ~/Screenshots | wl-copy"))
+-- hyprshot already copies the PNG to the clipboard itself when saving the
+-- file — piping into wl-copy would feed it zero bytes and clobber the image.
+hl.bind("SUPER + SHIFT + 5", hl.dsp.exec_cmd("hyprshot -m output -m active -o ~/Screenshots"))
+hl.bind("SUPER + SHIFT + 4", hl.dsp.exec_cmd("hyprshot -m region -o ~/Screenshots"))
+hl.bind("SUPER + CTRL + 5", hl.dsp.exec_cmd("hyprshot -m window -m active -o ~/Screenshots"))
+hl.bind("SUPER + CTRL + 4", hl.dsp.exec_cmd("hyprshot -m region --freeze -o ~/Screenshots"))
 
 -- --------------------Screen recording-------------------------------------------#
 hl.bind("SHIFT + SUPER + ALT + CTRL + R", hl.dsp.exec_cmd(hyprScripts .. "/record.sh --sound"))
