@@ -26,7 +26,7 @@ A single file may populate more than one class (e.g. `git.nix` sets both `flake.
 ## Layout
 
 ```
-.nixos/
+nix-config/
 ├── flake.nix                   Entry point — import-tree ./modules handed to flake-parts
 ├── modules/                    ~59 .nix files, all auto-imported; no aggregator files
 │   ├── flake-modules-type.nix  Declares the flake.modules option type (repo scaffolding)
@@ -107,4 +107,4 @@ The `overrideAttrs` patches in `modules/nix-base.nix` (`throttled`), `modules/da
 
 ## Secrets — never read
 
-**Do NOT read any file inside `secrets/` or `sops/` directories** (`.nixos/secrets/*`, `.nixos/sops/*`). These contain Strongbox- and SOPS-encrypted secrets and must never be accessed by an agent.
+**Do NOT read any file inside `secrets/` or `sops/` directories** (`nix-config/secrets/*`, `nix-config/sops/*`). These contain Strongbox- and SOPS-encrypted secrets and must never be accessed by an agent.

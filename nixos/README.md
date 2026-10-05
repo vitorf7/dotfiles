@@ -63,7 +63,7 @@ sudo nixos-rebuild switch --flake .#nixos-arm-vm
 
 Two secret-management mechanisms coexist:
 
-**strongbox** — still covers `nixos/.nixos/secrets/wiresteward-secrets.nix`, encrypted at rest
+**strongbox** — still covers `nixos/nix-config/secrets/wiresteward-secrets.nix`, encrypted at rest
 with [strongbox](https://github.com/uw-labs/strongbox) — the same tool/key already used
 elsewhere in this dotfiles repo — and decrypts automatically on `git clone`/`checkout`/`pull`.
 Before building a host with wiresteward enabled, make sure this machine already has:
@@ -72,7 +72,7 @@ Before building a host with wiresteward enabled, make sure this machine already 
 2. The private keyring in place (same one used for the rest of this repo)
 3. `scripts/gitconfig.sh` run once, to wire up the git filter
 
-If those aren't in place yet, `nixos/.nixos/secrets/*` will contain ciphertext instead of
+If those aren't in place yet, `nixos/nix-config/secrets/*` will contain ciphertext instead of
 usable Nix values. Edit the file with real values before relying on wiresteward DNS.
 
 **sops-nix** — covers everything else: git identities (`sops/git/{personal,work}.yaml`),
@@ -87,7 +87,7 @@ secrets (e.g. wiresteward) and home-manager secrets (e.g. git identity) use this
 ## Fresh install (macOS, one-liner)
 
 Run this on a fresh macOS machine. It installs Xcode CLT/Homebrew/Nix
-if absent, clones dotfiles, decrypts strongbox secrets, stows `~/.nixos`, and does
+if absent, clones dotfiles, decrypts strongbox secrets, stows `~/nix-config`, and does
 the first nix-darwin activation.
 
 ```bash
@@ -143,7 +143,7 @@ On the ThinkPad T480, run:
 lspci | grep -E 'VGA|3D'
 ```
 
-Update `prime.intelBusId` and `prime.nvidiaBusId` in `.nixos/modules/nvidia.nix` to match the
+Update `prime.intelBusId` and `prime.nvidiaBusId` in `nix-config/modules/nvidia.nix` to match the
 output (format: `PCI:bus:device:function`).
 
 ---
@@ -210,7 +210,7 @@ All feature toggles live under `vitorf7` in `modules/options.nix`, shared verbat
 ## Module structure
 
 ```
-.nixos/
+nix-config/
 ├── flake.nix                        Entry point — hands `import-tree ./modules` to flake-parts.mkFlake
 ├── modules/                         Flat: every .nix file here is auto-imported, no aggregator files
 │   ├── flake-modules-type.nix       Declares the `flake.modules` / `flake.darwinConfigurations` options

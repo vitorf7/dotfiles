@@ -1,8 +1,8 @@
 # Understanding My NixOS Configuration — A Guided Tour
 
-> This document explains the NixOS/nix-darwin setup in `nixos/.nixos/` from first principles.
+> This document explains the NixOS/nix-darwin setup in `nixos/nix-config/` from first principles.
 > It assumes you know Linux (and a bit of macOS) but have little to no prior Nix experience.
-> All file paths are relative to `nixos/.nixos/` unless stated otherwise.
+> All file paths are relative to `nixos/nix-config/` unless stated otherwise.
 >
 > This config follows the ["dendritic" flake-parts pattern](https://github.com/mightyiam/dendritic),
 > implemented with [`import-tree`](https://github.com/vic/import-tree). If you've read Nix docs

@@ -43,7 +43,7 @@
 
     programs.nh = {
       enable = true;
-      flake = "/home/${config.vitorf7.username}/dotfiles/nixos/.nixos";
+      flake = "/home/${config.vitorf7.username}/dotfiles/nixos/nix-config";
       clean = {
         enable = true;
         extraArgs = "--keep-since 2w --keep 5";

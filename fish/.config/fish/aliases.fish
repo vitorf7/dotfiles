@@ -262,11 +262,14 @@ function nrs
         set flake (hostname -s)
     end
 
-    # ~/.nixos is stowed on both Linux and macOS via initial_*_setup.sh.
+    # ~/nix-config is stowed on both Linux and macOS via initial_*_setup.sh.
+    # Keep it non-dot-prefixed: Claude Code deny-reads ~/.* and bwrap cannot
+    # tmpfs-mount over a symlink, so a ~/.nixos-style name kills every
+    # sandboxed bash command in claude (see AGENTS.md).
     # Fall back to the repo path when stow hasn't been run yet.
-    set -l flake_dir $HOME/.nixos
+    set -l flake_dir $HOME/nix-config
     if not test -d $flake_dir
-        set flake_dir $HOME/dotfiles/nixos/.nixos
+        set flake_dir $HOME/dotfiles/nixos/nix-config
     end
 
     set -l saved_dir $PWD
@@ -312,11 +315,11 @@ function hm
         set flake (hostname -s)
     end
 
-    # ~/.nixos is stowed on both Linux and macOS via initial_*_setup.sh.
+    # ~/nix-config is stowed on both Linux and macOS via initial_*_setup.sh.
     # Fall back to the repo path when stow hasn't been run yet.
-    set -l flake_dir $HOME/.nixos
+    set -l flake_dir $HOME/nix-config
     if not test -d $flake_dir
-        set flake_dir $HOME/dotfiles/nixos/.nixos
+        set flake_dir $HOME/dotfiles/nixos/nix-config
     end
 
     set -l saved_dir $PWD
@@ -342,11 +345,11 @@ function hm
 end
 
 function nix-update-derivations
-    # Always the real dotfiles checkout, not ~/.nixos (the stow symlink) —
+    # Always the real dotfiles checkout, not ~/nix-config (the stow symlink) —
     # nix-update shells out to `git diff -- <path>`, and git's repo-
     # containment check doesn't follow symlinks, so a path reached via
-    # ~/.nixos gets rejected as outside the repo it discovers from there.
-    set -l flake_dir $HOME/dotfiles/nixos/.nixos
+    # ~/nix-config gets rejected as outside the repo it discovers from there.
+    set -l flake_dir $HOME/dotfiles/nixos/nix-config
 
     set -l updater nix-update
     if not command -q nix-update
@@ -423,6 +426,6 @@ end
 
 function nvim-fix -d "Repair bob's nvim symlink and Mason/cargo/go-built binaries broken by nix flake updates"
     # Delegates to the shared nvfix script (fish/.config/bin/nvfix) — also run
-    # daily by the home-manager systemd user timer (nixos/.nixos/modules/dev.nix).
+    # daily by the home-manager systemd user timer (nixos/nix-config/modules/dev.nix).
     $HOME/.config/bin/nvfix $argv
 end

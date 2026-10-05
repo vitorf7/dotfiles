@@ -116,7 +116,7 @@
     # NH_SHOW_ACTIVATION_LOGS restores the activation-script output (e.g. the
     # Homebrew update/upgrade log) that `nh` hides by default since 4.3.0.
     home.sessionVariables = {
-      NH_FLAKE = "${config.home.homeDirectory}/dotfiles/nixos/.nixos";
+      NH_FLAKE = "${config.home.homeDirectory}/dotfiles/nixos/nix-config";
       NH_SHOW_ACTIVATION_LOGS = "1";
     };
   };

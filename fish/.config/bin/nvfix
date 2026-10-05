@@ -19,7 +19,7 @@
 #      in; interpreter-only rewrites are safe for Go and Rust alike.)
 #
 # Runs on demand (`nvfix` / `nvim-fix`) and daily via the home-manager
-# systemd user timer declared in nixos/.nixos/modules/dev.nix.
+# systemd user timer declared in nixos/nix-config/modules/dev.nix.
 
 set -u
 

@@ -13,7 +13,7 @@ keys:
 
 creation_rules:
   # Shared user secrets — fish private_config (available on all hosts)
-  - path_regex: nixos/\.nixos/sops/shared/.*$
+  - path_regex: nixos/nix-config/sops/shared/.*$
     key_groups:
       - age:
           - *uw-mac-m1
@@ -22,7 +22,7 @@ creation_rules:
           - *uw-thinkpad-x1
 
   # macOS-only secrets — sketchybar weather API key
-  - path_regex: nixos/\.nixos/sops/darwin/.*$
+  - path_regex: nixos/nix-config/sops/darwin/.*$
     key_groups:
       - age:
           - *uw-mac-m1
@@ -31,7 +31,7 @@ creation_rules:
           - *uw-thinkpad-x1
 
   # NixOS-only secrets — wiresteward VPN config
-  - path_regex: nixos/\.nixos/sops/nixos/.*$
+  - path_regex: nixos/nix-config/sops/nixos/.*$
     key_groups:
       - age:
           - *uw-mac-m1
@@ -39,7 +39,7 @@ creation_rules:
           - *uw-thinkpad-x1
 
   # Git identity — personal profile (all machines)
-  - path_regex: nixos/\.nixos/sops/git/personal\.yaml$
+  - path_regex: nixos/nix-config/sops/git/personal\.yaml$
     key_groups:
       - age:
           - *uw-mac-m1
@@ -48,7 +48,7 @@ creation_rules:
           - *uw-thinkpad-x1
 
   # Git identity — work profile (work machines only)
-  - path_regex: nixos/\.nixos/sops/git/work\.yaml$
+  - path_regex: nixos/nix-config/sops/git/work\.yaml$
     key_groups:
       - age:
           - *uw-mac-m1
