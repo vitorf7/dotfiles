@@ -17,9 +17,9 @@
 #   3. Install Nix (NixOS/nix-installer) if absent
 #   4. Clone / pull dotfiles to $HOME/dotfiles, and nvim-kick to $HOME/nvim-kick
 #      (core.nix symlinks ~/.config/nvim -> ~/nvim-kick on every host)
-#   5. Wire strongbox git filter (required for nixos/.nixos/secrets/* in the repo)
+#   5. Wire strongbox git filter (required for nixos/nix-config/secrets/* in the repo)
 #      and verify the sops age key is in place (sops-nix decrypts secrets on activation)
-#   6. Stow the nixos package ($HOME/.nixos symlink — same as Linux, makes nrs work)
+#   6. Stow the nixos package ($HOME/nix-config symlink — same as Linux, makes nrs work)
 #   7. First nix-darwin activation (darwin-rebuild does not exist until this succeeds)
 #      sops-nix activation decrypts fish/private_config.fish and weather_vars.lua
 #   8. Build + install SbarLua (sketchybar Lua bindings) — requires Homebrew lua
@@ -33,7 +33,7 @@
 #
 # Prerequisites:
 #   - ~/.strongbox_identity present (retrieve from 1Password — needed for git filter
-#     on nixos/.nixos/secrets/wiresteward-secrets.nix)
+#     on nixos/nix-config/secrets/wiresteward-secrets.nix)
 #   - ~/.config/sops/age/keys.txt present (retrieve from 1Password as
 #     "age key — <hostname>" — needed for sops-nix to decrypt secrets on activation)
 #
@@ -61,7 +61,7 @@ usage() {
   echo -e "${BLD}Usage:${RST} $(basename "$0") <hostname>"
   echo
   echo "Available hosts:"
-  ls "${DOTFILES:-$DOTFILES_TARGET}/nixos/.nixos/modules/hosts" 2>/dev/null | sed 's/^/  /'
+  ls "${DOTFILES:-$DOTFILES_TARGET}/nixos/nix-config/modules/hosts" 2>/dev/null | sed 's/^/  /'
   exit 1
 }
 
@@ -76,7 +76,7 @@ _candidate_dotfiles="$(dirname "$_candidate_dir")"
 
 DOTFILES_TARGET="$HOME/dotfiles"
 
-if [[ ! -f "$_candidate_dotfiles/nixos/.nixos/flake.nix" ]]; then
+if [[ ! -f "$_candidate_dotfiles/nixos/nix-config/flake.nix" ]]; then
   if [[ -d "$DOTFILES_TARGET/.git" ]]; then
     info "Updating dotfiles at ${DOTFILES_TARGET}…"
     git -C "$DOTFILES_TARGET" pull origin master || {
@@ -104,7 +104,7 @@ DOTFILES="$(dirname "$SCRIPT_DIR")"
 # ─── Argument validation ──────────────────────────────────────────────────────
 [[ $# -eq 1 ]] || { echo -e "${RED}error:${RST} hostname argument required" >&2; usage; }
 HOSTNAME_ARG="$1"
-HOST_DIR="$DOTFILES/nixos/.nixos/modules/hosts/$HOSTNAME_ARG"
+HOST_DIR="$DOTFILES/nixos/nix-config/modules/hosts/$HOSTNAME_ARG"
 
 if [[ ! -d "$HOST_DIR" ]]; then
   echo -e "${RED}error:${RST} unknown host '${HOSTNAME_ARG}'" >&2
@@ -260,7 +260,7 @@ fi
 ok "nvim-kick present at $NVIM_KICK_TARGET"
 
 # ─── Step 5: Strongbox + sops age key ────────────────────────────────────────
-# Strongbox: still required as a git filter for nixos/.nixos/secrets/* (the
+# Strongbox: still required as a git filter for nixos/nix-config/secrets/* (the
 # wiresteward-secrets.nix file is imported at nix eval time and stays on
 # strongbox). Fish and sketchybar secrets are now managed by sops-nix and
 # decrypted automatically at activation — no manual checkout needed.
@@ -272,7 +272,7 @@ if [[ ! -f "$HOME/.strongbox_identity" ]]; then
   die "~/.strongbox_identity not found.\n   Retrieve from 1Password, save to ~/.strongbox_identity, then re-run."
 fi
 
-# Wire the strongbox git filter (needed before any git operations on nixos/.nixos/secrets/*)
+# Wire the strongbox git filter (needed before any git operations on nixos/nix-config/secrets/*)
 _git config --global filter.strongbox.clean "strongbox -clean %f"
 _git config --global filter.strongbox.smudge "strongbox -smudge %f"
 _git config --global filter.strongbox.required true
@@ -281,7 +281,7 @@ _git config --global diff.strongbox.textconv "strongbox -diff"
 # Build strongbox from the flake so the git filter binary is available
 info "Building strongbox…"
 STRONGBOX_OUT=$(nix build "${NIX_OPTS[@]}" --no-link --print-out-paths \
-  "$DOTFILES/nixos/.nixos#strongbox")
+  "$DOTFILES/nixos/nix-config#strongbox")
 export PATH="$STRONGBOX_OUT/bin:$PATH"
 ok "strongbox: $(strongbox -version 2>/dev/null || echo 'built')"
 
@@ -294,11 +294,11 @@ if [[ ! -f "$SOPS_KEY" ]]; then
 fi
 ok "sops age key present."
 
-# ─── Step 6: Stow nixos → ~/.nixos ───────────────────────────────────────────
-# This creates ~/.nixos -> dotfiles/nixos/.nixos — same as on Linux —
+# ─── Step 6: Stow nixos → ~/nix-config ───────────────────────────────────────────
+# This creates ~/nix-config -> dotfiles/nixos/nix-config — same as on Linux —
 # so the nrs fish function works identically on both OSes.
-info "Stowing nixos package to create ~/.nixos…"
-if [[ ! -e "$HOME/.nixos" ]]; then
+info "Stowing nixos package to create ~/nix-config…"
+if [[ ! -e "$HOME/nix-config" ]]; then
   if command -v stow &>/dev/null && command -v git &>/dev/null; then
     stow -v -d "$DOTFILES" -t "$HOME" --restow nixos
   else
@@ -306,9 +306,9 @@ if [[ ! -e "$HOME/.nixos" ]]; then
     nix shell "${NIX_OPTS[@]}" nixpkgs#stow nixpkgs#git --command \
       stow -v -d "$DOTFILES" -t "$HOME" --restow nixos
   fi
-  ok "Symlink created: $HOME/.nixos → $DOTFILES/nixos/.nixos"
+  ok "Symlink created: $HOME/nix-config → $DOTFILES/nixos/nix-config"
 else
-  ok "~/.nixos already exists — skipping stow."
+  ok "~/nix-config already exists — skipping stow."
 fi
 
 # ─── Step 7: First darwin-rebuild switch ──────────────────────────────────────
@@ -329,7 +329,7 @@ for f in /etc/bashrc /etc/zshrc /etc/zprofile /etc/zshenv /etc/nix/nix.conf /etc
   fi
 done
 
-sudo nix "${NIX_OPTS[@]}" run nix-darwin -- switch --flake "$HOME/.nixos#${HOSTNAME_ARG}"
+sudo nix "${NIX_OPTS[@]}" run nix-darwin -- switch --flake "$HOME/nix-config#${HOSTNAME_ARG}"
 
 # ─── Step 7b: Bootstrap standalone home-manager (for the `hm` command) ──────
 # `programs.home-manager.enable` inside the darwin-integrated
@@ -346,7 +346,7 @@ sudo nix "${NIX_OPTS[@]}" run nix-darwin -- switch --flake "$HOME/.nixos#${HOSTN
 # `home-manager generations` etc. work afterward without further bootstrap.
 info "Bootstrapping standalone home-manager (for the 'hm' command)…"
 nix "${NIX_OPTS[@]}" run github:nix-community/home-manager/master -- \
-  switch -b hm-bak --flake "$HOME/.nixos#${HOSTNAME_ARG}"
+  switch -b hm-bak --flake "$HOME/nix-config#${HOSTNAME_ARG}"
 ok "Standalone home-manager activated — 'hm'/'home-manager' now on PATH."
 
 # ─── Step 8: SbarLua — Lua bindings for sketchybar ───────────────────────────

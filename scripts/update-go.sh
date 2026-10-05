@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-FILE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/nixos/.nixos/pkgs/go-latest.nix"
+FILE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/nixos/nix-config/pkgs/go-latest.nix"
 
 VERSION="$(curl -sf 'https://go.dev/dl/?mode=json' | jq -r '.[0].version' | sed 's/^go//')"
 echo "Latest go version: ${VERSION}"

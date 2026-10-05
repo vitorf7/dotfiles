@@ -12,7 +12,7 @@
 #   1. Clone/pull dotfiles to $HOME/dotfiles (skipped when running locally)
 #   2. Clone/pull nvim-kick to $HOME/nvim-kick
 #      (core.nix symlinks ~/.config/nvim -> ~/nvim-kick on every host)
-#   3. Stow the nixos package  ($HOME/.nixos symlink)
+#   3. Stow the nixos package  ($HOME/nix-config symlink)
 #   4. Copy /etc/nixos/hardware-configuration.nix into the host directory as
 #      _hardware-configuration.nix and git-stage it (required — Nix flakes ignore untracked files)
 #   5. Run `nixos-rebuild boot --flake .#<hostname>` (activates on next reboot)
@@ -22,11 +22,11 @@
 #     first nixos-rebuild, on every host — retrieve it from 1Password
 #     ("age key — <hostname>"), or generate a new one with:
 #     mkdir -p ~/.config/sops/age && age-keygen -o ~/.config/sops/age/keys.txt
-#   - nixos/.nixos/secrets/wiresteward-secrets.nix is imported at nix eval time
+#   - nixos/nix-config/secrets/wiresteward-secrets.nix is imported at nix eval time
 #     and stays strongbox-encrypted. The strongbox keyring must be present before
 #     running this script on hosts with vitorf7.networking.wiresteward.enable
 #     (thinkpad-t480, uw-thinkpad-x1).
-#   - nixos/.nixos/sops/nixos/wiresteward-config.json is sops-encrypted and
+#   - nixos/nix-config/sops/nixos/wiresteward-config.json is sops-encrypted and
 #     decrypted automatically by sops-nix at activation time using the age key.
 #
 # Prerequisites:
@@ -35,7 +35,7 @@
 #     "age key — <hostname>" — needed for sops-nix to decrypt secrets on activation
 #     for both system-level and home-manager secrets), on every host
 #   - ~/.strongbox_identity present (retrieve from 1Password — needed for git filter
-#     on nixos/.nixos/secrets/wiresteward-secrets.nix), on hosts with wiresteward
+#     on nixos/nix-config/secrets/wiresteward-secrets.nix), on hosts with wiresteward
 
 set -euo pipefail
 
@@ -57,19 +57,19 @@ usage() {
   echo -e "${BLD}Usage:${RST} $(basename "$0") <hostname>"
   echo
   echo "Available hosts:"
-  ls "$DOTFILES/nixos/.nixos/modules/hosts" 2>/dev/null | sed 's/^/  /'
+  ls "$DOTFILES/nixos/nix-config/modules/hosts" 2>/dev/null | sed 's/^/  /'
   exit 1
 }
 
 # ─── Bootstrap: clone/pull dotfiles when run remotely (curl | bash) ──────────
 # Detect whether we're running from within the real dotfiles repo.
 # When piped via curl, ${BASH_SOURCE[0]} is "/dev/fd/N", "bash", or empty —
-# none of which resolve to a path containing nixos/.nixos/flake.nix.
+# none of which resolve to a path containing nixos/nix-config/flake.nix.
 _script_src="${BASH_SOURCE[0]:-}"
 _candidate_dir="$(cd "$(dirname "$_script_src")" 2>/dev/null && pwd)" || _candidate_dir=""
 _candidate_dotfiles="$(dirname "$_candidate_dir")"
 
-if [[ ! -f "$_candidate_dotfiles/nixos/.nixos/flake.nix" ]]; then
+if [[ ! -f "$_candidate_dotfiles/nixos/nix-config/flake.nix" ]]; then
   _dotfiles_target="$HOME/dotfiles"
 
   if [[ -d "$_dotfiles_target/.git" ]]; then
@@ -95,8 +95,8 @@ DOTFILES="$(dirname "$SCRIPT_DIR")"
 # ─── Argument validation ──────────────────────────────────────────────────────
 [[ $# -eq 1 ]] || { echo -e "${RED}error:${RST} hostname argument required" >&2; usage; }
 HOSTNAME="$1"
-HOST_DIR="$DOTFILES/nixos/.nixos/modules/hosts/$HOSTNAME"
-FLAKE_DIR="$HOME/.nixos"
+HOST_DIR="$DOTFILES/nixos/nix-config/modules/hosts/$HOSTNAME"
+FLAKE_DIR="$HOME/nix-config"
 
 # ─── Safety checks ────────────────────────────────────────────────────────────
 if [[ $EUID -eq 0 ]]; then
@@ -180,14 +180,14 @@ case "$HOSTNAME" in
     info "Building strongbox…"
     STRONGBOX_OUT=$(nix build --no-link --print-out-paths \
       --extra-experimental-features 'nix-command flakes' \
-      "$DOTFILES/nixos/.nixos#strongbox")
+      "$DOTFILES/nixos/nix-config#strongbox")
     export PATH="$STRONGBOX_OUT/bin:$PATH"
 
-    if head -1 "$DOTFILES/nixos/.nixos/secrets/wiresteward-secrets.nix" 2>/dev/null \
+    if head -1 "$DOTFILES/nixos/nix-config/secrets/wiresteward-secrets.nix" 2>/dev/null \
         | grep -qE 'STRONGBOX ENCRYPTED RESOURCE|BEGIN AGE ENCRYPTED FILE'; then
       # Delete only after we know git + strongbox are ready; restore in one step.
-      rm -f "$DOTFILES/nixos/.nixos/secrets/"*.nix
-      _git -C "$DOTFILES" checkout -- nixos/.nixos/secrets
+      rm -f "$DOTFILES/nixos/nix-config/secrets/"*.nix
+      _git -C "$DOTFILES" checkout -- nixos/nix-config/secrets
       ok "Wiresteward secrets decrypted."
     else
       ok "Wiresteward secrets already decrypted — leaving as-is."
@@ -227,13 +227,13 @@ if [[ "$HOSTNAME" == "thinkpad-t480" ]]; then
   ok "Intel  $_intel_raw  → $INTEL_ID"
   ok "NVIDIA $_nvidia_raw → $NVIDIA_ID"
 
-  _NVIDIA_NIX="$DOTFILES/nixos/.nixos/modules/nvidia.nix"
+  _NVIDIA_NIX="$DOTFILES/nixos/nix-config/modules/nvidia.nix"
   sed -i "s|prime\.intelBusId = \".*\";|prime.intelBusId = \"$INTEL_ID\";|"   "$_NVIDIA_NIX"
   sed -i "s|prime\.nvidiaBusId = \".*\";|prime.nvidiaBusId = \"$NVIDIA_ID\";|" "$_NVIDIA_NIX"
   if command -v git &>/dev/null; then
-    git -C "$DOTFILES" add "nixos/.nixos/modules/nvidia.nix"
+    git -C "$DOTFILES" add "nixos/nix-config/modules/nvidia.nix"
   else
-    nix-shell -p git --run "git -C '$DOTFILES' add 'nixos/.nixos/modules/nvidia.nix'"
+    nix-shell -p git --run "git -C '$DOTFILES' add 'nixos/nix-config/modules/nvidia.nix'"
   fi
   ok "Updated and staged nvidia.nix."
   echo
@@ -252,12 +252,12 @@ else
     "stow -v -d '$DOTFILES' -t '$HOME' --restow nixos"
 fi
 
-ok "Symlink created: $HOME/.nixos → $DOTFILES/nixos/.nixos"
+ok "Symlink created: $HOME/nix-config → $DOTFILES/nixos/nix-config"
 
 # ─── Step 2: Copy + stage hardware-configuration.nix ─────────────────────────
 HARDWARE_SRC=/etc/nixos/hardware-configuration.nix
 HARDWARE_DST="$HOST_DIR/_hardware-configuration.nix"
-HARDWARE_REL="nixos/.nixos/modules/hosts/$HOSTNAME/_hardware-configuration.nix"
+HARDWARE_REL="nixos/nix-config/modules/hosts/$HOSTNAME/_hardware-configuration.nix"
 
 info "Copying hardware config for host '${HOSTNAME}'…"
 cp "$HARDWARE_SRC" "$HARDWARE_DST"

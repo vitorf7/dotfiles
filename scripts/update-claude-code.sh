@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-FILE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/nixos/.nixos/pkgs/claude-code-latest.nix"
+FILE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/nixos/nix-config/pkgs/claude-code-latest.nix"
 
 BASE_URL="https://downloads.claude.ai/claude-code-releases"
 VERSION="$(curl -sf "$BASE_URL/latest")"
