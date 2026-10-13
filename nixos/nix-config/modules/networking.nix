@@ -2,7 +2,7 @@
   flake.modules.nixos.networking = {...}: {
     networking.networkmanager.enable = true;
 
-    # Force DNS-over-TLS.
+    # Prefer DNS-over-TLS.
     #
     # UW resolves private services through *public* DNS: e.g.
     # grafana.dev.merit.uw.systems is a CNAME to
@@ -20,9 +20,14 @@
     # wiresteward's ~telecomplus.internal / ~tp.private continue to go to
     # 10.253.253.253 over wg-prod-merit.
     #
-    # NOTE: this is *strict* DoT. On a network that blocks port 853 — hotel and
-    # airport captive portals being the usual offenders — DNS fails outright
-    # until you opt that link out:
+    # dnsovertls = "opportunistic" (not "true"/strict): DoT to the resolvers
+    # below is attempted first, but falls back to plaintext to those same
+    # resolvers if DoT negotiation fails. Strict mode broke outright on
+    # networks that block port 853 — corporate/managed wifi and captive
+    # portals being the usual offenders, since they can't intercept encrypted
+    # DNS to redirect you to a login page — causing total DNS failure instead
+    # of just losing the rebind-protection benefit. A manual per-link
+    # override is still available if ever needed:
     #   sudo resolvectl dnsovertls <link> no
     networking.nameservers = [
       "1.1.1.1#one.one.one.one"
@@ -32,7 +37,7 @@
 
     services.resolved = {
       enable = true;
-      dnsovertls = "true";
+      dnsovertls = "opportunistic";
       domains = ["~."];
     };
   };
