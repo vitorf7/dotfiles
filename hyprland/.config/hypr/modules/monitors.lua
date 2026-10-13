@@ -5,8 +5,13 @@
 -- hub reconnects where DP-1/DP-2 numbering may shift.
 --
 -- Physical layout (left → right):
---   [LG 27GL650F 120Hz] [Dell U2419HC 60Hz] [Internal eDP-1 60Hz]
+--   [LG 27GL650F 120Hz] [Dell U2419HC 60Hz] [Internal eDP-1]
 --        0x0                 1920x0               3840x0
+--
+-- The internal panel differs per machine (T480: 1920x1080@60, X1 Carbon:
+-- 2880x1800@120 2.8K OLED), so its mode uses "highres" — Hyprland picks the
+-- highest supported resolution at the highest available refresh at runtime,
+-- which keeps this shared file correct on both hosts.
 
 -- LG 27GL650F: main, leftmost, 120Hz
 hl.monitor({
@@ -24,12 +29,13 @@ hl.monitor({
 	scale = 1,
 })
 
--- Internal eDP-1: tertiary, rightmost, 60Hz
+-- Internal eDP-1: tertiary, rightmost. "highres" = highest supported
+-- resolution + refresh the panel offers (per-machine, see header).
 hl.monitor({
 	output = "eDP-1",
-	mode = "1920x1080@60",
+	mode = "highres",
 	position = "3840x0",
-	scale = 1,
+	scale = 1.5,
 })
 
 -- Fallback: any other monitor (other machines, future devices)
