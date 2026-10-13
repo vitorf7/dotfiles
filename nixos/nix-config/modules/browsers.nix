@@ -26,6 +26,7 @@
           enableWidevine = true;
           proprietaryCodecs = true;
         })
+        pkgs.chromium
       ];
 
       # CSS mods that restyle Vivaldi into a Zen Browser lookalike
@@ -81,21 +82,21 @@
       # Glob the profile dir rather than hardcoding the random profile
       # suffix Zen generates on first launch.
       home.activation.zenPipewireCamera = lib.mkIf isLinux (lib.hm.dag.entryAfter ["writeBoundary"] ''
-        for profileDir in "$HOME"/.config/zen/*/; do
-          [ -d "$profileDir" ] || continue
-          cat > "$profileDir/user.js" <<'EOF'
-// Managed by dotfiles (modules/browsers.nix).
-// --- PipeWire camera portal (Option A) ---
-user_pref("media.webrtc.camera.allow-pipewire", true);
+                for profileDir in "$HOME"/.config/zen/*/; do
+                  [ -d "$profileDir" ] || continue
+                  cat > "$profileDir/user.js" <<'EOF'
+        // Managed by dotfiles (modules/browsers.nix).
+        // --- PipeWire camera portal (Option A) ---
+        user_pref("media.webrtc.camera.allow-pipewire", true);
 
-// --- V4L2 direct (Option B) ---
-// Uncomment the line below and comment out the one above to use raw V4L2.
-// user_pref("media.webrtc.camera.allow-pipewire", false);
+        // --- V4L2 direct (Option B) ---
+        // Uncomment the line below and comment out the one above to use raw V4L2.
+        // user_pref("media.webrtc.camera.allow-pipewire", false);
 
-user_pref("media.navigator.video.max_fr", 30);
-user_pref("media.navigator.video.max_fs", 3600);
-EOF
-        done
+        user_pref("media.navigator.video.max_fr", 30);
+        user_pref("media.navigator.video.max_fs", 3600);
+        EOF
+                done
       '');
     };
 }
