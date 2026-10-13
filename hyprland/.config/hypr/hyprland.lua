@@ -11,8 +11,11 @@ require("modules.animations")
 require("modules.keybindings")
 require("modules.windowrules")
 
--- HyprMod managed settings (only loaded if hyprmod.enable = true on this host)
-local hyprmodGui = os.getenv("HOME") .. "/.config/hypr-hyprmod/hyprland-gui.lua"
+-- HyprMod managed settings (only loaded if hyprmod.enable = true on this
+-- host). ~/.config/hypr/hyprland-gui.lua is symlinked into the repo by
+-- home-manager (hyprmod.nix), so the GUI's Save (cursor theme/size etc.)
+-- lands in git-tracked storage and this loader picks it up.
+local hyprmodGui = os.getenv("HOME") .. "/.config/hypr/hyprland-gui.lua"
 local e = io.open(hyprmodGui, "r")
 if e then
 	e:close()

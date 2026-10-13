@@ -16,7 +16,7 @@
 
       home.packages = [self.packages.${pkgs.stdenv.hostPlatform.system}.hyprmod];
 
-      xdg.configFile."hypr-hyprmod/hyprland-gui.lua".source =
+      xdg.configFile."hypr/hyprland-gui.lua".source =
         config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/hyprmod/.config/hypr/hyprland-gui.lua";
     };
 }
