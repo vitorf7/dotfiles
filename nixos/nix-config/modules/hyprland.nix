@@ -135,39 +135,4 @@
         };
       };
     };
-
-  flake.modules.homeManager.theming = {
-    pkgs,
-    lib,
-    osConfig,
-    ...
-  }:
-    lib.mkIf osConfig.vitorf7.desktop.enable {
-      home.packages = with pkgs; [
-        papirus-icon-theme
-        rose-pine-hyprcursor
-      ];
-
-      home.pointerCursor = {
-        enable = true;
-        name = "rose-pine-hyprcursor";
-        package = pkgs.rose-pine-hyprcursor;
-        gtk.enable = false;
-        size = 24;
-      };
-
-      dconf.settings = {
-        "org/gnome/desktop/interface" = {
-          color-scheme = "prefer-dark";
-          icon-theme = "Papirus-Dark";
-          cursor-theme = "rose-pine-hyprcursor";
-          cursor-size = 24;
-        };
-      };
-
-      qt = {
-        enable = true;
-        platformTheme.name = "gtk3";
-      };
-    };
 }

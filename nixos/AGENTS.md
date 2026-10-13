@@ -28,7 +28,7 @@ A single file may populate more than one class (e.g. `git.nix` sets both `flake.
 ```
 nix-config/
 ├── flake.nix                   Entry point — import-tree ./modules handed to flake-parts
-├── modules/                    ~59 .nix files, all auto-imported; no aggregator files
+├── modules/                    ~52 .nix files, all auto-imported; no aggregator files
 │   ├── flake-modules-type.nix  Declares the flake.modules option type (repo scaffolding)
 │   ├── options.nix             vitorf7.* option tree — shared across nixos and darwin classes
 │   ├── packages.nix            Custom packages (perSystem block; non-conforming)

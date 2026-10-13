@@ -710,7 +710,11 @@ imports = with self.modules.homeManager; [
 
 **`desktop.nix`** — Active when `vitorf7.desktop.enable` (checked via `osConfig`). SSH via 1Password agent, Zen browser, fonts, Wayland environment variables.
 
-**`hyprland.nix`** — Active when `vitorf7.desktop.hyprland.enable`. Full Hyprland ecosystem packages + config symlinks; also declares `flake.modules.homeManager.theming` in the same file.
+**`hyprland.nix`** — Active when `vitorf7.desktop.hyprland.enable`. Full Hyprland ecosystem packages + config symlinks.
+
+**`theming.nix`** — Active when `vitorf7.desktop.enable`. Icon/cursor **catalog** only: packages the themes and symlinks cursor themes into `~/.local/share/icons` where hyprcursor searches. The *selection* is deliberately unmanaged — `dconf.settings` pins just `color-scheme`, defaults are seeded once via a `home.activation` hook that only writes keys that are unset, and switching happens at runtime (icon themes via `nwg-look`/`hyprmod` or `hypr/scripts/iconSelect.sh`; cursor themes via the **hyprmod GUI's Cursor page**, which lists both XCursor and Hyprcursor formats with thumbnails and persists its picks in `~/.config/hypr/hyprland-gui.lua` — an out-of-store symlink into the repo, so GUI saves are git-tracked). Adding a theme = one line in the catalog; before this split, home-manager re-pinned `icon-theme`/`cursor-theme` in dconf on every rebuild, which is why GTK settings picks never stuck.
+
+**`hyprmod.nix`** — Active when `vitorf7.desktop.hyprmod.enable` (NixOS Hyprland hosts). Installs the hyprmod GTK settings GUI (from the flake input, via `self.packages`) and symlinks `~/.config/hypr/hyprland-gui.lua` out-of-store into the repo (`hyprmod/.config/hypr/hyprland-gui.lua`). The GUI's Save writes through that symlink, so cursor/theme picks land in git-tracked storage, and the optional-file loader in `hyprland.lua` picks the file up at runtime.
 
 **`darwin-packages.nix` / `darwin-symlinks.nix`** — darwin-only home modules: macOS-specific packages, and `mkOutOfStoreSymlink`-based dotfile links (`bin/`, `.aliases`) plus a `home.activation` hook that clones the `ruby-build` rbenv plugin if missing.
 
