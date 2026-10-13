@@ -18,7 +18,6 @@
         fzf
         bat
         eza
-        direnv
         sesh
         fastfetch
         ripgrep
@@ -55,6 +54,11 @@
         xh
         yazi
       ];
+
+    programs.direnv = {
+      enable = true;
+      nix-direnv.enable = true;
+    };
 
     xdg.configFile =
       lib.optionalAttrs isDarwin {

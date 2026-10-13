@@ -72,8 +72,6 @@ brew "czg"
 brew "diff-so-fancy"
 # Diff that understands syntax
 brew "difftastic"
-# Load/unload environment variables based on $PWD
-brew "direnv"
 # Lightweight DNS forwarder and DHCP server
 brew "dnsmasq"
 # Pack, ship and run any application as a lightweight container
