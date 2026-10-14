@@ -182,6 +182,12 @@
           "id": "controlCenterButton",
           "enabled": true,
           "showMicPercent": true
+        },
+        {
+          "id": "gpuTemp",
+          "enabled": true,
+          "selectedGpuIndex": 0,
+          "pciId": "8086:7d45"
         }
       ],
       "spacing": 9,
