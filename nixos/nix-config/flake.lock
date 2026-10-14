@@ -29,11 +29,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790168077,
-        "narHash": "sha256-RWSUZpWsNvgYxrnvnTeIlNDU0u+cGsK919YaGkCltVM=",
+        "lastModified": 1791885012,
+        "narHash": "sha256-PPxAx1H5RAZxH9c/ih6Wmf1TISqX30QFaa+CItMCihI=",
         "owner": "rhydianjenkins",
         "repo": "apix",
-        "rev": "07d6d0c73edb2c4206b6ae86888004b9175b8b69",
+        "rev": "fa52d8b7fa5d2abb60a0a8f1fa05a46cca2f660a",
         "type": "github"
       },
       "original": {
@@ -367,16 +367,15 @@
         ]
       },
       "locked": {
-        "lastModified": 1783596304,
-        "narHash": "sha256-40LjjyOi9CBenDso1zYMztZ3Yg95oUD5dQDGJeZq238=",
-        "owner": "vitorf7",
+        "lastModified": 1791555169,
+        "narHash": "sha256-x8/LWtNX2i1rhw1Mi2VYaMN54Aa15NtQatHwPeSbBxU=",
+        "owner": "BlueManCZ",
         "repo": "hyprmod",
-        "rev": "73d1c0d0e9c24c8eae1eff336d13a0e6008b140c",
+        "rev": "b475087af485bf53b33c4529ed616a220b512649",
         "type": "github"
       },
       "original": {
-        "owner": "vitorf7",
-        "ref": "nix-flake",
+        "owner": "BlueManCZ",
         "repo": "hyprmod",
         "type": "github"
       }

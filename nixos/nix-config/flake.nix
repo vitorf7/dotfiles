@@ -46,7 +46,7 @@
     };
 
     hyprmod = {
-      url = "github:vitorf7/hyprmod/nix-flake";
+      url = "github:BlueManCZ/hyprmod";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

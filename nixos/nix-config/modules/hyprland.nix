@@ -134,5 +134,23 @@
           source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/swaync/.config/hypr-swaync";
         };
       };
+
+      # hyprmod also occasionally rewrites ~/.config/hypr/hyprland.lua (config
+      # migrations, e.g. appending its require line) via temp-file+rename,
+      # which replaces the out-of-store symlink above with a plain regular
+      # file and makes the next activation die at checkLinkTargets. Absorb the
+      # stray before that check: copy its content back into the repo (so
+      # hyprmod's edits become git-tracked), then remove it so the symlink can
+      # be recreated.
+      home.activation.hyprlandLuaStraySync = lib.hm.dag.entryBefore ["checkLinkTargets"] ''
+        live="${config.home.homeDirectory}/.config/hypr/hyprland.lua"
+        repo="${config.home.homeDirectory}/dotfiles/hyprland/.config/hypr/hyprland.lua"
+        if [[ -f "$live" && ! -L "$live" ]]; then
+          if [[ -s "$live" ]]; then
+            run cp "$live" "$repo"
+          fi
+          run rm -f "$live"
+        fi
+      '';
     };
 }

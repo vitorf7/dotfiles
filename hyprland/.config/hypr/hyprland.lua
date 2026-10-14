@@ -11,16 +11,13 @@ require("modules.animations")
 require("modules.keybindings")
 require("modules.windowrules")
 
--- HyprMod managed settings (only loaded if hyprmod.enable = true on this
--- host). ~/.config/hypr/hyprland-gui.lua is symlinked into the repo by
--- home-manager (hyprmod.nix), so the GUI's Save (cursor theme/size etc.)
--- lands in git-tracked storage and this loader picks it up.
-local hyprmodGui = os.getenv("HOME") .. "/.config/hypr/hyprland-gui.lua"
-local e = io.open(hyprmodGui, "r")
-if e then
-	e:close()
-	loadfile(hyprmodGui)()
-end
+-- HyprMod managed settings (only present when hyprmod.enable = true on
+-- this host — hyprmod.nix symlinks the file in, and the GUI's Save lands
+-- in git-tracked storage through it). pcall guards hosts without the
+-- file, and the literal require(...) form is the only one hyprmod's
+-- first-run detection (and Hyprland's autoreload) recognize — so hyprmod
+-- never needs to append its own include line here.
+pcall(function() require("hyprland-gui") end)
 
 -- Tide Island keybinds (only loaded if tide_island.enable = true on this host)
 local tideKeybinds = os.getenv("HOME") .. "/.config/hypr-tide-island/keybinds.lua"
