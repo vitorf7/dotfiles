@@ -26,6 +26,7 @@
     lib.mkIf (isLinux && (osConfig.vitorf7.desktop.enable or false)) {
       home.packages = with pkgs; [
         libreoffice
+        wordcraft
       ];
     };
 }
