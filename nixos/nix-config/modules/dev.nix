@@ -36,6 +36,7 @@
         yarn
         python3
         go_1_26
+        terraform
         evans
         grpcui
         yq-go
