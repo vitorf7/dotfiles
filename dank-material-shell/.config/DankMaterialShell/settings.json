@@ -63,6 +63,10 @@
       "showTrash": false,
       "trashFileManager": "default",
       "trashCustomCommand": "",
+      "magnification": false,
+      "magnificationScale": 130,
+      "magnificationProfile": "parabolic",
+      "magnificationExpand": false,
       "order": [],
       "widgets": [
         {
@@ -182,12 +186,6 @@
           "id": "controlCenterButton",
           "enabled": true,
           "showMicPercent": true
-        },
-        {
-          "id": "gpuTemp",
-          "enabled": true,
-          "selectedGpuIndex": 0,
-          "pciId": "8086:7d45"
         }
       ],
       "spacing": 9,
@@ -227,7 +225,7 @@
       "maximizeDetection": true,
       "useOverlayLayer": false,
       "scrollEnabled": true,
-      "scrollXBehavior": "column",
+      "scrollXBehavior": "focusWindow",
       "scrollYBehavior": "workspace",
       "shadowIntensity": 0,
       "shadowOpacity": 60,
@@ -238,7 +236,9 @@
       "hoverPopoutDelay": 150,
       "batteryColorMode": "theme",
       "followInterfaceStyle": true,
-      "widgetFollowInterfaceStyle": true
+      "widgetFollowInterfaceStyle": true,
+      "island": false,
+      "dot": false
     }
   ],
   "builtInPluginSettings": {
@@ -256,5 +256,31 @@
     }
   },
   "clipboardEnterToPaste": true,
-  "configVersion": 31
+  "configVersion": 42,
+  "dashTabs": [
+    {
+      "id": "overview",
+      "enabled": true
+    },
+    {
+      "id": "media",
+      "enabled": true
+    },
+    {
+      "id": "wallpaper",
+      "enabled": true
+    },
+    {
+      "id": "weather",
+      "enabled": true
+    },
+    {
+      "id": "wellbeing",
+      "enabled": true
+    },
+    {
+      "id": "notifications",
+      "enabled": false
+    }
+  ]
 }
