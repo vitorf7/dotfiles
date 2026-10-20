@@ -29,19 +29,54 @@
     # once home.pointerCursor (which used to provide that wiring) is gone.
     # Any XCursor-format theme works too — hyprctl setcursor falls back to
     # XCursor when no hyprcursor manifest is found.
-    iconThemes = with pkgs; [
-      papirus-icon-theme
+    #
+    # GTK themes land in share/themes and are found the same way (nwg-look
+    # lists them). One package may ship several: whitesur-gtk-theme provides
+    # WhiteSur-Dark/Light (+ opacity variants). rose-pine-gtk-theme was removed
+    # from nixpkgs (it depended on gtk-engine-murrine), so there is no Rose
+    # Pine GTK theme here.
+    gtkThemes = with pkgs; [
+      whitesur-gtk-theme
+      (catppuccin-gtk.override {
+        variant = "mocha";
+        accents = ["mauve"];
+      })
     ];
 
+    iconThemes = with pkgs; [
+      papirus-icon-theme
+      # Ships WhiteSur and WhiteSur-dark.
+      whitesur-icon-theme
+      # rose-pine, rose-pine-moon, rose-pine-dawn.
+      rose-pine-icon-theme
+      # catppuccin-papirus-folders is deliberately absent: it ships its own
+      # copy of Papirus under the same theme names, so it collides with
+      # papirus-icon-theme in the home-manager profile.
+    ];
+
+    # Only rose-pine-hyprcursor is a real hyprcursor theme; the rest are
+    # XCursor themes, which hyprcursor falls back to.
     cursorThemes = [
       {
         name = "rose-pine-hyprcursor";
         package = pkgs.rose-pine-hyprcursor;
       }
+      {
+        name = "WhiteSur-cursors";
+        package = pkgs.whitesur-cursors;
+      }
+      {
+        name = "catppuccin-mocha-mauve-cursors";
+        package = pkgs.catppuccin-cursors.mochaMauve;
+      }
+      {
+        name = "BreezeX-RosePine-Linux";
+        package = pkgs.rose-pine-cursor;
+      }
     ];
   in
     lib.mkIf osConfig.vitorf7.desktop.enable {
-      home.packages = iconThemes ++ map (t: t.package) cursorThemes;
+      home.packages = gtkThemes ++ iconThemes ++ map (t: t.package) cursorThemes;
 
       # Make packaged cursor themes discoverable by hyprcursor without
       # relying on env-var search paths.
