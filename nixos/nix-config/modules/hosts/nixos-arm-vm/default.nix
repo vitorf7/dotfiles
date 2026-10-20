@@ -93,6 +93,7 @@ in {
       self.modules.nixos.ambxst
       self.modules.nixos.secrets
       self.modules.nixos.flatpak
+      self.modules.nixos.appimage
       self.modules.nixos.gaming
       self.modules.nixos.fonts
       self.modules.nixos.onepassword

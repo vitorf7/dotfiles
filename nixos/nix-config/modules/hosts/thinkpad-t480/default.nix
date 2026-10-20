@@ -122,6 +122,7 @@ in {
       self.modules.nixos.dankcalendar
       self.modules.nixos.secrets
       self.modules.nixos.flatpak
+      self.modules.nixos.appimage
       self.modules.nixos.mouseless
       self.modules.nixos.stremio
       self.modules.nixos.docker
