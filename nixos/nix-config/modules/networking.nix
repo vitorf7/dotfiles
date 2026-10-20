@@ -39,6 +39,12 @@
       enable = true;
       dnsovertls = "opportunistic";
       domains = ["~."];
+      # avahi (printing.nix) owns mDNS on :5353; resolved's responder would
+      # compete with it and break .local lookups for printers/scanners.
+      settings.Resolve.MulticastDNS = "no";
     };
+
+    # NetworkManager defaults to mdns=default → registers with resolved per link.
+    networking.networkmanager.connectionConfig."connection.mdns" = 0;
   };
 }
