@@ -111,3 +111,12 @@ hl.window_rule({
 	},
 	float = true,
 })
+
+-- Float system-config-printer
+hl.window_rule({
+	name = "float-system-config-printer",
+	match = {
+		class = "system-config-printer",
+	},
+	float = true,
+})
