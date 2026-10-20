@@ -1,5 +1,12 @@
 -- Autostart necessary processes
 hl.on("hyprland.start", function()
+	-- hyprmod persists only XCURSOR_* env; hyprcursor picks its own theme at
+	-- compositor start (falling back to rose-pine-hyprcursor), so replay the
+	-- saved choice. hyprland-gui.lua has loaded by now and hl.env has set these.
+	local cursorTheme = os.getenv("XCURSOR_THEME")
+	if cursorTheme then
+		hl.exec_cmd("hyprctl setcursor " .. cursorTheme .. " " .. (os.getenv("XCURSOR_SIZE") or "24"))
+	end
 	hl.exec_cmd("hypridle")
 	hl.exec_cmd("awww-daemon")
 	-- hl.exec_cmd("waybar")

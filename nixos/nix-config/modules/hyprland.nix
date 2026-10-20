@@ -25,7 +25,11 @@
 
       xdg.portal = {
         enable = true;
-        extraPortals = [pkgs.xdg-desktop-portal-gtk pkgs.xdg-desktop-portal-hyprland];
+        # xdg-desktop-portal-hyprland is added by programs.hyprland itself (portalPackage,
+        # built against programs.hyprland.package). Listing pkgs.xdg-desktop-portal-hyprland
+        # here too creates a second copy whenever that package is overridden, and the two
+        # collide on xdg-desktop-portal-hyprland.service in user-units.
+        extraPortals = [pkgs.xdg-desktop-portal-gtk];
         config = {
           common.default = ["hyprland" "gtk"];
           hyprland.default = ["hyprland" "gtk"];
@@ -114,6 +118,9 @@
           screencopy {
             custom_picker_binary = ${self.packages.${pkgs.stdenv.hostPlatform.system}.quickshell-share-picker}/bin/quickshell-share-picker
             allow_token_by_default = true
+            # Browsers (Zen/Chromium) don't send cursor_mode, so XDPH fell back to hidden and
+            # window shares came out with no cursor. 2 = embedded (draw cursor into frames).
+            cursor_mode = 2
           }
         '';
         "hypr/scheme".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/hyprland/.config/hypr/scheme";

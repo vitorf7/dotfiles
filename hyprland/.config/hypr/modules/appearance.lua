@@ -69,6 +69,16 @@ hl.config({
     },
 })
 
+-- Composite the cursor in software so it is included in screencopy frames
+-- (xdg-desktop-portal-hyprland), otherwise it is missing from screen shares
+-- in Google Meet. 0 = hardware, 1 = software, 2 = auto.
+-- https://wiki.hyprland.org/Configuring/Variables/#cursor
+hl.config({
+    cursor = {
+        no_hardware_cursors = 1,
+    },
+})
+
 -- https://wiki.hyprland.org/Configuring/Variables/#misc
 hl.config({
     misc = {
