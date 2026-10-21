@@ -10,12 +10,11 @@
       overlays = [(final: prev: {go = prev.go_1_26;})];
     };
 
-    # tide-island, mouseless, and hyprmod are Hyprland/Linux-only; guard them
+    # tide-island and hyprmod are Hyprland/Linux-only; guard them
     # so darwin evals don't throw on a missing platform key or build a
     # package that doesn't apply there.
     linuxOnlyPackages = pkgs.lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
       tide-island = pkgs.callPackage ../pkgs/tide-island.nix {};
-      mouseless = pkgs.callPackage ../pkgs/mouseless.nix {};
       hyprmod = inputs.hyprmod.packages.${system}.default;
       quickshell-share-picker = pkgs.callPackage ../pkgs/quickshell-share-picker.nix {};
     };

@@ -15,13 +15,17 @@
         ];
         packages = [
           {
-            appId = "net.sonuscape.mouseless";
+            # nix-flatpak has no branch option; the `//preview` suffix is
+            # passed straight through to `flatpak install`. Drop it to go
+            # back to stable.
+            appId = "net.sonuscape.mouseless//preview";
             origin = "sonuscape";
           }
         ];
         # The app reads its config (symlinked into its sandbox home) from the
-        # dotfiles repo, which lives outside the flatpak sandbox.
-        overrides.settings."net.sonuscape.mouseless".Context.filesystems = ["~/dotfiles/mouseless:ro"];
+        # dotfiles repo, which lives outside the flatpak sandbox. Writable so
+        # config migrations and in-app settings saves land in the repo.
+        overrides.settings."net.sonuscape.mouseless".Context.filesystems = ["~/dotfiles/mouseless"];
       };
     };
   };
