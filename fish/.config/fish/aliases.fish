@@ -359,14 +359,13 @@ function nix-update-derivations
     set -l saved_dir $PWD
     builtin cd $flake_dir
 
-    # tide-island and mouseless lose their `version`/`src` source position
-    # under nix-update's --flake mode (stdenv.mkDerivation / wrapAppImage
-    # don't preserve it), so they go through the non-flake shim instead —
-    # see pkgs/nix-update-shim.nix.
+    # tide-island loses its `version`/`src` source position under
+    # nix-update's --flake mode (stdenv.mkDerivation doesn't preserve it),
+    # so it goes through the non-flake shim instead — see
+    # pkgs/nix-update-shim.nix.
     set -l shim $flake_dir/pkgs/nix-update-shim.nix
 
     set -l failed
-    set -l skipped
 
     for pkg in strongbox wiresteward
         echo "==> $pkg"
@@ -385,26 +384,7 @@ function nix-update-derivations
         set -a failed tide-island
     end
 
-    # mouseless has no darwin sources at all (only x86_64-linux/aarch64-linux),
-    # and updating it means actually fetching+hashing a linux-only AppImage —
-    # darwin has no builder for that. Run this alias from a Linux host to
-    # update it.
-    if test (uname) = Darwin
-        echo "==> mouseless (skipped — run this from a Linux host)"
-        set -a skipped mouseless
-    else
-        echo "==> mouseless"
-        if not $updater mouseless -f $shim --override-filename $flake_dir/pkgs/mouseless.nix
-            set -a failed mouseless
-        end
-    end
-
     builtin cd $saved_dir
-
-    if test (count $skipped) -gt 0
-        echo ""
-        echo "Skipped (needs a Linux host): $skipped"
-    end
 
     if test (count $failed) -gt 0
         echo ""
