@@ -13,13 +13,13 @@
 # Last updated for Tide Island v1.0.20.
 stdenv.mkDerivation rec {
   pname = "tide-island";
-  version = "1.0.38";
+  version = "1.0.47";
 
   src = fetchFromGitHub {
     owner = "enhaoswen";
     repo = "Tide-island";
     tag = version;
-    hash = "sha256-z7uynD+uzrPw5SzB7X0Ati2kgB+jzOja9WPlKqfN9c8=";
+    hash = "sha256-oxt4tFZIo9p/3AKyF9q1mP6k9RGulFOyZBtvnSiButA=";
   };
 
   nativeBuildInputs = [
