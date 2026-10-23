@@ -26,6 +26,7 @@
       desktop.stremio.enable = lib.mkEnableOption "Stremio (Flatpak on Linux, Homebrew cask on macOS)";
       desktop.gaming.enable = lib.mkEnableOption "Gaming (Steam, Lutris, emulators)";
       desktop.winboat.enable = lib.mkEnableOption "WinBoat — run Windows applications on Linux via Docker + KVM + RemoteApp";
+      desktop.speakoflow.enable = lib.mkEnableOption "SpeakoFlow local voice dictation + meeting transcription (AppImage)";
       networking.nordvpn.enable = lib.mkEnableOption "NordVPN client (CLI + GUI) with systemd daemon";
       networking.globalprotect.enable = lib.mkEnableOption "GlobalProtect VPN client (gpclient CLI + gpgui GUI) via GlobalProtect-openconnect flake";
       networking.wiresteward.enable = lib.mkEnableOption "Wiresteward WireGuard VPN agent with per-cluster interfaces (dev/prod x AWS/GCP/Merit)";

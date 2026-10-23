@@ -120,3 +120,40 @@ hl.window_rule({
 	},
 	float = true,
 })
+
+-- Float Speakoflow
+hl.window_rule({
+	name = "float-speakoflow",
+	match = {
+		class = "Speakoflow",
+	},
+	float = true,
+})
+
+-- SpeakoFlow overlays (recording pill, assistant panel) are transparent,
+-- undecorated webviews; without this Hyprland borders, shadows and blurs them
+-- into an empty frosted box. Case-insensitive class so it matches both the
+-- XWayland WM_CLASS ("Speakoflow") and a native-Wayland app_id.
+hl.window_rule({
+	name = "speakoflow-overlays",
+	match = {
+		class = "(?i)speakoflow",
+		title = "^(Recording|Assistant)$",
+	},
+	float = true,
+	pin = true,
+	border_size = 0,
+	no_shadow = true,
+	no_blur = true,
+	rounding = 0,
+})
+
+-- The recording pill must never take focus from the app being dictated into.
+hl.window_rule({
+	name = "speakoflow-recording-no-focus",
+	match = {
+		class = "(?i)speakoflow",
+		title = "^Recording$",
+	},
+	no_focus = true,
+})

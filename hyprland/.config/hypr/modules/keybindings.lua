@@ -194,6 +194,17 @@ hl.bind(
 	)
 )
 
+-- SpeakoFlow dictation — the flags are forwarded to the tray instance started
+-- by the speakoflow user service (nixos/nix-config/modules/speakoflow.nix).
+-- Its own Tauri shortcuts can't see keys on native Wayland, hence binds here.
+-- Punctuation keys because SUPER/SUPER+SHIFT letters are taken by Ghostty's
+-- tmux/nvim keybinds, and CTRL+Space (upstream's default) is the tmux prefix.
+hl.bind("SUPER + semicolon", hl.dsp.exec_cmd("speakoflow --toggle-transcription"))
+hl.bind("SUPER + CTRL + semicolon", hl.dsp.exec_cmd("speakoflow --toggle-post-process"))
+hl.bind("SUPER + apostrophe", hl.dsp.exec_cmd("speakoflow --toggle-assistant"))
+hl.bind("CTRL + ALT + SUPER + semicolon", hl.dsp.exec_cmd("speakoflow --toggle-call"))
+hl.bind("SUPER + Escape", hl.dsp.exec_cmd("speakoflow --cancel"))
+
 -- Media — commented out: handled by caelestia:media* when caelestia is enabled
 -- hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"), { locked = true })
 -- hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })

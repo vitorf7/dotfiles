@@ -367,7 +367,7 @@ function nix-update-derivations
 
     set -l failed
 
-    for pkg in strongbox wiresteward
+    for pkg in strongbox wiresteward speakoflow
         echo "==> $pkg"
         if not $updater $pkg --flake
             set -a failed $pkg

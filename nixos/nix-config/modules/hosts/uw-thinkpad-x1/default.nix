@@ -49,6 +49,7 @@
       databases
       webcam
       notes
+      speakoflow
     ];
     home.username = username;
     home.homeDirectory = "/home/${username}";
@@ -90,6 +91,7 @@ in {
         vitorf7.desktop.mouseless.enable = true;
         vitorf7.desktop.gaming.enable = true;
         vitorf7.desktop.winboat.enable = true;
+        vitorf7.desktop.speakoflow.enable = true;
         vitorf7.networking.wiresteward.enable = true;
         vitorf7.hardware.fingerprint.enable = true;
         vitorf7.git.defaultProfile = "work";
@@ -127,6 +129,7 @@ in {
       self.modules.nixos.fonts
       self.modules.nixos.onepassword
       self.modules.nixos.input
+      self.modules.nixos.speakoflow
       # Upstream NixOS modules
       inputs.brain-shell.nixosModules.default
       inputs.ambxst.nixosModules.default
