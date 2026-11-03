@@ -50,6 +50,7 @@
       webcam
       notes
       speakoflow
+      openwhispr
     ];
     home.username = username;
     home.homeDirectory = "/home/${username}";
@@ -92,6 +93,8 @@ in {
         vitorf7.desktop.gaming.enable = true;
         vitorf7.desktop.winboat.enable = true;
         vitorf7.desktop.speakoflow.enable = true;
+        # Trialled for meetings; dropped since it never stores meeting audio.
+        vitorf7.desktop.openwhispr.enable = false;
         vitorf7.networking.wiresteward.enable = true;
         vitorf7.hardware.fingerprint.enable = true;
         vitorf7.git.defaultProfile = "work";
