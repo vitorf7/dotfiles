@@ -367,11 +367,18 @@ function nix-update-derivations
 
     set -l failed
 
-    for pkg in strongbox wiresteward speakoflow
+    for pkg in strongbox wiresteward openwhispr
         echo "==> $pkg"
         if not $updater $pkg --flake
             set -a failed $pkg
         end
+    end
+
+    # SpeakoFlow publishes `test-*` pre-release tags that top releases.atom;
+    # only follow stable vX.Y.Z tags (the group strips the `v`).
+    echo "==> speakoflow"
+    if not $updater speakoflow --flake --version-regex '^v(\d+\.\d+\.\d+)$'
+        set -a failed speakoflow
     end
 
     echo "==> quickshell-share-picker"
