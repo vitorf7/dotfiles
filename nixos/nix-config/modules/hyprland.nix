@@ -49,6 +49,7 @@
         [
           hyprsunset
           hyprshot
+          satty
           wf-recorder
           wl-clipboard
           slurp

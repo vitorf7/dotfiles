@@ -76,8 +76,14 @@ hl.bind(mainMod .. " + SUPER + R", hl.dsp.exec_cmd(hyprScripts .. "/refresh.sh")
 -- file — piping into wl-copy would feed it zero bytes and clobber the image.
 hl.bind("SUPER + SHIFT + 5", hl.dsp.exec_cmd("hyprshot -m output -m active -o ~/Screenshots"))
 hl.bind("SUPER + SHIFT + 4", hl.dsp.exec_cmd("hyprshot -m region -o ~/Screenshots"))
-hl.bind("SUPER + CTRL + 5", hl.dsp.exec_cmd("hyprshot -m window -m active -o ~/Screenshots"))
-hl.bind("SUPER + CTRL + 4", hl.dsp.exec_cmd("hyprshot -m region --freeze -o ~/Screenshots"))
+
+-- SUPER + CTRL + 4/5: capture with hyprshot (--raw -> PNG on stdout) and open in
+-- satty for annotation (arrows, boxes, text, blur). Enter/Ctrl+C copies to the
+-- clipboard; Ctrl+S saves.
+local satty = "satty -f - --early-exit --copy-command wl-copy"
+	.. " --output-filename ~/Screenshots/satty-%Y%m%d-%H%M%S.png"
+hl.bind("SUPER + CTRL + 5", hl.dsp.exec_cmd("sh -c 'hyprshot -m window -m active --raw | " .. satty .. "'"))
+hl.bind("SUPER + CTRL + 4", hl.dsp.exec_cmd("sh -c 'hyprshot -m region --freeze --raw | " .. satty .. "'"))
 
 -- --------------------Screen recording-------------------------------------------#
 hl.bind("SHIFT + SUPER + ALT + CTRL + R", hl.dsp.exec_cmd(hyprScripts .. "/record.sh --sound"))
@@ -193,17 +199,6 @@ hl.bind(
 			.. "\"$(hyprctl -j devices | jq -r '[.keyboards[] | select(.main)] | first | .active_keymap')\""
 	)
 )
-
--- SpeakoFlow dictation — the flags are forwarded to the tray instance started
--- by the speakoflow user service (nixos/nix-config/modules/speakoflow.nix).
--- Its own Tauri shortcuts can't see keys on native Wayland, hence binds here.
--- Punctuation keys because SUPER/SUPER+SHIFT letters are taken by Ghostty's
--- tmux/nvim keybinds, and CTRL+Space (upstream's default) is the tmux prefix.
-hl.bind("SUPER + semicolon", hl.dsp.exec_cmd("speakoflow --toggle-transcription"))
-hl.bind("SUPER + CTRL + semicolon", hl.dsp.exec_cmd("speakoflow --toggle-post-process"))
-hl.bind("SUPER + apostrophe", hl.dsp.exec_cmd("speakoflow --toggle-assistant"))
-hl.bind("CTRL + ALT + SUPER + semicolon", hl.dsp.exec_cmd("speakoflow --toggle-call"))
-hl.bind("SUPER + Escape", hl.dsp.exec_cmd("speakoflow --cancel"))
 
 -- Media — commented out: handled by caelestia:media* when caelestia is enabled
 -- hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"), { locked = true })

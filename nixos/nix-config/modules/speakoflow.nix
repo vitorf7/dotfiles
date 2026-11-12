@@ -44,6 +44,7 @@
     };
 
   flake.modules.homeManager.speakoflow = {
+    config,
     pkgs,
     lib,
     osConfig,
@@ -69,6 +70,14 @@
   in
     lib.mkIf osConfig.vitorf7.desktop.speakoflow.enable {
       home.packages = [speakoflow];
+
+      # Hyprland binds that hand `--toggle-*` flags to the tray instance below.
+      # Only linked in while speakoflow is enabled; hyprland.lua loads the file
+      # if present, so turning this off (e.g. to try another dictation app)
+      # needs no edit to the shared keybindings.
+      xdg.configFile."hypr-speakoflow/keybinds.lua".source =
+        config.lib.file.mkOutOfStoreSymlink
+        "${config.home.homeDirectory}/dotfiles/hyprland/.config/hypr/modules/speakoflow-keybinds.lua";
 
       # Meetings ignore the microphone setting and always open ALSA `default`
       # (meetings/session.rs: start_mic_capture(None, ..)). Inside the
