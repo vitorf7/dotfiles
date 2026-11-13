@@ -359,9 +359,11 @@ function nix-update-derivations
     set -l saved_dir $PWD
     builtin cd $flake_dir
 
-    # tide-island loses its `version`/`src` source position under
-    # nix-update's --flake mode (stdenv.mkDerivation doesn't preserve it),
-    # so it goes through the non-flake shim instead — see
+    # Everything goes through nix-update's non-flake shim, not `--flake`:
+    # Nix >= 2.35 copies flake sources to the store lazily, so the store path
+    # nix-update's --flake mode reads from `nix flake metadata` doesn't exist
+    # ("opening file ...-source/...: No such file or directory"). tide-island
+    # also loses its `version`/`src` source position under --flake. See
     # pkgs/nix-update-shim.nix.
     set -l shim $flake_dir/pkgs/nix-update-shim.nix
 
@@ -369,7 +371,7 @@ function nix-update-derivations
 
     for pkg in strongbox wiresteward openwhispr
         echo "==> $pkg"
-        if not $updater $pkg --flake
+        if not $updater -f $shim $pkg --override-filename $flake_dir/pkgs/$pkg.nix
             set -a failed $pkg
         end
     end
@@ -377,17 +379,32 @@ function nix-update-derivations
     # SpeakoFlow publishes `test-*` pre-release tags that top releases.atom;
     # only follow stable vX.Y.Z tags (the group strips the `v`).
     echo "==> speakoflow"
-    if not $updater speakoflow --flake --version-regex '^v(\d+\.\d+\.\d+)$'
+    if not $updater -f $shim speakoflow --override-filename $flake_dir/pkgs/speakoflow.nix --version-regex '^v(\d+\.\d+\.\d+)$'
         set -a failed speakoflow
     end
 
+    # opencode is held on 1.x (opencode-claude-auth doesn't support 2.x).
+    # releases.atom only lists the ~10 newest releases, all 2.x now, so a
+    # --version-regex can never find a 1.x — resolve the newest v1.x.y tag
+    # with git instead (lists every tag) and pin nix-update to it.
+    # --subpackage also refreshes the node_modules fixed-output hash — this
+    # one runs a build, unlike the others.
+    echo "==> opencode-v1"
+    set -l oc_ver (git ls-remote --tags --refs https://github.com/anomalyco/opencode 'v1.*' 2>/dev/null | string replace -rf '^.*refs/tags/v(1\.\d+\.\d+)$' '$1' | sort -V | tail -n1)
+    if test -z "$oc_ver"
+        echo "Couldn't resolve the latest opencode v1.x tag (network?)"
+        set -a failed opencode-v1
+    else if not $updater -f $shim opencode-v1 --override-filename $flake_dir/pkgs/opencode-v1.nix --subpackage node_modules --version $oc_ver
+        set -a failed opencode-v1
+    end
+
     echo "==> quickshell-share-picker"
-    if not $updater quickshell-share-picker --flake
+    if not $updater -f $shim quickshell-share-picker --override-filename $flake_dir/pkgs/quickshell-share-picker.nix
         set -a failed quickshell-share-picker
     end
 
     echo "==> tide-island"
-    if not $updater tide-island -f $shim --override-filename $flake_dir/pkgs/tide-island.nix
+    if not $updater -f $shim tide-island --override-filename $flake_dir/pkgs/tide-island.nix
         set -a failed tide-island
     end
 
