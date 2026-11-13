@@ -61,6 +61,11 @@ in
         pipewire
         vulkan-loader
         libayatana-appindicator
+        # appimageTools' default FHS package list dropped libgcrypt and
+        # libgpg-error in the Nov 2026 nixpkgs, but the bundled binary still
+        # links libgpg-error.so.0 ("error while loading shared libraries").
+        libgcrypt
+        libgpg-error
       ];
 
     extraInstallCommands = ''
