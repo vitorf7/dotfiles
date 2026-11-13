@@ -40,7 +40,7 @@ nix-config/
 │   │   ├── uw-mac-m1/          nix-darwin — work.enable = true
 │   │   └── vitorf7-mac-m1/     nix-darwin — work.enable = false (nordvpn instead)
 │   └── ...                     Feature modules (see options.nix for flags)
-├── pkgs/                       Custom derivations (claude-code-latest, go-latest, openwhispr, speakoflow, strongbox, tide-island, wiresteward)
+├── pkgs/                       Custom derivations (claude-code-latest, go-latest, opencode-v1, openwhispr, speakoflow, strongbox, tide-island, wiresteward)
 ├── secrets/                    Strongbox-encrypted — DO NOT READ
 └── sops/                       SOPS age-encrypted secrets — DO NOT READ
 ```
@@ -83,11 +83,11 @@ nrs
 
 ## Updating pinned custom packages
 
-`nix flake update` only bumps the flake `inputs` in `flake.nix` — it does **not** touch the hand-pinned derivations under `pkgs/` (`strongbox`, `wiresteward`, `speakoflow`, `openwhispr`, `go-latest`, `tide-island`, `claude-code-latest`). Those pin a `rev`/`tag`/`version` + `hash` by hand and only move when someone refreshes them.
+`nix flake update` only bumps the flake `inputs` in `flake.nix` — it does **not** touch the hand-pinned derivations under `pkgs/` (`strongbox`, `wiresteward`, `speakoflow`, `openwhispr`, `go-latest`, `tide-island`, `claude-code-latest`, `opencode-v1`). Those pin a `rev`/`tag`/`version` + `hash` by hand and only move when someone refreshes them.
 
 The easiest way is the fish aliases in `fish/.config/fish/aliases.fish` (mirroring `nrs`):
 
-- `nix-update-derivations` — refreshes `strongbox`, `wiresteward`, `speakoflow`, `openwhispr`, `tide-island`, and `quickshell-share-picker` in one go.
+- `nix-update-derivations` — refreshes `strongbox`, `wiresteward`, `speakoflow`, `openwhispr`, `opencode-v1`, `tide-island`, and `quickshell-share-picker` in one go.
 - `nix-update-golatest` — runs `scripts/update-go.sh` for `go-latest`.
 - `nix-update-claude` — runs `scripts/update-claude-code.sh` for `claude-code-latest`.
 
@@ -95,11 +95,13 @@ Then rebuild to pick up the change: `sudo darwin-rebuild switch --flake .#<host>
 
 Details, if running things by hand:
 
-- `strongbox`/`wiresteward` — standard `buildGoModule` + `fetchFromGitHub rec` shape: `nix-update strongbox --flake` / `nix-update wiresteward --flake`. If a `buildGoModule` update fails with `go.mod requires go >= X.Y.Z` during the `vendorHash` step, that's nixpkgs' own `go`/`go_1_26` lagging behind — run `nix flake update nixpkgs` first, then retry.
-- `tide-island` — `stdenv.mkDerivation` doesn't preserve the source position of `version`/`src` the way `nix-update --flake` needs, even when written as a self-referencing `rec` set — it crashes with `expected a set but found null: null`. Use the non-flake shim instead: `nix-update tide-island -f pkgs/nix-update-shim.nix --override-filename pkgs/tide-island.nix`.
-- `speakoflow` — upstream publishes `test-*` pre-release tags that top `releases.atom`, and nix-update would bump to one (404 on the AppImage, file left half-updated). Pin to stable tags: `nix-update speakoflow --flake --version-regex '^v(\d+\.\d+\.\d+)$'` (already baked into `nix-update-derivations`).
+- **Don't use `nix-update --flake` on Nix >= 2.35.** Nix 2.35 copies flake sources to the store lazily, so the `path` from `nix flake metadata --json` doesn't exist on disk, and nix-update (1.16.0) hands it to `nix-instantiate`, failing with `opening file "/nix/store/...-source/nixos/nix-config": No such file or directory`. There's no setting to restore eager copying. Every package goes through the non-flake shim instead: `nix-update -f pkgs/nix-update-shim.nix <name> --override-filename pkgs/<name>.nix` (the shim exposes all the packages below with the same unfree/`go_1_26` setup as `modules/packages.nix`). Revisit `--flake` once nix-update handles non-materialised flake paths.
+- `strongbox`/`wiresteward` — standard `buildGoModule` + `fetchFromGitHub rec` shape: `nix-update -f pkgs/nix-update-shim.nix strongbox --override-filename pkgs/strongbox.nix` (same for `wiresteward`). If a `buildGoModule` update fails with `go.mod requires go >= X.Y.Z` during the `vendorHash` step, that's nixpkgs' own `go`/`go_1_26` lagging behind — run `nix flake update nixpkgs` first, then retry.
+- `tide-island` — `stdenv.mkDerivation` doesn't preserve the source position of `version`/`src` the way `nix-update --flake` needs, even when written as a self-referencing `rec` set — it crashes with `expected a set but found null: null`. It always needed the non-flake shim: `nix-update tide-island -f pkgs/nix-update-shim.nix --override-filename pkgs/tide-island.nix`.
+- `speakoflow` — upstream publishes `test-*` pre-release tags that top `releases.atom`, and nix-update would bump to one (404 on the AppImage, file left half-updated). Pin to stable tags: `nix-update -f pkgs/nix-update-shim.nix speakoflow --override-filename pkgs/speakoflow.nix --version-regex '^v(\d+\.\d+\.\d+)$'` (already baked into `nix-update-derivations`).
 - `go-latest` — sourced from go.dev, not GitHub, and needs 3 platform hashes at once: run `scripts/update-go.sh` instead of `nix-update`.
 - `claude-code-latest` — an override of nixpkgs' `claude-code` carrying its own release manifest, so `nix-update` can't see its version/src: run `scripts/update-claude-code.sh` instead (fetches the latest version + checksums from `downloads.claude.ai/claude-code-releases`). Keep it at or above the org's `minimumVersion` (currently v2.1.277) — nixpkgs unstable usually lags behind it.
+- `opencode-v1` — opencode held on the 1.x line because `opencode-claude-auth` (nixpkgs ships 0.7.3; upstream's last 1.x-compatible release is 2.2.1) doesn't work with OpenCode 2.x. It's a vendored copy of nixpkgs' source-build derivation (not the release AppImages — those are the desktop app, not the CLI). `nix-update-derivations` resolves the newest `v1.x.y` tag with `git ls-remote --tags` and pins nix-update to it: `nix-update -f pkgs/nix-update-shim.nix opencode-v1 --override-filename pkgs/opencode-v1.nix --subpackage node_modules --version <1.x.y>`. It can't use `--version-regex` like the others: `releases.atom` only lists the ~10 newest releases, which are all 2.x now, so nix-update reports "No version matched the regex". Unlike the others this one **does build** (the `node_modules` fixed-output hash is found by building it). 1.19.5 was the newest 1.x confirmed; if 1.x is frozen the step just reports "already <version>". Drop it, and go back to `pkgs.opencode`, once the plugin is on 3.x.
 - `nix-update` (`nix run nixpkgs#nix-update --` if not on `PATH`, or via `nix develop` — see `modules/packages.nix`'s `devShells.default`) never builds anything by default (`--build` is opt-in), so these are all fast, hash-only updates — build/verify separately via `nrs`.
 
 **If any of the above stops partway through** (a real build failure, a network hiccup, etc.), it can leave the `.nix` file half-updated — e.g. `version` bumped but `vendorHash`/`hash` still the old value. Check `git diff pkgs/` after a failed run and revert by hand if so, rather than leaving a derivation with mismatched version/hash pairs.

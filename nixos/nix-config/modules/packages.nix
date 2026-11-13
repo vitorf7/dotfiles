@@ -27,6 +27,8 @@
         apix = inputs.apix.packages.${system}.default;
         claude-code-latest = pkgs.callPackage ../pkgs/claude-code-latest.nix {};
         go-latest = pkgs.callPackage ../pkgs/go-latest.nix {};
+        # opencode held on 1.x (opencode-claude-auth doesn't support 2.x) — see the file header.
+        opencode-v1 = pkgs.callPackage ../pkgs/opencode-v1.nix {};
         strongbox = pkgs.callPackage ../pkgs/strongbox.nix {};
         wiresteward = pkgs.callPackage ../pkgs/wiresteward.nix {};
       };
