@@ -144,6 +144,15 @@
                "shortcut": "super+alt+shift+B"
             }
          }
+      },
+      "snippets": {
+         "preferences": {
+            "enabled": true,
+            "undo": true,
+            "layout": "",
+            "prePasteDelay": "0",
+            "keyDelay": "2"
+         }
       }
    }
 }
