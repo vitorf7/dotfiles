@@ -26,6 +26,7 @@
       "showOnLastDisplay": true,
       "position": 1,
       "mode": "compact",
+      "middleClickAction": "close",
       "taskbarAlign": "center",
       "widgetExpansion": "popout",
       "iconSize": 40,
@@ -256,7 +257,7 @@
     }
   },
   "clipboardEnterToPaste": true,
-  "configVersion": 42,
+  "configVersion": 43,
   "dashTabs": [
     {
       "id": "overview",
