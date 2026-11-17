@@ -29,11 +29,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1793206629,
-        "narHash": "sha256-Rci1As04YDGl61nTYpe+tifn6ZwSO5/mJ75hIog5kis=",
+        "lastModified": 1794916231,
+        "narHash": "sha256-t/osOZu2K0C3tF37hZlHJRZnr0jZzJPiCyF6dM2U/wY=",
         "owner": "rhydianjenkins",
         "repo": "apix",
-        "rev": "15c7c132fcdfae3b61ce4e16d8832b5dbce8da63",
+        "rev": "993d1a5b4acca7c250a446f7dc8bbfb7647cafb4",
         "type": "github"
       },
       "original": {
