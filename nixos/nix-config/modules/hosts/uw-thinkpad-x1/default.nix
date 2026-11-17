@@ -73,6 +73,10 @@ in {
         # shared sets these — the T480 predates the requirement.
         hardware.enableRedistributableFirmware = true;
         hardware.firmware = [pkgs.sof-firmware];
+        # BIOS/Thunderbolt/dock firmware updates via LVFS (`fwupdmgr
+        # get-updates`). Added while chasing a pre-GRUB hang on reboot with the
+        # USB-C hub attached, which is firmware-side, not the kernel's.
+        services.fwupd.enable = true;
       })
       # Feature flags
       {
