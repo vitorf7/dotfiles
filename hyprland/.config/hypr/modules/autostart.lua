@@ -12,11 +12,6 @@ hl.on("hyprland.start", function()
 	-- hl.exec_cmd("waybar")
 	hl.exec_cmd("vicinae server")
 	hl.exec_cmd("avizo-service")
-	-- EasyEffects (Qt) checks QSystemTrayIcon::isSystemTrayAvailable() exactly
-	-- once at startup and never retries; it returns false unless DMS's
-	-- org.kde.StatusNotifierWatcher is already on the session bus. Wait for the
-	-- bus name first, otherwise EE starts before DMS and shows no tray icon.
-	hl.exec_cmd([[sh -c 'gdbus wait --session --timeout 60 org.kde.StatusNotifierWatcher; exec easyeffects --service-mode']])
 	hl.exec_cmd("lxqt-policykit-agent")
 	-- hl.exec_cmd("caelestia shell -d")
 	-- hl.exec_cmd("tide-island")
@@ -34,4 +29,7 @@ hl.on("hyprland.start", function()
 	hl.exec_cmd("systemctl --user start xdg-desktop-portal.service")
 	hl.exec_cmd("systemctl --user start openlogi-agent.service")
 	hl.exec_cmd("systemctl --user start ydotool.service")
+	-- EasyEffects is a user service (modules/desktop.nix) so it restarts with
+	-- WirePlumber; it waits for DMS's StatusNotifierWatcher itself.
+	hl.exec_cmd("systemctl --user start easyeffects.service")
 end)
