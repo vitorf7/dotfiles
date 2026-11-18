@@ -10,7 +10,6 @@
       "hashicorp/tap/terraform-ls"
       "snyk/tap/snyk"
       "teamookla/speedtest/speedtest"
-      "awscli@1"
       "julia"
       "cocoapods"
       "composer"
@@ -29,6 +28,12 @@
     isDarwin = pkgs.stdenv.isDarwin;
     dot = "${config.home.homeDirectory}/dotfiles";
     link = config.lib.file.mkOutOfStoreSymlink;
+    # nixpkgs' google-cloud-sdk is read-only, so `gcloud components install`
+    # doesn't work; extra components must be baked in. The GKE auth plugin is
+    # what lets kubectl/k9s authenticate to GKE clusters.
+    gcloud = pkgs.google-cloud-sdk.withExtraComponents [
+      pkgs.google-cloud-sdk.components.gke-gcloud-auth-plugin
+    ];
   in {
     home.packages = with pkgs;
       [
@@ -37,6 +42,8 @@
         python3
         go_1_26
         terraform
+        gcloud
+        awscli2
         evans
         grpcui
         yq-go
