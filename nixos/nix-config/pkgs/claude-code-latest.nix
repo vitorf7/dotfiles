@@ -1,20 +1,20 @@
 {
   claude-code,
 }: let
-  version = "2.1.323"; # claude-update:version
+  version = "2.1.327"; # claude-update:version
 
   platforms = {
     "linux-x64" = {
       binary = "claude.zst";
-      checksum = "d5f85ac4e9b7ca95e6bbeeeaf05af7c20ff62ddd2a0f49b1f4a0699c30ab0686"; # claude-update:linux-x64
+      checksum = "a7ba3640f5c656d697b743c20bcfa4470e8b4e88aa352be82dafe3041d5f8961"; # claude-update:linux-x64
     };
     "linux-arm64" = {
       binary = "claude.zst";
-      checksum = "fe84a70e49198b4489aeadbe08cdbfb6a01abf2ca0d8dfe861d5f933e4e1516b"; # claude-update:linux-arm64
+      checksum = "2f2201df61973fc0637e5e50c0c81c75884bec3ca7eed856e3242ab4cfb22e17"; # claude-update:linux-arm64
     };
     "darwin-arm64" = {
       binary = "claude.zst";
-      checksum = "20788f38f520395da5dc315ba6ef2f86c6a0850d9104e6b870cd980697e81055"; # claude-update:darwin-arm64
+      checksum = "bba95782cd2be6baa993d93fe35719eb7a168ce8cfb12b9967e84f2f31341abb"; # claude-update:darwin-arm64
     };
   };
 in

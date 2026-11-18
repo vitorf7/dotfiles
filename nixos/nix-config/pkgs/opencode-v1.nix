@@ -8,6 +8,7 @@
 # that shipped 1.19.0, so it moves by `nix-update` rather than with nixpkgs.
 # Differences from that file:
 #   - no nix-update-script / maintainers (not needed here)
+#   - smoke test skipped via upstream's `--skip-smoke` build flag (>= 1.19.6)
 #   - darwin: `autoSignDarwinBinariesHook` replaces the removed
 #     `darwin.sigtool` + manual `codesign` (same approach as nixpkgs' 2.x file)
 #
@@ -91,14 +92,14 @@
       # NOTE: Required else we get errors that our fixed-output derivation references store paths
       dontFixup = true;
 
-      outputHash = "sha256-yGAwP7EV8Ukasx6d4MhUChznFrKuArk0M9+xHFczNfg=";
+      outputHash = "sha256-7DYTUG+WAs1Q6Yv5TBTTFuK1V/M57+6hCq6vaw2FPMo=";
       outputHashAlgo = "sha256";
       outputHashMode = "recursive";
     };
 in
   stdenv.mkDerivation (finalAttrs: {
     pname = "opencode";
-    version = "1.19.5";
+    version = "1.19.6";
 
     __structuredAttrs = true;
     strictDeps = true;
@@ -107,7 +108,7 @@ in
       owner = "anomalyco";
       repo = "opencode";
       tag = "v${finalAttrs.version}";
-      hash = "sha256-tmFnVEBsnLZNuBaSIt7rZYuBV4jf/Ccaq2a6AwjyCec=";
+      hash = "sha256-BljW36xeL0YYUp23EetqeGaFv3CdzVF4BPE4VJ1lXGk=";
     };
 
     postPatch =
@@ -117,13 +118,6 @@ in
           --replace-fail \
           'throw new Error(`This script requires bun@''${expectedBunVersionRange}' \
           'console.warn(`Warning: This script requires bun@''${expectedBunVersionRange}'
-      ''
-      # Skip smoke test
-      + ''
-        substituteInPlace packages/opencode/script/build.ts \
-          --replace-fail \
-          'if (item.os === process.platform && item.arch === process.arch && !item.abi)' \
-          'if (false)'
       ''
       # Bun 1.4.x regressed compiled executable code splitting.
       + ''
@@ -162,7 +156,7 @@ in
       runHook preBuild
 
       cd ./packages/opencode
-      bun --bun ./script/build.ts --single --skip-install
+      bun --bun ./script/build.ts --single --skip-install --skip-smoke
       bun --bun ./script/schema.ts config.json tui.json
       substituteInPlace config.json \
         --replace-fail "https://models.dev/model-schema.json" \

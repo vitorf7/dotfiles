@@ -4,14 +4,14 @@
   lib,
 }: let
   pname = "openwhispr";
-  version = "1.11.0";
+  version = "1.12.0";
 
   # Vendored from upstream's nix/package.nix rather than taken as a flake
   # input: upstream doesn't bump that file on release (still 1.7.4 at the
   # v1.10.4 tag), so pinning here keeps nix-update-derivations in charge.
   src = fetchurl {
     url = "https://github.com/OpenWhispr/openwhispr/releases/download/v${version}/OpenWhispr-${version}-linux-x86_64.AppImage";
-    hash = "sha256-fI8RCYVybv/sDSrm8Kw0O2TzX5Z+Cf/9z6pL/wwpMH4=";
+    hash = "sha256-OXtzb/8jslS7JIE1Ep7liKniAj6M/sFAh4OijT8YdBA=";
   };
 
   appimageContents = appimageTools.extractType2 {inherit pname version src;};
