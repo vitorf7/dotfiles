@@ -1,0 +1,17 @@
+-- Your keyboard shortcuts for the Slate session: ~/.config/slate/hypr/binds.lua
+--
+-- Loaded after Slate's own shortcuts, so a shortcut here replaces Slate's for the same keys.
+-- Settings → Shortcuts lists Slate's. Saving this file reloads Hyprland's config; if
+-- something in it is wrong, Slate shows the error in a notification.
+--
+-- Binds: https://wiki.hypr.land/Configuring/Basics/Binds/
+-- Examples (remove the "--" to use one):
+-- hl.bind("SUPER + B", hl.dsp.exec_cmd("firefox"))
+-- hl.bind("SUPER + SHIFT + S", hl.dsp.exec_cmd(SLATE_DIR .. "/scripts/screenshot.sh region"))   (replaces Slate's: window to the secret workspace)
+-- hl.bind("SUPER + G", function() hl.dispatch(hl.dsp.focus({ workspace = "name:gaming" })) end)
+--
+-- Remove one of Slate's:
+-- hl.unbind("SUPER + J")
+--
+-- Run anything in Slate from a key (see `slate ipc show` for what there is):
+-- hl.bind("SUPER + S", hl.dsp.exec_cmd(SLATE .. " ipc call spaces restore Coding"))   (replaces Slate's: the secret workspace)

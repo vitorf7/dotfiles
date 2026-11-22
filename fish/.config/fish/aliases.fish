@@ -408,6 +408,12 @@ function nix-update-derivations
         set -a failed tide-island
     end
 
+    # Slate: stable vX.Y.Z release tags only (the group strips the `v`).
+    echo "==> slate"
+    if not $updater -f $shim slate --override-filename $flake_dir/pkgs/slate/package.nix --version-regex '^v(\d+\.\d+\.\d+)$'
+        set -a failed slate
+    end
+
     builtin cd $saved_dir
 
     if test (count $failed) -gt 0

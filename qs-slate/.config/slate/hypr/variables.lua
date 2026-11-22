@@ -1,0 +1,23 @@
+-- Your default apps, monitors and cursor for the Slate session: ~/.config/slate/hypr/variables.lua
+--
+-- Loaded before Slate's own Hyprland config, which uses any of these you set here instead
+-- of its defaults (shown below). Saving this file reloads Hyprland's config; if something in
+-- it is wrong, Slate shows the error in a notification.
+--
+-- Remove the "--" in front of a line to use it:
+-- TERMINAL     = "kitty"                            -- Super+Return
+-- FILE_MANAGER = "dolphin"                          -- Super+E
+-- BROWSER      = "firefox"
+-- EDITOR       = "gnome-text-editor --new-window"   -- Super+T
+-- CALCULATOR   = "gnome-calculator"                 -- Super+C
+--
+-- Monitors by output name (`hyprctl monitors` lists them); "" = whichever Hyprland finds.
+-- MONITOR1 = "eDP-1"
+-- MONITOR2 = "DP-1"
+-- MONITOR3 = ""
+-- PRIMARY_MONITOR = "DP-1"      -- where games and launchers open (default: MONITOR1)
+--
+-- NUM_WPM = 3                   -- workspaces per monitor with number-key shortcuts (up to 10)
+--
+-- CURSOR_THEME = "Slate-Cursors"
+-- CURSOR_SIZE  = 20

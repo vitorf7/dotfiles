@@ -19,6 +19,7 @@
       quickshell-share-picker = pkgs.callPackage ../pkgs/quickshell-share-picker.nix {};
       speakoflow = pkgs.callPackage ../pkgs/speakoflow.nix {};
       openwhispr = pkgs.callPackage ../pkgs/openwhispr.nix {};
+      slate = pkgs.callPackage ../pkgs/slate/package.nix {};
     };
   in {
     packages =

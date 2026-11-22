@@ -40,7 +40,7 @@ nix-config/
 │   │   ├── uw-mac-m1/          nix-darwin — work.enable = true
 │   │   └── vitorf7-mac-m1/     nix-darwin — work.enable = false (nordvpn instead)
 │   └── ...                     Feature modules (see options.nix for flags)
-├── pkgs/                       Custom derivations (claude-code-latest, go-latest, opencode-v1, openwhispr, speakoflow, strongbox, tide-island, wiresteward)
+├── pkgs/                       Custom derivations (claude-code-latest, go-latest, opencode-v1, openwhispr, slate/, speakoflow, strongbox, tide-island, wiresteward)
 ├── secrets/                    Strongbox-encrypted — DO NOT READ
 └── sops/                       SOPS age-encrypted secrets — DO NOT READ
 ```
@@ -51,7 +51,7 @@ All feature toggles live under `vitorf7` in `modules/options.nix`, shared betwee
 
 | Namespace | Gates |
 |-----------|-------|
-| `vitorf7.desktop.*` | Desktop env, Hyprland, Quickshell shells, Flatpak, gaming, WinBoat |
+| `vitorf7.desktop.*` | Desktop env, Hyprland, Quickshell shells (incl. Slate — replaces DMS), Flatpak, gaming, WinBoat |
 | `vitorf7.hardware.*` | NVIDIA PRIME, fingerprint (fprintd), QEMU guest |
 | `vitorf7.networking.*` | NordVPN, GlobalProtect, Wiresteward WireGuard |
 | `vitorf7.darwin.*` | macOS base, Homebrew, Aerospace+sketchybar, Colima, work-only items |
@@ -83,11 +83,11 @@ nrs
 
 ## Updating pinned custom packages
 
-`nix flake update` only bumps the flake `inputs` in `flake.nix` — it does **not** touch the hand-pinned derivations under `pkgs/` (`strongbox`, `wiresteward`, `speakoflow`, `openwhispr`, `go-latest`, `tide-island`, `claude-code-latest`, `opencode-v1`). Those pin a `rev`/`tag`/`version` + `hash` by hand and only move when someone refreshes them.
+`nix flake update` only bumps the flake `inputs` in `flake.nix` — it does **not** touch the hand-pinned derivations under `pkgs/` (`strongbox`, `wiresteward`, `speakoflow`, `openwhispr`, `go-latest`, `tide-island`, `claude-code-latest`, `opencode-v1`, `slate`). Those pin a `rev`/`tag`/`version` + `hash` by hand and only move when someone refreshes them.
 
 The easiest way is the fish aliases in `fish/.config/fish/aliases.fish` (mirroring `nrs`):
 
-- `nix-update-derivations` — refreshes `strongbox`, `wiresteward`, `speakoflow`, `openwhispr`, `opencode-v1`, `tide-island`, and `quickshell-share-picker` in one go.
+- `nix-update-derivations` — refreshes `strongbox`, `wiresteward`, `speakoflow`, `openwhispr`, `opencode-v1`, `tide-island`, `quickshell-share-picker`, and `slate` in one go.
 - `nix-update-golatest` — runs `scripts/update-go.sh` for `go-latest`.
 - `nix-update-claude` — runs `scripts/update-claude-code.sh` for `claude-code-latest`.
 
@@ -99,6 +99,7 @@ Details, if running things by hand:
 - `strongbox`/`wiresteward` — standard `buildGoModule` + `fetchFromGitHub rec` shape: `nix-update -f pkgs/nix-update-shim.nix strongbox --override-filename pkgs/strongbox.nix` (same for `wiresteward`). If a `buildGoModule` update fails with `go.mod requires go >= X.Y.Z` during the `vendorHash` step, that's nixpkgs' own `go`/`go_1_26` lagging behind — run `nix flake update nixpkgs` first, then retry.
 - `tide-island` — `stdenv.mkDerivation` doesn't preserve the source position of `version`/`src` the way `nix-update --flake` needs, even when written as a self-referencing `rec` set — it crashes with `expected a set but found null: null`. It always needed the non-flake shim: `nix-update tide-island -f pkgs/nix-update-shim.nix --override-filename pkgs/tide-island.nix`.
 - `speakoflow` — upstream publishes `test-*` pre-release tags that top `releases.atom`, and nix-update would bump to one (404 on the AppImage, file left half-updated). Pin to stable tags: `nix-update -f pkgs/nix-update-shim.nix speakoflow --override-filename pkgs/speakoflow.nix --version-regex '^v(\d+\.\d+\.\d+)$'` (already baked into `nix-update-derivations`).
+- `slate` — lives in `pkgs/slate/` (`package.nix` + a generic `nixos-module.nix` exposing `programs.slate`), both written with no references to this repo so they can be offered upstream as a flake; `modules/slate.nix` is only the `vitorf7.desktop.slate.enable` glue. Stable tags only: `nix-update -f pkgs/nix-update-shim.nix slate --override-filename pkgs/slate/package.nix --version-regex '^v(\d+\.\d+\.\d+)$'`. Slate's own updater sees its code in `/nix/store` and stands down ("packaged"); Settings → Updates still announces new releases. After a bump, `nix build .#slate` — the `installPhase` `substituteInPlace --replace-fail` lines on `session/slate-session` / `slate.desktop` / `slate-settings.desktop` fail loudly if upstream changes those files.
 - `go-latest` — sourced from go.dev, not GitHub, and needs 3 platform hashes at once: run `scripts/update-go.sh` instead of `nix-update`.
 - `claude-code-latest` — an override of nixpkgs' `claude-code` carrying its own release manifest, so `nix-update` can't see its version/src: run `scripts/update-claude-code.sh` instead (fetches the latest version + checksums from `downloads.claude.ai/claude-code-releases`). Keep it at or above the org's `minimumVersion` (currently v2.1.277) — nixpkgs unstable usually lags behind it.
 - `opencode-v1` — opencode held on the 1.x line because `opencode-claude-auth` (nixpkgs ships 0.7.3; upstream's last 1.x-compatible release is 2.2.1) doesn't work with OpenCode 2.x. It's a vendored copy of nixpkgs' source-build derivation (not the release AppImages — those are the desktop app, not the CLI). `nix-update-derivations` resolves the newest `v1.x.y` tag with `git ls-remote --tags` and pins nix-update to it: `nix-update -f pkgs/nix-update-shim.nix opencode-v1 --override-filename pkgs/opencode-v1.nix --subpackage node_modules --version <1.x.y>`. It can't use `--version-regex` like the others: `releases.atom` only lists the ~10 newest releases, which are all 2.x now, so nix-update reports "No version matched the regex". Unlike the others this one **does build** (the `node_modules` fixed-output hash is found by building it). 1.19.6 was the newest 1.x confirmed (it needs the `--skip-smoke` build flag, so the derivation is 1.19.6+ only); **nix-update doesn't build the main derivation, so after bumping run `nix build .#opencode-v1` — upstream `build.ts` changes can break the `postPatch` substitutions**; if 1.x is frozen the step just reports "already <version>". Drop it, and go back to `pkgs.opencode`, once the plugin is on 3.x.

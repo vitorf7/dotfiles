@@ -1,0 +1,15 @@
+-- Your monitor setup for the Slate session: ~/.config/slate/hypr/monitors.lua
+--
+-- Loaded after Slate's own config (including what you set in Settings → Displays), so
+-- anything here wins. Most people don't need this file: Settings → Displays handles mode,
+-- scale, position and rotation. Saving this file reloads Hyprland's config; if something in
+-- it is wrong, Slate shows the error in a notification.
+--
+-- Monitors: https://wiki.hypr.land/Configuring/Basics/Monitors/
+-- `hyprctl monitors` lists your outputs. Examples (remove the "--" to use one):
+-- hl.monitor({ output = "DP-1", mode = "2560x1440@144", position = "0x0", scale = "1" })
+-- hl.monitor({ output = "HDMI-A-1", mode = "preferred", position = "auto-right", scale = "auto" })
+-- hl.monitor({ output = "eDP-1", disabled = true })
+--
+-- Workspaces on a monitor:
+-- hl.workspace_rule({ workspace = "4", monitor = "DP-1", default = true, persistent = true })

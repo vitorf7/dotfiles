@@ -33,4 +33,5 @@ in {
   opencode-v1 = pkgs.callPackage ./opencode-v1.nix {};
   quickshell-share-picker = pkgs.callPackage ./quickshell-share-picker.nix {};
   tide-island = pkgs.callPackage ./tide-island.nix {};
+  slate = pkgs.callPackage ./slate/package.nix {};
 }

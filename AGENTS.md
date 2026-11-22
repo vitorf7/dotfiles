@@ -26,6 +26,7 @@ Each top-level directory (except `nixos/`, `scripts/`, `secrets/`, `configs/`, `
 | Git tooling | `git/`, `lazygit/`, `gh/`, `gh-dash/`                      |
 | macOS WM    | `aerospace/`, `sketchybar/`, `yabai/`, `karabiner/`        |
 | Linux WM    | `hyprland/`, `waybar/`, `rofi/`, `swaync/`                 |
+| Qs shells   | `qs-slate/`, `dank-material-shell/`, `caelestia/`, `ambxst/` (symlinked by home-manager, not stowed) |
 | Dev         | `k9s/`, `starship/`, `bat/`                                |
 
 ## Submodules

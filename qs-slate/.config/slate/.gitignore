@@ -1,0 +1,3 @@
+# Slate writes these beside your settings; they aren't config.
+*.bak*
+.new-here

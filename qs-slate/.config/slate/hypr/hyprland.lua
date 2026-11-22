@@ -1,0 +1,12 @@
+-- Anything else for the Slate session's Hyprland: ~/.config/slate/hypr/hyprland.lua
+--
+-- Loaded last, after Slate's own config and your other files here (env, variables,
+-- monitors, binds, rules, autostart), so it wins over all of them. Saving this file reloads
+-- Hyprland's config; if something in it is wrong, Slate shows the error in a notification.
+--
+-- Hyprland's Lua config: https://wiki.hypr.land/Configuring/
+-- Examples (remove the "--" to use one):
+-- hl.config({ input = { kb_layout = "gb", kb_options = "caps:escape" } })
+-- hl.config({ general = { gaps_in = 4, gaps_out = 8 } })
+-- hl.config({ decoration = { rounding = 14 } })
+-- hl.device({ name = "logitech-g502", sensitivity = -0.3 })

@@ -1,0 +1,13 @@
+-- Your window and workspace rules for the Slate session: ~/.config/slate/hypr/rules.lua
+--
+-- Loaded after Slate's own rules, so these win where they overlap. Saving this file reloads
+-- Hyprland's config; if something in it is wrong, Slate shows the error in a notification.
+--
+-- Window rules: https://wiki.hypr.land/Configuring/Basics/Window-Rules/
+-- `hyprctl clients` shows each window's class and title. Examples (remove the "--"):
+-- hl.window_rule({ match = { class = "^(pavucontrol)$" }, float = true, size = { 800, 600 } })
+-- hl.window_rule({ match = { class = "^(Spotify)$" }, workspace = "5 silent" })
+-- hl.window_rule({ match = { title = "^(Picture-in-Picture)$" }, pin = true })
+--
+-- Workspace rules: https://wiki.hypr.land/Configuring/Basics/Workspace-Rules/
+-- hl.workspace_rule({ workspace = "3", layout = "scrolling" })
