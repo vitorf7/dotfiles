@@ -83,13 +83,13 @@ let
 in
   stdenvNoCC.mkDerivation (finalAttrs: {
     pname = "slate";
-    version = "0.34.0";
+    version = "0.36.0";
 
     src = fetchFromGitHub {
       owner = "daylerees";
       repo = "slate";
       tag = "v${finalAttrs.version}";
-      hash = "sha256-Jwrd/yM+1VvgF/492Tn1DWPOoxsnSJPxO8cnlLCoul8=";
+      hash = "sha256-Fv6IBarwnZHIzPHOmwpkNMHuR6VBijK07BYqHrRJc3M=";
     };
 
     dontConfigure = true;
