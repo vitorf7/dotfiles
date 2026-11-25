@@ -43,6 +43,14 @@ if h then
 	loadfile(dmsConfig)()
 end
 
+-- DankMaterialShell autostart (only loaded if dank_material_shell.enable = true on this host)
+local dmsAutostart = os.getenv("HOME") .. "/.config/hypr-dank-material-shell/autostart.lua"
+local d = io.open(dmsAutostart, "r")
+if d then
+	d:close()
+	loadfile(dmsAutostart)()
+end
+
 -- SpeakoFlow keybinds (only loaded if speakoflow.enable = true on this host)
 local speakoflowKeybinds = os.getenv("HOME") .. "/.config/hypr-speakoflow/keybinds.lua"
 local k = io.open(speakoflowKeybinds, "r")

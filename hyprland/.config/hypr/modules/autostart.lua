@@ -25,7 +25,8 @@ hl.on("hyprland.start", function()
 	-- WantedBy/Requisite=graphical-session.target (xdg-desktop-portal,
 	-- openlogi-agent, ydotool, dms) needs it active before it can start.
 	hl.exec_cmd("systemctl --user start graphical-session-holder.service")
-	hl.exec_cmd("systemctl --user start dms")
+	-- (dms is started from ~/.config/hypr-dank-material-shell/autostart.lua,
+	-- loaded by hyprland.lua only on hosts with dank_material_shell.enable.)
 	hl.exec_cmd("systemctl --user start xdg-desktop-portal.service")
 	hl.exec_cmd("systemctl --user start openlogi-agent.service")
 	hl.exec_cmd("systemctl --user start ydotool.service")

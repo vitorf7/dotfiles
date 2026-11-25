@@ -66,6 +66,12 @@ in {
         config.lib.file.mkOutOfStoreSymlink
         "${config.home.homeDirectory}/dotfiles/dank-material-shell/.config/hypr/modules/dank-material-shell-keybinds.lua";
 
+      # Its presence tells hyprland.lua to start the dms user service (same
+      # pattern as hypr-swaync/autostart.lua in hyprland.nix).
+      xdg.configFile."hypr-dank-material-shell/autostart.lua".source =
+        config.lib.file.mkOutOfStoreSymlink
+        "${config.home.homeDirectory}/dotfiles/dank-material-shell/.config/hypr/modules/dank-material-shell-autostart.lua";
+
       # DMS shell settings — bar layout, widgets, fonts, corner radius, etc.
       # Using mkOutOfStoreSymlink so DMS can write back to this file when the
       # user changes settings through the GUI.
