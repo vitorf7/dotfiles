@@ -36,6 +36,31 @@
       # and Restart= covers its occasional crashes.
       systemd.user.services.easyeffects = let
         start = pkgs.writeShellScript "easyeffects-service" ''
+          # Qt aborts (qFatal in createPlatformIntegration, SIGABRT) when there is
+          # no display to connect to, and under UWSM this unit can start before
+          # the compositor's WAYLAND_DISPLAY has been imported into the user
+          # manager, or before its socket exists. Wait (best effort, ~60 s) for a
+          # usable Wayland socket, adopting the first one in $XDG_RUNTIME_DIR if the
+          # variable is missing, and start anyway after that so a headless login
+          # never hangs the unit.
+          i=0
+          while [ "$i" -lt 120 ]; do
+            if [ -z "$WAYLAND_DISPLAY" ]; then
+              for s in "$XDG_RUNTIME_DIR"/wayland-[0-9]; do
+                if [ -S "$s" ]; then
+                  WAYLAND_DISPLAY=$(${pkgs.coreutils}/bin/basename "$s")
+                  export WAYLAND_DISPLAY
+                  break
+                fi
+              done
+            fi
+            if [ -n "$WAYLAND_DISPLAY" ] && [ -S "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" ]; then
+              break
+            fi
+            ${pkgs.coreutils}/bin/sleep 0.5
+            i=$((i + 1))
+          done
+
           # EasyEffects (Qt) checks QSystemTrayIcon::isSystemTrayAvailable()
           # exactly once at startup and never retries; it returns false unless
           # DMS's org.kde.StatusNotifierWatcher is already on the session bus.
@@ -43,6 +68,39 @@
           # shows no tray icon.
           ${pkgs.glib}/bin/gdbus wait --session --timeout 60 org.kde.StatusNotifierWatcher || true
           exec ${lib.getExe pkgs.easyeffects} --service-mode
+        '';
+
+        # EasyEffects' virtual sink is created with monitor.channel-volumes=false,
+        # so the sink's own volume (what Slate's slider and the volume keys set on
+        # the default output) never reaches the monitor ports EasyEffects reads:
+        # at 0% the audio still plays at full level. The property can be flipped on
+        # the live node (verified: volume then follows the slider, 0 is silent),
+        # but not at creation, so do it once the node exists after each (re)start.
+        #
+        # Deliberately does NOT touch the default input. Pinning it to
+        # easyeffects_source meant apps recorded EasyEffects' virtual mic, whose
+        # own capture followed some other device, so the Wave:3's hardware mute
+        # button silenced nothing anyone was hearing. The default input is left
+        # to WirePlumber's priorities in audio.nix (Wave:3 > BT headset >
+        # laptop mic); the wave3.json input preset only applies to an app that
+        # picks "Easy Effects Source" by hand. Default output is likewise left
+        # to Slate's Output device list.
+        # Best effort: if the sink never shows up the unit still runs.
+        applyAudio = pkgs.writeShellScript "easyeffects-apply-audio" ''
+          node_id() {
+            ${pkgs.pipewire}/bin/pw-dump 2>/dev/null \
+              | ${pkgs.jq}/bin/jq -r --arg n "$1" '.[] | select(.info.props."node.name" == $n) | .id' \
+              | ${pkgs.coreutils}/bin/head -n1
+          }
+          i=0
+          while [ "$i" -lt 120 ]; do
+            sink=$(node_id easyeffects_sink)
+            if [ -n "$sink" ]; then
+              exec ${pkgs.pipewire}/bin/pw-cli set-param "$sink" Props '{ params = [ "monitor.channel-volumes" true ] }'
+            fi
+            ${pkgs.coreutils}/bin/sleep 0.5
+            i=$((i + 1))
+          done
         '';
       in {
         Unit = {
@@ -52,6 +110,7 @@
         };
         Service = {
           ExecStart = "${start}";
+          ExecStartPost = "-${applyAudio}";
           Restart = "on-failure";
           RestartSec = 2;
         };
