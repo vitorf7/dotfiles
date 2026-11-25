@@ -7,9 +7,12 @@ background-opacity-cells = true
 background-opacity = .90
 background-blur-radius = 20
 
-# MX Master 3 hi-res wheel sends many scroll reports per ratchet step;
-# scale down scroll speed in Ghostty (also applies to TUIs like opencode)
-mouse-scroll-multiplier = 0.3
+# MX Master 3 hi-res wheel reaches Ghostty as smooth ("precision") scroll, not
+# discrete notches, so `precision` is the value that controls its speed (and the
+# touchpad's). A bare number like 0.3 applies to both types and made scrolling
+# much slower in tmux / Claude Code, so set them separately. `discrete` only
+# affects true notched wheels.
+mouse-scroll-multiplier = precision:3,discrete:2
 
 macos-non-native-fullscreen = true
 macos-titlebar-style = hidden
@@ -80,3 +83,4 @@ keybind = super+ctrl+n=text:nvims\x0D
 keybind = ctrl+alt+k=text:clear\x0D
 # AI Agent
 keybind = super+shift+a=text:startAIAgent\x0D
+theme = slate

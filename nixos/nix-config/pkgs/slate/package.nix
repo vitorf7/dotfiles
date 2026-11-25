@@ -26,6 +26,7 @@
   poppler-utils,
   ffmpeg,
   pciutils,
+  qt6,
 }:
 # Slate — a desktop shell for Hyprland built with Quickshell.
 # https://github.com/daylerees/slate
@@ -80,6 +81,12 @@ let
     glib.out
     gobject-introspection
   ];
+
+  # nixpkgs' quickshell only carries qtbase and qtsvg plugins, so Qt can't
+  # decode WebP (or TIFF, ICNS, …) and a .webp wallpaper renders as nothing
+  # ("Unsupported image format"). Same Qt version as quickshell's (both come
+  # from this nixpkgs' qt6), so the plugin is ABI-compatible.
+  qtPluginPath = "${qt6.qtimageformats}/lib/qt-6/plugins";
 in
   stdenvNoCC.mkDerivation (finalAttrs: {
     pname = "slate";
@@ -112,6 +119,25 @@ in
       echo "v${finalAttrs.version}" > $share/VERSION
       chmod +x $share/bin/* $share/scripts/*.sh $share/scripts/*.py \
         $share/greeter/run-greeter.sh $share/session/slate-session
+
+      # Slate's own launcher carries the runtime tools too, not only the login
+      # session below. Slate starts Quickshell from this script, and every Python
+      # script (the app-icon tiles, spaces, session.sh) and rsvg-convert it runs
+      # inherits from there, so no session can drop them: under UWSM the PATH
+      # slate-session exports is rebuilt by a login shell, and NixOS's
+      # set-environment replaces PATH outright. Without them, appicon.py can't
+      # even find python3 and no app icon is ever drawn. The Qt image-format
+      # plugins go here too (not in slate-session): only Slate's own Quickshell
+      # needs them, and the wrapper around `qs` prepends its plugins, so this
+      # adds WebP decoding without displacing anything.
+      {
+        echo '#!/bin/sh'
+        echo 'export PATH="${runtimePath}''${PATH:+:$PATH}"'
+        echo 'export GI_TYPELIB_PATH="${typelibPath}''${GI_TYPELIB_PATH:+:$GI_TYPELIB_PATH}"'
+        echo 'export QT_PLUGIN_PATH="${qtPluginPath}''${QT_PLUGIN_PATH:+:$QT_PLUGIN_PATH}"'
+        tail -n +2 $share/bin/slate
+      } > slate.patched
+      install -m755 slate.patched $share/bin/slate
 
       # The slate command
       mkdir -p $out/bin

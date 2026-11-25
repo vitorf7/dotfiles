@@ -91,10 +91,10 @@ in {
         vitorf7.desktop.ambxst.enable = false;
         vitorf7.desktop.tide_island.enable = false;
         vitorf7.desktop.caelestia_shell.enable = false;
-        vitorf7.desktop.dank_material_shell.enable = true;
+        vitorf7.desktop.dank_material_shell.enable = false;
         # To move to Slate (like thinkpad-t480): set this true and
         # dank_material_shell false — the slate module asserts the pair.
-        vitorf7.desktop.slate.enable = false;
+        vitorf7.desktop.slate.enable = true;
         vitorf7.desktop.dankcalendar.enable = true;
         vitorf7.desktop.flatpak.enable = true;
         vitorf7.desktop.mouseless.enable = true;

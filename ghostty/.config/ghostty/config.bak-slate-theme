@@ -1,0 +1,82 @@
+term = xterm-256color
+
+# UI config
+# theme = "dark:catppuccin-mocha,light:catppuccin-latte"
+theme = Rose Pine
+background-opacity-cells = true
+background-opacity = .90
+background-blur-radius = 20
+
+# MX Master 3 hi-res wheel sends many scroll reports per ratchet step;
+# scale down scroll speed in Ghostty (also applies to TUIs like opencode)
+mouse-scroll-multiplier = 0.3
+
+macos-non-native-fullscreen = true
+macos-titlebar-style = hidden
+window-decoration = false
+window-padding-balance = true
+window-padding-color = background
+window-padding-x = 15
+window-padding-y = 15
+
+
+# Font config
+font-family = "MonaspiceRn Nerd Font Mono"
+font-family = "Symbols Nerd Font Mono"
+font-size = 14
+
+shell-integration = fish
+shell-integration-features = cursor,sudo,title
+clipboard-read = allow
+clipboard-write = allow
+
+
+# Keybindings
+#
+# Reloads config
+keybind = super+r=reload_config
+# Open quick terminal
+keybind = global:super+ctrl+shift+space=toggle_quick_terminal
+# Open text editor
+keybind = super+shift+e=text:NVIM_APPNAME=nvim-kick nvim\x0D
+# Open text editor
+keybind = super+e=text:nvim\x0D
+# Open Sesh
+keybind = super+j=text:t\x0D
+
+# Tmux Keybindings (tmux prefix CTRL + Space => #x00 escape sequence)
+#
+# Open Sesh
+keybind = super+k=text:\x00T
+# New Tab
+keybind = super+t=text:\x00c
+# Vertical Split
+keybind = super+d=text:\x00%
+# Horizontal Split (\x22 is double quote)
+keybind = super+shift+d=text:\x00\x22
+# Select tab number (1-9)
+keybind = super+one=text:\x00\x31
+keybind = super+two=text:\x00\x32
+keybind = super+three=text:\x00\x33
+keybind = super+four=text:\x00\x34
+keybind = super+five=text:\x00\x35
+keybind = super+six=text:\x00\x36
+keybind = super+seven=text:\x00\x37
+keybind = super+eight=text:\x00\x38
+keybind = super+nine=text:\x00\x39
+# Lazygit tmux custom binding
+keybind = super+g=text:\x00g
+# GH Dash tmux custom binding
+keybind = super+shift+g=text:\x00G
+# Neovim Telescope smart_open
+keybind = super+p=text:\x1b:GoToFile\x0D
+# Neovim Command pallete
+keybind = super+shift+p=text:\x1b:GoToCommand\x0D
+# Neovim browse files
+keybind = super+o=text:\x1b:BrowseFiles\x0D
+# nvims tmux custom binding
+keybind = super+ctrl+n=text:nvims\x0D
+# clear
+keybind = ctrl+alt+k=text:clear\x0D
+# AI Agent
+keybind = super+shift+a=text:startAIAgent\x0D

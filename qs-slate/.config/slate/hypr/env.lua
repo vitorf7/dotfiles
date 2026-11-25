@@ -4,8 +4,7 @@
 -- (apps already running keep what they started with). Saving this file reloads Hyprland's
 -- config; if something in it is wrong, Slate shows the error in a notification.
 --
--- Examples (remove the "--" to use one):
--- hl.env("QT_QPA_PLATFORMTHEME", "qt5ct")      -- Qt apps use qt6ct's settings (Qt 5 apps qt5ct's)
--- hl.env("MOZ_ENABLE_WAYLAND", "1")            -- Firefox on Wayland
--- hl.env("ELECTRON_OZONE_PLATFORM_HINT", "auto")
--- hl.env("GDK_SCALE", "2")
+-- Shared with the plain Hyprland session: its modules/environment.lua is the one list of
+-- env vars (Wayland hints for Firefox/Electron/Qt/SDL/Java, HYPRSHOT_DIR), so the two
+-- sessions can't drift. The cursor theme is not set here: Slate owns it (variables.lua).
+dofile(os.getenv("HOME") .. "/.config/hypr/modules/environment.lua")

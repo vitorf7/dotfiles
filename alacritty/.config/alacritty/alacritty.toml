@@ -1,4 +1,4 @@
-import = ["/Users/vitorfaiante/.config/alacritty/themes/catppuccin-mocha.toml"]
+import = ["/Users/vitorfaiante/.config/alacritty/themes/catppuccin-mocha.toml", "~/.config/alacritty/themes/slate.toml"]
 live_config_reload = true
 
 [env]

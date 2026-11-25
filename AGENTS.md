@@ -29,6 +29,13 @@ Each top-level directory (except `nixos/`, `scripts/`, `secrets/`, `configs/`, `
 | Qs shells   | `qs-slate/`, `dank-material-shell/`, `caelestia/`, `ambxst/` (symlinked by home-manager, not stowed) |
 | Dev         | `k9s/`, `starship/`, `bat/`                                |
 
+**Slate is its own login session and never reads `~/.config/hypr`.** Your personal Hyprland settings reach it through `qs-slate/.config/slate/hypr/*.lua` (Slate loads `env`, `variables`, then its own config, then `monitors`, `binds`, `rules`, `autostart`, `hyprland` — later wins). Those files `dofile` the session-agnostic modules from `hyprland/.config/hypr/modules/` (environment, monitors, monitor_manager, windowrules, input, clamshell) so there is one copy; `binds.lua` and `autostart.lua` are curated instead. Rules for editing them:
+
+- **One owner per capability.** Don't bind or start in the Slate session what Slate already does (volume/media keys and OSD, wallpaper, idle/lock, polkit agent, power menu, notifications, tray watcher). Starting a second one gives duplicate pop-ups, or two polkit agents fighting over registration.
+- **Binds stack, they don't replace.** A chord bound twice fires both actions, and key-name case doesn't matter (`ALT + J` and `ALT + j` are the same chord). To make yours win over one of Slate's, `hl.unbind(<chord>)` first (Slate binds digits as `code:10`..`code:19`, so unbind those spellings).
+- Don't define a second submap named `resize`; enter Slate's.
+- **Ghostty owns the Super+letter chords it sends to tmux/nvim** (`ghostty/.config/ghostty/config`: `super+j`, `super+k`, `super+t`, `super+d`, …). Slate binds many Super+letters globally, and Hyprland grabs a bound chord before any app sees it, so when you add a `super+…` keybind to Ghostty, add its chord to the "Ghostty owns" unbind list in `qs-slate/.config/slate/hypr/binds.lua`.
+
 ## Submodules
 
 `neovim/.config/nvim`, `lunarvim/.config/lvim`, and `neovimold/.config/nvimold` are git submodules. Run `git submodule update --init --recursive` after cloning.

@@ -34,7 +34,10 @@ in {
     config = lib.mkIf config.vitorf7.desktop.slate.enable {
       assertions = assertionsFor config.vitorf7;
       programs.slate.enable = true;
-      # GDM still lists every session; this only preselects Slate.
+      # GDM still lists every session; this only preselects Slate. The running
+      # GDM doesn't see a new session until it restarts (display-manager.service
+      # has X-RestartIfChanged=false): reboot after the first switch that adds
+      # "Slate", or `sudo systemctl restart display-manager`.
       services.displayManager.defaultSession = lib.mkDefault "slate";
     };
   };
