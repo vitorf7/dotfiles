@@ -44,7 +44,9 @@ hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
 -- hl.bind("SUPER + Space", hl.dsp.exec_cmd("$HOME/.config/rofi/launchers/launcher.sh || pkill rofi"))
 hl.bind(mainMod .. " + Space", hl.dsp.exec_cmd("vicinae toggle"))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
-hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))
+-- Toggle split on ALT+T. It used to be ALT+J, but Hyprland ignores key-name case, so that was
+-- the same chord as ALT+j below (focus down) and both fired on every press.
+hl.bind(mainMod .. " + T", hl.dsp.layout("togglesplit"))
 hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.exec_cmd(hyprScripts .. "/wlogout.sh"))
 
 -- --------------------exit hyprland-----------------------------------------------#
