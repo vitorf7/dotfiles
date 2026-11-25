@@ -50,6 +50,46 @@
                 "priority.session" = 100;
               };
             }
+            # Default-microphone fallback order: Wave:3 > Bluetooth headset mic
+            # (bluez rule below) > built-in laptop mic. WirePlumber picks the
+            # highest priority.session among available sources whenever no
+            # remembered user choice is present, so unplugging/replugging walks
+            # this order. Apps must record the real device (not EasyEffects'
+            # virtual source) so the Wave:3's hardware mute button actually mutes.
+            {
+              matches = [{"node.name" = "~alsa_input.*Elgato.*";}];
+              actions.update-props = {
+                "priority.driver" = 3000;
+                "priority.session" = 3000;
+              };
+            }
+            {
+              matches = [{"node.name" = "~alsa_input.pci-.*";}];
+              actions.update-props = {
+                "priority.driver" = 1000;
+                "priority.session" = 1000;
+              };
+            }
+            {
+              # USB webcam mics (C922) get an auto priority (~2109) above the
+              # BT headset; keep them as the last resort, below the laptop mic.
+              matches = [{"node.name" = "~alsa_input.*Webcam.*";}];
+              actions.update-props = {
+                "priority.driver" = 500;
+                "priority.session" = 500;
+              };
+            }
+          ];
+          # A BT headset only exposes a mic in its headset (HFP) profile;
+          # WirePlumber autoswitches to it when an app starts recording.
+          "monitor.bluez.rules" = [
+            {
+              matches = [{"node.name" = "~bluez_input.*";}];
+              actions.update-props = {
+                "priority.driver" = 2000;
+                "priority.session" = 2000;
+              };
+            }
           ];
         };
       };
